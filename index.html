@@ -499,6 +499,13 @@ body.traffic #tlegend{display:flex}
 #tlegend .tmode button.on{background:rgba(255,255,255,.14);color:#fff}
 body.tdemo #tbanner{background:rgba(255,179,71,.14);border-color:rgba(255,179,71,.55);color:#ffd9a0}
 body:not(.tdemo) #tbanner{background:rgba(150,205,255,.12);border-color:rgba(150,205,255,.45);color:#cfe6ff}
+.legs{display:flex;flex-direction:column;gap:6px;margin:8px 0 12px}
+.leg{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:rgba(150,205,255,.08);border:1px solid rgba(150,205,255,.25)}
+.leg.dark{background:rgba(255,255,255,.03);border-style:dashed;border-color:rgba(255,255,255,.18)}
+.leg i{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);display:grid;place-items:center;font:700 11px/1 Inter,system-ui,sans-serif;color:#fff;font-style:normal}
+.leg b{display:block;font-size:13.5px;font-weight:600;color:#fff}
+.leg.dark b{color:#aab2d0}
+.leg > div > span{font-size:12px;color:var(--muted)}
 .tbadge.lvB{background:rgba(92,255,138,.14);border-color:rgba(92,255,138,.5);color:#bfffd2}
 .tbadge.lvC{background:rgba(150,205,255,.14);border-color:rgba(150,205,255,.5);color:#cfe6ff}
 .tbadge{display:inline-block;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,179,71,.16);border:1px solid rgba(255,179,71,.5);color:#ffd9a0;margin-left:6px;vertical-align:middle}
@@ -1981,6 +1988,7 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
   };
   Object.entries(EV).forEach(([k,e]) => { const [from,to] = k.split("|"); const nk = rkey(from,to); EVK[nk] = Object.assign({ k:nk, from, to }, e); });
   const FACTS = [
+    { keys:["track","tracks","tracked","follow a player","follows","followed","between the functions","between functions","move from","moves from","movement between","transition from","transitions","who counts","anyone count","does anyone","is there data","any data","no data","rec to comp","rec to travel","play to test","test to learn","learn to choose","choose to pathway","through the functions","across the functions","whole journey","full journey"], h:"Does anyone track players moving between the five functions?", body:"No. No public source follows a player from one function to the next. Registrars count who is in each program once a year; they do not count who crossed. Nobody registers training, so TEST to LEARN is invisible. Tryouts are run by thousands of clubs and nobody aggregates who showed up or who was cut, so LEARN to CHOOSE is invisible. Only the last leg, CHOOSE to PATHWAY, has numbers, because institutions publish rosters, and even those give the destination, never the origin. Every data holder counts the people inside its own walls; movement happens between walls, and no one owns that space. This site measures it two ways: coding registrations by function (the stocks) and the season check-in (the flows).", lvl:"D", src:[["Research Coverage Matrix v1 (method and sources)","https://claude.ai/artifact/UWkYeBoKX1RzmkYWAyTWnv"],["U.S. Soccer FY2025 audit: the federation collects $1 per registered player and tracks nothing across bodies","https://www.ussoccer.com/governance/financial-information"]] },
     { keys:["how many kids play","how many children play","how many play soccer","how many americans play","participation"], h:"How many people play soccer in the U.S.?", body:"16.8 million Americans aged 6 and over played outdoor soccer in 2025, a record, up 15.8% in a year. 6.6 million played indoor. 5.5 million of the outdoor players were children aged 6 to 12.", lvl:"B", src:[["SFIA soccer hub","https://sfia.org/u-s-soccer-participation-data/"]] },
     { keys:["high school players","how many high school","nfhs"], h:"How many play high school soccer?", body:"877,956 in 2024-25: 484,908 boys at 12,969 schools and 393,048 girls at 12,516 schools.", lvl:"B", src:[["NFHS 2024-25 survey","https://a-us.storyblok.com/f/1022696/x/85a6414d04/2024-25-nfhs-high-school-athletics-participation-survey.pdf"]] },
     { keys:["how many college","ncaa players","how many ncaa"], h:"How many play NCAA soccer?", body:"28,746 men and 31,200 women in 2024-25. Division III has the most programs (406 men's, 416 women's). NAIA adds about 190 men's and 197 women's programs; 48 of 100 NAIA men are international.", lvl:"B", src:[["NCAA Research, Mar 2026","https://ncaaorg.s3.amazonaws.com/research/pro_beyond/RES_ProbabilityBeyondHSFiguresMethod.pdf"],["RosterWise division counts","https://rosterwise-app.pages.dev/soccer/insights/division-by-numbers/"]] },
@@ -2008,7 +2016,7 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
     ["sunday league","sunday"],["adult league","sunday"],["adult soccer","sunday"],["adults","sunday",1],["adult","sunday",1],["pickup","pickup"],["pick-up","pickup"],["futsal","futsal"],["over-30","masters"],["over 30","masters"],["masters","masters"],["walking soccer","masters"],
     ["semi-pro","semipro"],["semi pro","semipro"],["semipro","semipro"],["usl","semipro"],["npsl","semipro"],["upsl","semipro"],
     ["coach","coaching"],["coaching","coaching"],["referee","referee"],["ref ","referee"],["scout","scouting"],["agent","agency"],["analyst","analysis"],["analytics","analysis"],["media","media"],["club operations","clubops"],["own a club","owner"],["owner","owner"],["league office","league"],["federation","league"],
-    ["recreational","play"],["rec soccer","play"],["rec ","play"],["recreation","play"],["travel","test"],["travel team","test"],["travel soccer","test"],["select team","test"],["classic","test"],["play for fun","play"],["kids","play",1],["children","play",1],["youth","play",1],["players","play",1],["learn","learn"],["training","learn"],["development","learn"],["competing","test"],["compete","test"],["competition","test"],["competitive","test"],["keeps score","test"],["games that count","test"],["club soccer","choose"],["club team","choose"],["pathway","bridge"]
+    ["recreational","play"],["rec soccer","play"],["rec ","play"],["recreation","play"],["travel","test"],["travel team","test"],["travel soccer","test"],["select team","test"],["classic","test"],["play for fun","play"],["kids","play",1],["children","play",1],["youth","play",1],["players","play",1],["learn","learn"],["training","learn"],["development","learn"],["developing","learn"],["selection","choose"],["tryouts","g3"],["competing","test"],["compete","test"],["competition","test"],["competitive","test"],["keeps score","test"],["games that count","test"],["club soccer","choose"],["club team","choose"],["pathway","bridge"]
   ];
   const ASK_EXAMPLES = ["What percentage of high school players play in college?","How many drafted players make MLS?","Academy vs high school: which road reaches pro?","How many kids come back after an ACL injury?","What happens to kids who get cut?","How many adults still play?"];
 
@@ -2026,18 +2034,33 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
     if(!origin){ const ofIdx = s.indexOf(" of "); if(ofIdx >= 0){ const h = use.find(([pos]) => pos > ofIdx); if(h && use.length > 1) origin = h[1]; } }
     return { ids, origin, compare, s };
   }
+  // path for a trip: never through the center hub unless it is an endpoint; prefer measured roads when lengths tie
+  function tripPath(from, to){
+    if(from===to) return [from];
+    const cost = (a,b) => EVK[rkey(a,b)] ? 0.9 : 1;
+    const dist = { [from]:0 }, prev = {}, seen = new Set(); const q = [from];
+    while(q.length){ q.sort((a,b) => dist[a]-dist[b]); const cur = q.shift(); if(seen.has(cur)) continue; seen.add(cur); if(cur===to) break;
+      for(const nx of (adj[cur]||[])){ if(nx==="you" && nx!==to) continue; const d = dist[cur] + cost(cur,nx); if(dist[nx]==null || d < dist[nx]){ dist[nx] = d; prev[nx] = cur; if(!seen.has(nx)) q.push(nx); } } }
+    if(dist[to]==null) return null; const path=[to]; let p=prev[to]; while(p){ path.unshift(p); p=prev[p]; } return path;
+  }
   const roadsTouching = (id) => Object.keys(EVK).filter(k => k.split("|").includes(id));
   const unknownTouching = (id) => Object.keys(roadGeom).filter(k => k.split("|").includes(id) && !EVK[k] && T[k]);
   function findAnswers(q){
     const P = parseAsk(q); const out = { roads:[], facts:[], unknown:[], ids:P.ids };
     FACTS.forEach(f => { if(f.keys.some(k => P.s.includes(k))) out.facts.push(f); });
     const ids = P.ids; const add = (arr,k) => { if(!arr.includes(k)) arr.push(k); };
-    if(ids.length >= 2){
-      // direct roads between any two mentioned places, measured or not
+    if(ids.length >= 2 && !P.compare){
+      // a trip: walk the map between each pair of places in the order they were named, leg by leg
+      out.chain = [];
+      for(let i=0;i<ids.length-1;i++){ const path = tripPath(ids[i], ids[i+1]); if(!path) continue; for(let k=1;k<path.length;k++){ const key = rkey(path[k-1], path[k]); if(!out.chain.some(c => c.k===key)) out.chain.push({ k:key, from:path[k-1], to:path[k], ev: !!EVK[key] }); } }
+      if(out.chain.length > 1 || (out.chain.length === 1 && !out.chain[0].ev)){ return out; }
+      out.chain = null;
       for(let i=0;i<ids.length;i++) for(let j=i+1;j<ids.length;j++){ const k = rkey(ids[i], ids[j]); if(EVK[k]) add(out.roads,k); else if(roadGeom[k]) add(out.unknown,k); }
-      // comparison, or nothing direct: every measured road touching each place
-      if(P.compare || out.roads.length === 0){ ids.forEach(a => roadsTouching(a).forEach(k => add(out.roads,k))); }
-      // a named place with no evidence at all gets its unknown roads listed, so the gap is visible
+      if(out.roads.length === 0){ ids.forEach(a => roadsTouching(a).forEach(k => add(out.roads,k))); }
+      ids.forEach(a => { if(!roadsTouching(a).length) unknownTouching(a).slice(0,4).forEach(k => add(out.unknown,k)); });
+    } else if(ids.length >= 2){
+      for(let i=0;i<ids.length;i++) for(let j=i+1;j<ids.length;j++){ const k = rkey(ids[i], ids[j]); if(EVK[k]) add(out.roads,k); else if(roadGeom[k]) add(out.unknown,k); }
+      ids.forEach(a => roadsTouching(a).forEach(k => add(out.roads,k)));
       ids.forEach(a => { if(!roadsTouching(a).length) unknownTouching(a).slice(0,4).forEach(k => add(out.unknown,k)); });
     } else if(ids.length === 1){
       roadsTouching(ids[0]).forEach(k => add(out.roads,k));
@@ -2058,7 +2081,7 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
   }
   function unknownCard(k){
     const g = roadGeom[k]; const A = byId[g.a], B = byId[g.b];
-    return `<div class="ans unknown"><h3>${A.t} → ${B.t}<span class="lvl D">D</span></h3><p style="margin:6px 0 4px;font-size:14px;line-height:1.5">Nobody has measured this road. No federation, league or survey counts how many people take it. It stays open on the map, and the season check-in on this site is how it gets measured.</p><button class="go" data-road="${k}">Show this road on the map →</button></div>`;
+    return `<div class="ans unknown"><h3>${A.t} → ${B.t}<span class="lvl D">D</span></h3><p style="margin:6px 0 4px;font-size:14px;line-height:1.5">Nobody has measured this road. Every organization counts the people inside its own walls once a year; nothing follows a player across. It stays open on the map. The season check-in on this site is the instrument that measures it.</p><button class="go" data-road="${k}">Show this road on the map →</button></div>`;
   }
   function factCard(f){ const srcs = f.src.map(([t,u]) => `<a href="${u}" target="_blank" rel="noopener">${t}</a>`).join(" · "); return `<div class="ans"><h3>${f.h}<span class="lvl ${f.lvl}">${f.lvl}</span></h3><p style="margin:6px 0 4px;font-size:14px;line-height:1.5">${f.body}</p><div class="meta">Sources: ${srcs}</div></div>`; }
   function answer(q){
@@ -2067,7 +2090,14 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
     card.style.setProperty("--c", "#9ccfff"); $("#crumb").textContent = "Ask the map";
     let html = `<h2 style="font-size:20px">${q.replace(/</g,"&lt;")}</h2>`;
     const n = r.roads.length + r.facts.length;
-    if(!n && !r.unknown.length){
+    if(r.chain){
+      const legs = r.chain, m = legs.filter(l => l.ev).length, u = legs.length - m;
+      html += `<p class="short">That trip is ${legs.length} road${legs.length>1?"s":""} on the map. ${m} ${m===1?"has":"have"} a number, ${u} ${u===1?"has":"have"} never been measured. ${u ? "The legs cannot be multiplied into one figure: each measured one counts a different group of people, and the dark ones are dark." : ""}</p>`;
+      html += `<div class="legs">${legs.map((l,i) => { const A = byId[l.from], B = byId[l.to]; const e = EVK[l.k]; const v = e ? (e.rate!=null ? fmtRate(e.rate)+" of 100" : e.men!=null ? fmtRate(e.men)+" / "+fmtRate(e.women)+" of 100" : e.range ? fmtRate(e.range[0])+" to "+fmtRate(e.range[1])+" of 100" : "trend") : "not measured"; return `<div class="leg ${e?"":"dark"}"><i>${i+1}</i><div><b>${A.t} → ${B.t}</b><span>${v}</span></div><span class="lvl ${e?e.lvl:"D"}">${e?e.lvl:"D"}</span></div>`; }).join("")}</div>`;
+      r.facts.forEach(f => html += factCard(f));
+      legs.forEach(l => { html += l.ev ? evCard(l.k, false) : unknownCard(l.k); });
+      html += `<p style="font-size:12px;color:var(--muted);margin-top:10px">Levels: A observed cohort · B published counts · C modeled with stated assumptions · D unknown. Heavy traffic is not a better road. Group numbers do not predict one person.</p>`;
+    } else if(!n && !r.unknown.length){
       html += `<p class="short">I couldn't match that to a place on the map. Try naming two places, like high school and college, or academy and pro.</p><div class="sec"><h4>Try one of these</h4>${ASK_EXAMPLES.map(x => `<button class="go" data-q="${x}" style="display:block;text-align:left;margin:4px 0">${x}</button>`).join("")}</div>`;
     } else {
       if(r.roads.length > 1) html += `<p class="short">${r.roads.length} measured roads match. Each number is "of 100" of the named group, with its evidence level.</p>`;
