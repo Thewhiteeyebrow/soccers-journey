@@ -535,6 +535,8 @@ body.lite #roads path.road.season{filter:none}
 #journey.checkin .jbox{box-shadow:0 0 0 1px rgba(255,211,77,.4), 0 30px 80px rgba(0,0,0,.6)}
 #journey .jlast{font-size:13px;color:var(--muted);margin:-6px 0 12px}
 #journey .jlast b{color:#ffd34d;font-weight:600}
+#toast{position:fixed;left:50%;bottom:120px;transform:translateX(-50%) translateY(20px);z-index:40;padding:12px 18px;border-radius:14px;background:rgba(10,14,32,.92);border:1px solid rgba(255,211,77,.5);color:#fff;font-size:14px;max-width:min(520px,calc(100vw - 28px));opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;backdrop-filter:blur(10px)}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body class="no-select">
@@ -2207,6 +2209,11 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
   /* ----- arrival: ?j=<key> restores a dot; a dot older than a season opens the check-in ----- */
   const JKEY = (() => { try{ const q = new URLSearchParams(location.search); const k = q.get("j"); if(k){ q.delete("j"); history.replaceState(null, "", location.pathname + (q.toString() ? "?" + q : "") + location.hash); } return k && /^[0-9a-f-]{36}$/i.test(k) ? k : null; }catch(e){ return null; } })();
   const FORCE = /[?&]checkin=1/.test(location.search);
+  // unsubscribe landing: soccersjourney.com/?unsub=<token>
+  (async () => { try{ const q = new URLSearchParams(location.search); const t = q.get("unsub"); if(!t) return; q.delete("unsub"); history.replaceState(null, "", location.pathname + (q.toString() ? "?" + q : "") + location.hash);
+    let el = $("#toast"); if(!el){ el = document.createElement("div"); el.id = "toast"; document.body.appendChild(el); }
+    const r = await sjCall("sj_unsubscribe", { t }); el.textContent = r && r.ok ? "You're unsubscribed. No more notes. The dot stays on the map, and you can always come back to it." : "That unsubscribe link has already been used or isn't valid. If notes keep coming, reply to one and we'll stop them by hand.";
+    if(state.journey) state.journey.subscribed = false; persist(); requestAnimationFrame(() => el.classList.add("on")); setTimeout(() => el.classList.remove("on"), 9000); }catch(e){} })();
   async function arrive(){
     if(JKEY && !(state.journey && state.journey.key === JKEY)){
       try{
