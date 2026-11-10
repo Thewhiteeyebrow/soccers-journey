@@ -404,8 +404,12 @@ body.lite #roads path.road.lit, body.lite #roads path.road.trail{animation:none}
 #card .jactions{display:flex;gap:8px}
 #card .jactions .btn{flex:1;justify-content:center;text-decoration:none}
 .sbox img{display:block;width:100%;max-height:62vh;object-fit:contain;border-radius:14px;margin:14px 0;background:#070b18}
+#sharefmt{display:flex;gap:4px;background:rgba(255,255,255,.06);border-radius:10px;padding:3px}
+#sharefmt button{border:0;background:transparent;color:var(--muted);font:600 12px/1 Inter,system-ui,sans-serif;letter-spacing:.04em;text-transform:uppercase;padding:7px 12px;border-radius:8px;transition:background .15s,color .15s}
+#sharefmt button.on{background:rgba(255,255,255,.14);color:#fff}
+#share.story .sbox img{max-height:68vh}
 .srow{display:flex;gap:8px}
-.srow .btn{flex:1;justify-content:center;text-decoration:none}
+.srow .btn{flex:1;justify-content:center;text-decoration:none;color:#fff}
 @media (max-width:760px){ .jbox,.sbox{padding:18px 18px 16px} #jq{font-size:22px} #jopts button{padding:12px 14px;font-size:14.5px} .jfoot .tiny{display:none} }
 
 /* ---------- counter ---------- */
@@ -504,7 +508,7 @@ body.lite #roads path.road.lit, body.lite #roads path.road.trail{animation:none}
 </div>
 <div id="share" class="hide">
   <div class="sbox">
-    <div class="jtop"><span>Your journey card</span><button class="x" id="shareClose" aria-label="Close">×</button></div>
+    <div class="jtop"><span>Your journey card</span><div id="sharefmt" role="tablist"><button data-fmt="post" title="Square-ish card for a feed post (4:5)">Post</button><button data-fmt="story" title="Tall card for an Instagram or TikTok story (9:16)">Story</button></div><button class="x" id="shareClose" aria-label="Close">×</button></div>
     <img id="shareImg" alt="Your journey card">
     <div class="srow"><button class="btn primary" id="shareNative">Share</button><a class="btn" id="shareDl" download="soccers-journey.png">Download</a><button class="btn" id="shareCopy">Copy link</button></div>
     <p class="tiny">On a phone, press and hold the image to save it, then post it.</p>
@@ -1402,7 +1406,7 @@ setTimeout(()=> $("#hint").classList.add("hide"), 9000);
    BUILD YOUR JOURNEY
    Six taps place the dot. The board lights up as yours. A card to share.
    ===================================================================== */
-function track(ev, props){ try{ if(window.va) window.va("event", { name: ev, data: props||{} }); if(window.posthog) window.posthog.capture(ev, props||{}); }catch(e){} }
+function track(ev, props){ try{ props = Object.assign({ src: (typeof SRC !== "undefined" ? SRC.first : "direct") }, props||{}); if(window.va) window.va("event", { name: ev, data: props }); if(window.posthog) window.posthog.capture(ev, props); }catch(e){} }
 
 const JQ = [
   { id:"who",    q:"Who's looking at the map?", opts:[["player","The player"],["parent","A parent"],["coach","A coach"],["club","A club or program"]] },
@@ -1497,19 +1501,23 @@ function renderJourneyCard(){
   $("#backBtn").style.visibility = "hidden"; $("#nextBtn").style.visibility = "hidden";
 }
 
-/* ---------- share card (1080 x 1350) ---------- */
+/* ---------- share card: post (1080 x 1350) or story (1080 x 1920) ---------- */
 function roundRect(c, x, y, w, h, r){ c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r); c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
 function cssColor(v){ if(!v) return "#fff"; if(v.startsWith("var(")){ return getComputedStyle(document.documentElement).getPropertyValue(v.slice(4,-1)).trim() || "#fff"; } return v; }
-function drawShareCard(){
-  const j = state.journey; const a = j.answers, d = j.derived;
-  const cv = document.createElement("canvas"); cv.width = 1080; cv.height = 1350; const c = cv.getContext("2d");
-  const g = c.createLinearGradient(0,0,0,1350); g.addColorStop(0,"#0b1128"); g.addColorStop(1,"#070b18"); c.fillStyle = g; c.fillRect(0,0,1080,1350);
-  const rg = c.createRadialGradient(540,560,40,540,560,700); rg.addColorStop(0,"rgba(63,208,255,.10)"); rg.addColorStop(1,"rgba(0,0,0,0)"); c.fillStyle = rg; c.fillRect(0,0,1080,1350);
+const CARD_FMT = {
+  post:  { W:1080, H:1350, titleY:124, cy:520,  R:230, ctaY:1245 },
+  story: { W:1080, H:1920, titleY:360, cy:800,  R:240, ctaY:1590 }   // keeps clear of the Instagram story UI (top 250, bottom 250)
+};
+function drawShareCard(fmtName){
+  const j = state.journey; const a = j.answers, d = j.derived; const F = CARD_FMT[fmtName] || CARD_FMT.post; const W = F.W, H = F.H;
+  const cv = document.createElement("canvas"); cv.width = W; cv.height = H; const c = cv.getContext("2d");
+  const g = c.createLinearGradient(0,0,0,H); g.addColorStop(0,"#0b1128"); g.addColorStop(1,"#070b18"); c.fillStyle = g; c.fillRect(0,0,W,H);
+  const rg = c.createRadialGradient(540,F.cy,40,540,F.cy,700); rg.addColorStop(0,"rgba(63,208,255,.10)"); rg.addColorStop(1,"rgba(0,0,0,0)"); c.fillStyle = rg; c.fillRect(0,0,W,H);
   c.fillStyle = "#fff"; c.textAlign = "left"; c.textBaseline = "alphabetic";
-  c.font = "700 64px Inter, system-ui, sans-serif"; c.fillText(a.who === "parent" ? "Our soccer journey" : a.who === "player" ? "My soccer journey" : "A soccer journey", 72, 128);
-  c.font = "500 30px Inter, system-ui, sans-serif"; c.fillStyle = "#aab2d0"; c.fillText(journeyLine(a), 72, 180);
+  c.font = "700 64px Inter, system-ui, sans-serif"; c.fillText(a.who === "parent" ? "Our soccer journey" : a.who === "player" ? "My soccer journey" : "A soccer journey", 72, F.titleY);
+  c.font = "500 30px Inter, system-ui, sans-serif"; c.fillStyle = "#aab2d0"; c.fillText(journeyLine(a), 72, F.titleY + 52);
   // board
-  const cx = 540, cy = 560, R = 250;
+  const cx = 540, cy = F.cy, R = F.R;
   c.fillStyle = "rgba(255,255,255,.04)"; c.beginPath(); c.arc(cx, cy, R+40, 0, Math.PI*2); c.fill();
   c.strokeStyle = "rgba(255,255,255,.18)"; c.lineWidth = 2; c.beginPath(); c.arc(cx, cy, R, 0, Math.PI*2); c.stroke();
   const pads = { play:[cx-R*0.7, cy, cssColor("var(--play)"), "PLAY"], test:[cx, cy-R*0.7, cssColor("var(--test)"), "TEST"], learn:[cx+R*0.7, cy, cssColor("var(--learn)"), "LEARN"], choose:[cx, cy+R*0.7, cssColor("var(--choose)"), "CHOOSE"], bridge:[cx+R*0.72, cy+R*0.72, cssColor("var(--path)"), "PATHWAY"] };
@@ -1527,25 +1535,44 @@ function drawShareCard(){
   // attributes
   c.textAlign = "left"; c.textBaseline = "alphabetic"; c.fillStyle = "#aab2d0"; c.font = "600 22px Inter, system-ui, sans-serif"; c.fillText("ALREADY CARRYING", 72, rowY + 112);
   let x = 72, y = rowY + 140; c.font = "500 24px Inter, system-ui, sans-serif";
-  d.attrs.forEach(id => { const t = ATTR[id].t; const w = c.measureText(t).width + 44; if(x + w > 1008){ x = 72; y += 58; } roundRect(c, x, y, w, 46, 23); c.fillStyle = "rgba(255,179,71,.14)"; c.fill(); c.strokeStyle = "rgba(255,179,71,.5)"; c.lineWidth = 2; c.stroke(); c.fillStyle = "#fff"; c.textBaseline = "middle"; c.fillText(t, x+22, y+24); c.textBaseline = "alphabetic"; x += w + 12; });
-  // footer
-  c.fillStyle = "rgba(255,255,255,.08)"; c.fillRect(72, 1262, 936, 1);
-  c.fillStyle = "#fff"; c.font = "700 26px Inter, system-ui, sans-serif"; c.fillText("soccersjourney.com", 72, 1308);
-  c.fillStyle = "#aab2d0"; c.font = "500 22px Inter, system-ui, sans-serif"; c.textAlign = "right"; c.fillText((j.n ? `Journey #${fmt(j.n)} · ` : "") + "The Five Functions · @JeremiahWhiteIII", 1008, 1308);
+  const maxY = F.ctaY - 46 - 56; // last chip row must clear the divider
+  const chip = (t) => { const w = c.measureText(t).width + 44; if(x + w > 1008){ x = 72; y += 58; } if(y > maxY) return false; roundRect(c, x, y, w, 46, 23); c.fillStyle = "rgba(255,179,71,.14)"; c.fill(); c.strokeStyle = "rgba(255,179,71,.5)"; c.lineWidth = 2; c.stroke(); c.fillStyle = "#fff"; c.textBaseline = "middle"; c.fillText(t, x+22, y+24); c.textBaseline = "alphabetic"; x += w + 12; return true; };
+  const rowsFit = Math.max(1, Math.floor((maxY - y) / 58) + 1);
+  let shown = 0; const list = d.attrs.map(id => ATTR[id].t);
+  // if everything will not fit, reserve room for a "+N more" chip by trying, then retrying with fewer
+  const fits = (n) => { let xx = 72, yy = y; const items = list.slice(0, n).concat(n < list.length ? [`+${list.length - n} more`] : []); for(const t of items){ const w = c.measureText(t).width + 44; if(xx + w > 1008){ xx = 72; yy += 58; } if(yy > maxY) return false; xx += w + 12; } return true; };
+  let n = list.length; while(n > 0 && !fits(n)) n--;
+  list.slice(0, n).forEach(t => chip(t)); if(n < list.length) chip(`+${list.length - n} more`);
+  // call to action
+  const cy2 = F.ctaY;
+  c.fillStyle = "rgba(255,255,255,.08)"; c.fillRect(72, cy2 - 46, 936, 1);
+  c.textAlign = "left"; c.textBaseline = "alphabetic";
+  c.fillStyle = "#aab2d0"; c.font = "600 22px Inter, system-ui, sans-serif"; c.fillText("WHERE IS YOUR DOT?", 72, cy2);
+  c.fillStyle = "#fff"; c.font = "800 40px Inter, system-ui, sans-serif"; c.fillText("Map yours at soccersjourney.com", 72, cy2 + 46);
+  c.fillStyle = "#aab2d0"; c.font = "500 24px Inter, system-ui, sans-serif"; c.fillText((j.n ? `Journey #${fmt(j.n)} · ` : "") + "The Five Functions · @JeremiahWhiteIII", 72, cy2 + 84);
   return cv;
 }
+let shareFmt = store.get("sj.cardfmt", matchMedia("(hover:none)").matches ? "story" : "post");
+function renderShareImage(){
+  const cv = drawShareCard(shareFmt); const url = cv.toDataURL("image/png");
+  $("#shareImg").src = url; $("#shareDl").href = url; $("#shareDl").download = shareFmt === "story" ? "soccers-journey-story.png" : "soccers-journey.png";
+  $("#share").classList.toggle("story", shareFmt === "story");
+  document.querySelectorAll("#sharefmt button").forEach(b => b.classList.toggle("on", b.dataset.fmt === shareFmt));
+  return url;
+}
+const SHARE_URL = "https://soccersjourney.com/?ref=share";
 async function shareJourney(){
   if(!state.journey){ openJourney(); return; }
-  track("share_open");
-  const cv = drawShareCard(); const url = cv.toDataURL("image/png");
-  $("#shareImg").src = url; $("#shareDl").href = url;
+  track("share_open", { fmt: shareFmt });
+  renderShareImage();
   $("#share").classList.remove("hide");
   $("#shareNative").style.display = navigator.share ? "" : "none";
-  $("#shareNative").onclick = async () => { try{ const blob = await (await fetch(url)).blob(); const file = new File([blob], "soccers-journey.png", { type:"image/png" }); if(navigator.canShare && navigator.canShare({ files:[file] })) await navigator.share({ files:[file], title:"Soccer's Journey", text:"Where the dot is right now. soccersjourney.com" }); else await navigator.share({ title:"Soccer's Journey", text:"Where the dot is right now.", url:"https://soccersjourney.com" }); track("share_done", { how:"native" }); }catch(e){} };
-  $("#shareCopy").onclick = async () => { try{ await navigator.clipboard.writeText("https://soccersjourney.com"); $("#shareCopy").textContent = "Link copied"; setTimeout(()=> $("#shareCopy").textContent = "Copy link", 1800); track("share_done", { how:"copy" }); }catch(e){} };
+  $("#shareNative").onclick = async () => { try{ const url = $("#shareImg").src; const blob = await (await fetch(url)).blob(); const file = new File([blob], $("#shareDl").download, { type:"image/png" }); if(navigator.canShare && navigator.canShare({ files:[file] })) await navigator.share({ files:[file], title:"Soccer's Journey", text:"Where the dot is right now. " + SHARE_URL }); else await navigator.share({ title:"Soccer's Journey", text:"Where the dot is right now.", url: SHARE_URL }); track("share_done", { how:"native", fmt: shareFmt }); }catch(e){} };
+  $("#shareCopy").onclick = async () => { try{ await navigator.clipboard.writeText(SHARE_URL); $("#shareCopy").textContent = "Link copied"; setTimeout(()=> $("#shareCopy").textContent = "Copy link", 1800); track("share_done", { how:"copy" }); }catch(e){} };
 }
+document.querySelectorAll("#sharefmt button").forEach(b => b.addEventListener("click", () => { Snd.tick(); shareFmt = b.dataset.fmt; store.set("sj.cardfmt", shareFmt); renderShareImage(); }));
 $("#shareClose").addEventListener("click", () => { Snd.click(); $("#share").classList.add("hide"); });
-$("#shareDl").addEventListener("click", () => track("share_done", { how:"download" }));
+$("#shareDl").addEventListener("click", () => track("share_done", { how:"download", fmt: shareFmt }));
 
 /* ---------- entry points ---------- */
 $("#journeyBtn").addEventListener("click", () => { Snd.click(); if(state.journey){ const d = state.journey.derived; openNode(d.pos); setTimeout(() => { if(state.current === d.pos) renderJourneyCard(); }, 2600); } else openJourney(); });
@@ -1572,8 +1599,19 @@ function renderTotals(t){
   const today = $("#counterToday"); if(today) today.textContent = t.journeys_today > 0 ? `· ${fmt(t.journeys_today)} today` : "";
   $("#counterIntro").hidden = false; $("#counterFoot").hidden = false;
 }
-(async () => { try{ const key = "sj.hit." + new Date().toISOString().slice(0,10); const already = store.get(key, false); const t = already ? await sjCall("sj_totals") : await sjCall("sj_hit"); if(!already) store.set(key, true); renderTotals(t); }catch(e){ /* stay hidden */ } })();
-async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", { a: Object.assign({}, a, { pos }) }); renderTotals(t); if(state.journey) { state.journey.n = t.journeys; persist(); } }catch(e){} }
+/* Source attribution. First touch wins and sticks to this device: ?ref=ig (link in bio), ?ref=share (a shared card), ?utm_source=... */
+const SRC = (() => {
+  try{
+    const q = new URLSearchParams(location.search); const raw = q.get("ref") || q.get("src") || q.get("utm_source") || "";
+    const clean = raw.toLowerCase().replace(/[^a-z0-9_.-]/g, "").slice(0, 32);
+    let src = store.get("sj.src", null);
+    if(clean && !src){ src = clean; store.set("sj.src", src); }
+    if(q.has("ref") || q.has("src") || q.has("utm_source")){ ["ref","src","utm_source","utm_medium","utm_campaign"].forEach(k => q.delete(k)); history.replaceState(null, "", location.pathname + (q.toString() ? "?" + q : "") + location.hash); }
+    return { first: src || "direct", visit: clean || src || "direct" };
+  }catch(e){ return { first:"direct", visit:"direct" }; }
+})();
+(async () => { try{ const key = "sj.hit." + new Date().toISOString().slice(0,10); const already = store.get(key, false); let t; if(already) t = await sjCall("sj_totals"); else { try{ t = await sjCall("sj_hit", { src: SRC.visit }); }catch(e){ t = await sjCall("sj_hit"); } } if(!already) store.set(key, true); renderTotals(t); }catch(e){ /* stay hidden */ } })();
+async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", { a: Object.assign({}, a, { pos, src: SRC.first }) }); renderTotals(t); if(state.journey) { state.journey.n = t.journeys; persist(); } }catch(e){} }
 
 /* ---------- tooltips (hover and keyboard focus; hidden on touch devices) ---------- */
 (function(){
