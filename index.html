@@ -431,6 +431,110 @@ body.lite #roads path.road.lit, body.lite #roads path.road.trail{animation:none}
 #tip.above::after{bottom:-5px;left:50%;margin-left:-4px;transform:rotate(225deg)}
 #tip.left::after{right:-5px;top:50%;margin-top:-4px;transform:rotate(135deg)}
 @media (hover:none){#tip{display:none}}
+
+/* ---------- TRAFFIC LAYER (prototype) ---------- */
+#traffic{position:absolute;left:0;top:0;width:3300px;height:2380px;transform:translateZ(3px);pointer-events:none;display:none}
+body.traffic #traffic{display:block}
+body.traffic #roads path.road.tr{opacity:1;stroke:rgba(150,205,255,.16);stroke-width:3;pointer-events:visibleStroke;cursor:pointer}
+body.traffic #roads path.road.tr.t1{stroke:rgba(150,205,255,.22);stroke-width:3.5}
+body.traffic #roads path.road.tr.t2{stroke:rgba(170,215,255,.34);stroke-width:5}
+body.traffic #roads path.road.tr.t3{stroke:rgba(200,230,255,.5);stroke-width:7}
+body.traffic #roads path.road.tr.t0{stroke:rgba(255,255,255,.14);stroke-width:2.5;stroke-dasharray:3 10}
+body.traffic #roads path.road.tr.ev{stroke:rgba(255,236,180,.55)}
+body.traffic #roads path.road.tr.ev.t3{stroke:rgba(255,236,180,.7)}
+body.traffic #roads path.road.tr.show{stroke:#fff;stroke-width:6}
+body.traffic #roads path.road.tr.hitw{stroke-width:14;stroke:transparent}
+body.traffic #roads path.road:not(.tr):not(.show):not(.trail){opacity:0}
+#roads path.road.hit{fill:none;stroke:transparent;stroke-width:16;pointer-events:none;opacity:1}
+body.traffic #roads path.road.hit{pointer-events:visibleStroke;cursor:pointer}
+#trafficBtn.on{background:rgba(150,205,255,.14);box-shadow:inset 0 0 0 1px rgba(150,205,255,.5)}
+.tlight{display:flex;flex-direction:column;gap:3px;padding:4px 3px;border-radius:5px;background:#141a2e;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.tlight i{display:block;width:6px;height:6px;border-radius:50%;background:#2a3147;transition:background .2s, box-shadow .2s}
+#trafficBtn.on .tlight i.r{background:#ff5470;box-shadow:0 0 6px #ff5470}
+#trafficBtn.on .tlight i.y{background:#ffd34d;box-shadow:0 0 6px #ffd34d}
+#trafficBtn.on .tlight i.g{background:#5cff8a;box-shadow:0 0 6px #5cff8a}
+#trafficBtn:not(.on):hover .tlight i.g{background:#5cff8a88}
+/* ask bar */
+#ask{position:fixed;left:50%;top:calc(var(--hud) + 54px);transform:translateX(-50%);z-index:11;width:min(640px, calc(100vw - 28px));display:none;flex-direction:column;gap:8px}
+body.traffic #ask{display:flex}
+#ask form{display:flex;gap:6px;align-items:center;padding:6px 6px 6px 14px;border-radius:999px;background:rgba(10,14,32,.86);border:1px solid rgba(150,205,255,.35);backdrop-filter:blur(10px);box-shadow:0 14px 40px rgba(0,0,0,.45)}
+#ask input{flex:1;background:transparent;border:0;color:#fff;font:500 14px/1.3 Inter,system-ui,sans-serif;outline:0;min-width:0}
+#ask input::placeholder{color:#7f88ad}
+#ask button.go{border:0;border-radius:999px;background:rgba(150,205,255,.22);color:#fff;font:700 12px/1 Inter,system-ui,sans-serif;letter-spacing:.06em;padding:9px 14px;cursor:pointer}
+#ask .chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+#ask .chips button{border:1px solid rgba(255,255,255,.12);background:rgba(10,14,32,.7);color:#c7cde6;border-radius:999px;padding:5px 11px;font:500 12px/1.2 Inter,system-ui,sans-serif;cursor:pointer;backdrop-filter:blur(8px)}
+#ask .chips button:hover{border-color:rgba(150,205,255,.5);color:#fff}
+body.cardopen #ask{width:min(640px, calc(100vw - var(--card-w) - 56px))}
+@media (max-width:760px){#ask{top:calc(var(--hud) + 92px)}#ask .chips{display:none}body.cardopen #ask{display:none}}
+/* answer cards */
+.ans{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:10px 0;background:rgba(255,255,255,.03)}
+.ans h3{margin:0 0 4px;font-size:15px;font-weight:700;line-height:1.3}
+.ans .big{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:6px 0 2px}
+.ans .big small{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:0;margin-left:6px}
+.ans .bar{height:8px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden;margin:6px 0}
+.ans .bar i{display:block;height:100%;background:linear-gradient(90deg,rgba(150,205,255,.6),#fff);border-radius:4px}
+.ans .bar i.rng{background:repeating-linear-gradient(90deg,rgba(150,205,255,.55) 0 6px,rgba(150,205,255,.2) 6px 10px)}
+.ans .meta{font-size:12.5px;color:var(--muted);line-height:1.5}
+.ans .meta a{color:#9ccfff}
+.lvl{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10.5px;font-weight:800;letter-spacing:.08em;margin-left:6px;vertical-align:middle}
+.lvl.A{background:rgba(92,255,138,.18);color:#9dffb8;border:1px solid rgba(92,255,138,.5)}
+.lvl.B{background:rgba(150,205,255,.16);color:#bfe3ff;border:1px solid rgba(150,205,255,.5)}
+.lvl.C{background:rgba(255,211,77,.14);color:#ffe49a;border:1px solid rgba(255,211,77,.5)}
+.lvl.D{background:rgba(255,255,255,.06);color:#aab2d0;border:1px solid rgba(255,255,255,.2)}
+.ans.unknown{border-style:dashed}
+.ans .go{display:inline-block;margin-top:6px;font-size:12px;color:#9ccfff;cursor:pointer;background:none;border:0;padding:0}
+#tbanner{position:fixed;left:50%;bottom:118px;transform:translateX(-50%);z-index:12;white-space:nowrap;display:none;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;background:rgba(255,179,71,.14);border:1px solid rgba(255,179,71,.55);color:#ffd9a0;font-size:12.5px;font-weight:600;letter-spacing:.04em;backdrop-filter:blur(8px)}
+#tbanner b{color:#fff}
+body.traffic #tbanner{display:flex}
+#tlegend{position:fixed;left:14px;bottom:52px;z-index:10;display:none;flex-direction:column;gap:6px;padding:10px 12px;border-radius:12px;background:rgba(10,14,32,.8);border:1px solid var(--line);font-size:11.5px;color:var(--muted);backdrop-filter:blur(8px)}
+body.traffic #tlegend{display:flex}
+#tlegend div{display:flex;align-items:center;gap:8px}
+#tlegend i{display:inline-block;width:28px;height:0;border-top:3px solid rgba(200,230,255,.5);border-radius:2px}
+#tlegend .l2 i{border-top-width:2px;border-top-color:rgba(170,215,255,.34)}
+#tlegend .l1 i{border-top-width:2px;border-top-color:rgba(150,205,255,.22)}
+#tlegend .l0 i{border-top:2px dashed rgba(255,255,255,.3)}
+#tlegend .lk{color:#ffd9a0;font-weight:600;margin-top:2px}
+#tlegend .tmode{display:flex;gap:3px;background:rgba(255,255,255,.06);border-radius:8px;padding:2px;margin-bottom:4px}
+#tlegend .tmode button{flex:1;border:0;background:transparent;color:var(--muted);font:600 11px/1 Inter,system-ui,sans-serif;padding:6px 8px;border-radius:6px;cursor:pointer}
+#tlegend .tmode button.on{background:rgba(255,255,255,.14);color:#fff}
+body.tdemo #tbanner{background:rgba(255,179,71,.14);border-color:rgba(255,179,71,.55);color:#ffd9a0}
+body:not(.tdemo) #tbanner{background:rgba(150,205,255,.12);border-color:rgba(150,205,255,.45);color:#cfe6ff}
+.tbadge.lvB{background:rgba(92,255,138,.14);border-color:rgba(92,255,138,.5);color:#bfffd2}
+.tbadge.lvC{background:rgba(150,205,255,.14);border-color:rgba(150,205,255,.5);color:#cfe6ff}
+.tbadge{display:inline-block;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,179,71,.16);border:1px solid rgba(255,179,71,.5);color:#ffd9a0;margin-left:6px;vertical-align:middle}
+.tmeter{height:8px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden;margin:8px 0 4px}
+.tmeter i{display:block;height:100%;background:linear-gradient(90deg,rgba(150,205,255,.6),#fff);border-radius:4px}
+.tgrid{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:13.5px;margin:12px 0}
+.tgrid b{color:var(--muted);font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;align-self:center}
+@media (hover:none){#tlegend{bottom:60px}}
+@media (max-width:760px){#tbanner{left:50%;bottom:auto;top:calc(var(--hud) + 56px);font-size:10.5px;padding:6px 10px;white-space:normal;width:calc(100vw - 28px);transform:translateX(-50%)}#tlegend{display:none !important}}
+@media (prefers-reduced-motion:reduce){#traffic{display:none !important}}
+body.lite #traffic{display:none}
+body.lite.traffic.tlite #traffic{display:block}
+
+/* ---------- SEASON CHECK-IN ---------- */
+#roads path.road.season{opacity:1;stroke:#ffd34d;stroke-width:5.5;stroke-dasharray:none;filter:drop-shadow(0 0 6px rgba(255,211,77,.6))}
+body.lite #roads path.road.season{filter:none}
+.seasons{display:flex;flex-direction:column;gap:0;margin:6px 0 2px;position:relative}
+.seasons .sn{display:grid;grid-template-columns:18px 1fr;gap:10px;align-items:start;padding:0 0 12px;position:relative}
+.seasons .sn:before{content:"";position:absolute;left:8px;top:18px;bottom:-2px;width:2px;background:rgba(255,255,255,.12)}
+.seasons .sn:last-child:before{display:none}
+.seasons .sn i{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.08);border:2px solid var(--c);display:grid;place-items:center;font:700 9px/1 Inter,system-ui,sans-serif;color:#fff;margin-top:1px}
+.seasons .sn:last-child i{background:var(--c);box-shadow:0 0 12px var(--c)}
+.seasons .sn b{display:block;font-size:14px;color:#fff;font-weight:600}
+.seasons .sn span{font-size:12.5px;color:var(--muted)}
+.nudge{margin-top:14px;padding:12px 14px;border-radius:14px;background:rgba(255,211,77,.07);border:1px solid rgba(255,211,77,.3)}
+.nudge h4{margin:0 0 6px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#ffd9a0;font-weight:600}
+.nudge p{font-size:13px;margin:0 0 8px;color:#dde2f5}
+.nudge form{display:flex;gap:6px}
+.nudge input{flex:1;min-width:0;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:9px 12px;color:#fff;font:500 14px/1.2 Inter,system-ui,sans-serif;outline:0}
+.nudge input:focus{border-color:rgba(255,211,77,.6)}
+.nudge button{border:0;border-radius:10px;background:#ffd34d;color:#0b1020;font:700 13px/1 Inter,system-ui,sans-serif;padding:9px 14px;cursor:pointer}
+.nudge .fine{font-size:11.5px;color:var(--muted);margin:8px 0 0}
+.nudge.done p{color:#bfffd2}
+#journey.checkin .jbox{box-shadow:0 0 0 1px rgba(255,211,77,.4), 0 30px 80px rgba(0,0,0,.6)}
+#journey .jlast{font-size:13px;color:var(--muted);margin:-6px 0 12px}
+#journey .jlast b{color:#ffd34d;font-weight:600}
 </style>
 </head>
 <body class="no-select">
@@ -472,6 +576,9 @@ body.lite #roads path.road.lit, body.lite #roads path.road.trail{animation:none}
 <div id="tip" role="tooltip"></div>
 <div id="hint">Drag to move · scroll or pinch to zoom · click anywhere and you travel there · gold = an institution bears the risk</div>
 <nav id="regions" aria-label="Territories"></nav>
+<div id="ask"><form id="askForm" autocomplete="off"><input id="askIn" type="text" placeholder="Ask the map: what percentage of high school players play in college?" aria-label="Ask the map"><button class="go" type="submit">ASK</button></form><div class="chips" id="askChips"></div></div>
+<div id="tbanner"><b id="tbannerB">EVIDENCE</b> <span id="tbannerT">14 roads carry published or modeled numbers · the other 61 are unknown and drawn as such</span></div>
+<div id="tlegend"><div class="tmode"><button data-m="evidence" class="on">Evidence</button><button data-m="demo">Illustrative</button></div><div class="l3"><i style="border-top-color:rgba(255,236,180,.7)"></i> Measured road (evidence)</div><div class="l3"><i></i> Heavier traffic</div><div class="l2"><i></i> Moderate</div><div class="l1"><i></i> Lighter</div><div class="l0"><i></i> Unknown: no evidence yet</div><div class="lk">Flow is annual movement, not live tracking</div></div>
 <footer id="credits"><span class="cnt" id="counterFoot" hidden><b data-n="journeys">0</b> journeys mapped ·</span> Soccer's Journey · The Five Functions · <a href="https://www.instagram.com/jeremiahwhiteiii/" target="_blank" rel="noopener">Jeremiah White III · @jeremiahwhiteiii</a> · <a href="https://www.wsvlabs.com" target="_blank" rel="noopener">WSV Labs</a> · <a href="https://www.whitesportventures.com" target="_blank" rel="noopener">White Sports Ventures</a></footer>
 
 <button id="carry" title="Your map">
@@ -480,6 +587,7 @@ body.lite #roads path.road.lit, body.lite #roads path.road.trail{animation:none}
 </button>
 
 <div id="viewtools">
+  <button class="btn icon" id="trafficBtn" title="Traffic: how people move through the map, and ask it questions"><span class="tlight"><i class="r"></i><i class="y"></i><i class="g"></i></span></button>
   <button class="btn icon" id="trailBtn" title="Show or hide your trail">≈</button>
   <button class="btn icon" id="tiltBtn" title="Flat view / 3D view">◩</button>
   <button class="btn icon" id="zinBtn" title="Zoom in">+</button>
@@ -1516,6 +1624,7 @@ function drawShareCard(fmtName){
   c.fillStyle = "#fff"; c.textAlign = "left"; c.textBaseline = "alphabetic";
   c.font = "700 64px Inter, system-ui, sans-serif"; c.fillText(a.who === "parent" ? "Our soccer journey" : a.who === "player" ? "My soccer journey" : "A soccer journey", 72, F.titleY);
   c.font = "500 30px Inter, system-ui, sans-serif"; c.fillStyle = "#aab2d0"; c.fillText(journeyLine(a), 72, F.titleY + 52);
+  if(j.seasons && j.seasons.length > 1){ const sn = j.seasons; const line = sn.map(x => (byId[x.pos] ? byId[x.pos].t : x.pos)).join("  →  "); c.font = "600 26px Inter, system-ui, sans-serif"; c.fillStyle = "#ffd34d"; c.fillText(`Season ${sn.length}: ` + line, 72, F.titleY + 96); }
   // board
   const cx = 540, cy = F.cy, R = F.R;
   c.fillStyle = "rgba(255,255,255,.04)"; c.beginPath(); c.arc(cx, cy, R+40, 0, Math.PI*2); c.fill();
@@ -1641,5 +1750,487 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
 
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
+<script>
+/* =====================================================================
+   TRAFFIC LAYER, prototype. Additive. Reads a separate movement table
+   (TRAFFIC_DEMO, illustrative) and animates traveling light along the
+   existing road geometry. Nothing in the journey map is modified.
+   ===================================================================== */
+(function(){
+  // Illustrative weights 0..1 for prototype review only. null = unknown (no evidence).
+  // dir: 1 = a→b as listed in ROADS, 2 = both ways.
+  const TRAFFIC_DEMO = {
+    "you|play":[.9,1],"you|test":[.5,1],"you|learn":[.6,1],"you|choose":[.35,1],
+    "play|g1":[.8,1],"g1|test":[.8,1],"test|g2":[.6,1],"g2|learn":[.6,1],"learn|g3":[.5,1],"g3|choose":[.5,1],"choose|g4":[.45,1],"g4|play":[.45,1],
+    "choose|bridge":[.12,1],"g3|notpicked":[.4,1],"choose|notpicked":[.55,1],"g4|pickup":[.35,1],"g4|burnout":[.3,1],
+    "notpicked|recruit":[.15,1],"notpicked|sunday":[.4,1],"notpicked|coaching":[null,1],"notpicked|learn":[.35,2],
+    "injury|learn":[.5,2],"injury|medical":[null,1],"money|play":[.5,1],"money|scholar":[.1,1],"money|futsal":[null,1],
+    "geo|learn":[null,1],"geo|sunday":[.35,1],"burnout|pickup":[.45,1],
+    "bridge|academy":[.3,1],"bridge|scholar":[.5,1],"bridge|pro":[.06,1],"academy|pro":[.08,1],"academy|released":[.45,1],"academy|recruit":[.4,1],
+    "scholar|recruit":[.9,1],"pro|released":[.3,1],"pro|trials":[.25,1],"released|trials":[.3,1],"released|recruit":[.3,1],"released|sunday":[.4,1],"released|coaching":[.2,1],
+    "trials|semipro":[.4,1],"recruit|divisions":[.7,1],"recruit|walkon":[.3,1],"recruit|clubintra":[.5,1],"divisions|transfer":[.3,1],"divisions|degree":[.75,1],
+    "walkon|degree":[.6,1],"transfer|degree":[.6,1],"clubintra|sunday":[.5,1],"degree|draft":[.06,1],"degree|analysis":[.15,1],"draft|pro":[.2,1],"draft|semipro":[.4,1],
+    "pickup|sunday":[.5,2],"sunday|futsal":[.4,2],"futsal|semipro":[.08,1],"sunday|masters":[.45,1],"masters|coachkid":[.5,1],"coachkid|play":[.7,1],"coachkid|coaching":[.25,1],
+    "semipro|pro":[.05,1],"coaching|clubops":[.25,1],"clubops|league":[.1,1],"league|owner":[.04,1],"analysis|scouting":[.2,1],"scouting|agency":[.1,1],"agency|owner":[.05,1],
+    "referee|league":[null,1],"referee|coaching":[.2,1],"media|agency":[null,1],"media|analysis":[.15,1],"medical|analysis":[.1,1],"owner|bridge":[.1,1]
+  };
+  const T = {}; // key (rkey) -> {w, dir, a, b}; rebuilt by buildT() for the current mode
+  let tmode = store.get("sj.tmode", "evidence"); // "evidence" | "demo"
+  const EVK = {}; // rkey -> evidence entry with from/to (filled after EV is defined, see below)
+  // evidence weight: log scale so 79 of 100 and 6 of 100 both read as traffic, unknown gets none
+  const evWeight = (e) => { const v = e.rate!=null ? e.rate : e.men!=null ? Math.max(e.men, e.women) : e.range ? (e.range[0]+e.range[1])/2 : e.trend ? 25 : null; if(v==null) return null; return Math.min(1, Math.max(0.1, Math.log10(v+1)/2)); };
+  function buildT(){
+    Object.keys(T).forEach(k => delete T[k]);
+    if(tmode === "demo"){ Object.entries(TRAFFIC_DEMO).forEach(([k,[w,dir]]) => { const [a,b] = k.split("|"); T[rkey(a,b)] = { w, dir, a, b }; }); }
+    else { Object.entries(TRAFFIC_DEMO).forEach(([k]) => { const [a,b] = k.split("|"); T[rkey(a,b)] = { w:null, dir:1, a, b }; }); Object.values(EVK).forEach(e => { T[e.k] = { w: evWeight(e), dir:1, a:e.from, b:e.to }; }); }
+    Object.entries(T).forEach(([k,t]) => { const p = paths[k]; if(!p) return; p.classList.remove("t0","t1","t2","t3"); p.classList.add(t.w==null ? "t0" : t.w>=.6 ? "t3" : t.w>=.3 ? "t2" : "t1"); });
+  }
+
+  const reduced = matchMedia("(prefers-reduced-motion:reduce)").matches;
+  const W = 3300, H = 2380, SCALE = isMobile() ? 0.3 : 0.5; const FRAME_MS = isMobile() ? 33 : 0;
+  const cv = document.createElement("canvas"); cv.id = "traffic"; cv.width = W*SCALE; cv.height = H*SCALE;
+  world.insertBefore(cv, $("#plates"));
+  const c = cv.getContext("2d");
+
+  // classify existing road paths and add wide invisible hit paths
+  const paths = {}; const hits = [];
+  document.querySelectorAll("#roads path.road").forEach(p => {
+    const k = p.dataset.k; if(!k) return; paths[k] = p;
+    if(!TRAFFIC_DEMO[k] && !TRAFFIC_DEMO[k.split("|").reverse().join("|")]) return;
+    p.classList.add("tr");
+    const h = p.cloneNode(false); h.setAttribute("class","road hit"); h.dataset.k = k; h.removeAttribute("data-a"); h.removeAttribute("data-b"); hits.push(h);
+  });
+  hits.forEach(h => $("#roads-g").appendChild(h));
+
+  // sample road curves (board space)
+  const samples = {};
+  function sample(k){
+    if(samples[k]) return samples[k];
+    const g = roadGeom[k]; if(!g) return null;
+    const pts = []; const N = 48; let len = 0;
+    for(let i=0;i<=N;i++){ const t=i/N, u=1-t; const x = u*u*g.ax + 2*u*t*g.cx + t*t*g.bx, y = u*u*g.ay + 2*u*t*g.cy + t*t*g.by; if(i){ len += Math.hypot(x-pts[i-1][0], y-pts[i-1][1]); } pts.push([x,y,len]); }
+    return samples[k] = { pts, len };
+  }
+  const at = (s, d) => { // point at distance d along sampled path
+    const pts = s.pts; let lo=0, hi=pts.length-1; while(hi-lo>1){ const m=(lo+hi)>>1; if(pts[m][2] < d) lo=m; else hi=m; }
+    const a=pts[lo], b=pts[hi]; const f = (d-a[2])/((b[2]-a[2])||1); return [a[0]+(b[0]-a[0])*f, a[1]+(b[1]-a[1])*f];
+  };
+
+  const nodePos = {}; NODES.forEach(n => nodePos[n.id] = [n.x, n.y]);
+  // particles
+  const P = []; const halos = []; const SPEED = 0.085; // px per ms, constant: speed is not volume
+  function seed(){
+    buildT(); buildBreath();
+    P.length = 0; const lite = document.body.classList.contains("lite");
+    Object.entries(T).forEach(([k,t]) => {
+      if(t.w==null) return; const s = sample(k); if(!s) return;
+      const g = roadGeom[k]; const fwdIsAB = (g.a === t.a); // listed a→b vs geometry order
+      let n = Math.max(1, Math.round(t.w * (lite ? 4 : 7)));
+      for(let i=0;i<n;i++){
+        const rev = t.dir===2 ? (i%2===1) : false;
+        P.push({ k, s, d: Math.random()*s.len, dir: (fwdIsAB ? 1 : -1) * (rev ? -1 : 1), w: t.w, r: 2.2 + t.w*2.6, tail: [] });
+      }
+    });
+  }
+  // pre-rendered sprites: no per-particle gradients in the hot loop
+  const glowSprite = (() => { const sz = 64, k = document.createElement("canvas"); k.width = k.height = sz; const g = k.getContext("2d"); const gr = g.createRadialGradient(sz/2,sz/2,0,sz/2,sz/2,sz/2); gr.addColorStop(0,"rgba(220,240,255,1)"); gr.addColorStop(.35,"rgba(220,240,255,.45)"); gr.addColorStop(1,"rgba(220,240,255,0)"); g.fillStyle = gr; g.fillRect(0,0,sz,sz); return k; })();
+  const breathSprite = (() => { const sz = 96, k = document.createElement("canvas"); k.width = k.height = sz; const g = k.getContext("2d"); const gr = g.createRadialGradient(sz/2,sz/2,4,sz/2,sz/2,sz/2); gr.addColorStop(0,"rgba(190,225,255,1)"); gr.addColorStop(1,"rgba(190,225,255,0)"); g.fillStyle = gr; g.fillRect(0,0,sz,sz); return k; })();
+  let breathList = []; function buildBreath(){ breathList = []; const seen = new Set(); let ph = 0; Object.values(T).forEach(t => { if(t.w==null) return; [t.a,t.b].forEach(id => { if(seen.has(id) || !nodePos[id]) return; seen.add(id); breathList.push([nodePos[id][0], nodePos[id][1], ph]); ph += 0.9; }); }); }
+
+  let raf = 0, last = 0, on = false;
+  function frame(ts){
+    if(!on) return; raf = requestAnimationFrame(frame);
+    if(FRAME_MS && last && ts - last < FRAME_MS) return;
+    const dt = Math.min(80, ts - (last||ts)); last = ts;
+    c.setTransform(SCALE,0,0,SCALE,0,0); c.clearRect(0,0,W,H);
+    c.globalCompositeOperation = "lighter";
+    // soft breathing on eligible nodes
+    for(const [x,y,ph] of breathList){ c.globalAlpha = 0.06 + 0.05*Math.sin(ts/900 + ph); c.drawImage(breathSprite, x-48, y-48, 96, 96); }
+    // particles
+    for(const p of P){
+      p.d += p.dir * SPEED * dt;
+      let arrived = null;
+      if(p.d > p.s.len){ p.d -= p.s.len; arrived = p.dir>0 ? roadGeom[p.k].b : roadGeom[p.k].a; p.tail.length = 0; }
+      if(p.d < 0){ p.d += p.s.len; arrived = p.dir>0 ? roadGeom[p.k].a : roadGeom[p.k].b; p.tail.length = 0; }
+      if(arrived) halos.push({ id: arrived, t0: ts });
+      const [x,y] = at(p.s, p.d);
+      p.tail.unshift([x,y]); if(p.tail.length > 7) p.tail.pop();
+      for(let i=1;i<p.tail.length;i++){ const [tx,ty] = p.tail[i]; const f = 1 - i/p.tail.length; c.globalAlpha = f * 0.5 * (0.4 + p.w*0.6); const r = p.r*2.6*f + 2; c.drawImage(glowSprite, tx-r, ty-r, r*2, r*2); }
+      const R = p.r*4.5; c.globalAlpha = 0.45 + p.w*0.4; c.drawImage(glowSprite, x-R, y-R, R*2, R*2);
+      c.globalAlpha = 0.8 + p.w*0.2; c.fillStyle = "#fff"; c.beginPath(); c.arc(x,y,p.r,0,Math.PI*2); c.fill();
+    }
+    c.globalAlpha = 1;
+    // arrival halos
+    for(let i=halos.length-1;i>=0;i--){ const h = halos[i]; const age = ts - h.t0; if(age > 700){ halos.splice(i,1); continue; } const p = nodePos[h.id]; if(!p) continue; const f = age/700; c.strokeStyle = `rgba(220,240,255,${(1-f)*0.55})`; c.lineWidth = 2.5*(1-f)+0.5; c.beginPath(); c.arc(p[0],p[1],26 + f*34,0,Math.PI*2); c.stroke(); }
+    c.globalCompositeOperation = "source-over";
+  }
+
+  function setTraffic(v){
+    on = !!v && !reduced; document.body.classList.toggle("traffic", !!v); $("#trafficBtn").classList.toggle("on", !!v);
+    if(document.body.classList.contains("lite")) document.body.classList.toggle("tlite", !!v);
+    cancelAnimationFrame(raf); last = 0;
+    if(on){ seed(); raf = requestAnimationFrame(frame); }
+    else { c.setTransform(SCALE,0,0,SCALE,0,0); c.clearRect(0,0,W,H); }
+    store.set("sj.traffic", !!v); if(typeof track==="function") track("traffic_toggle", { on: !!v });
+  }
+  function setMode(m){ tmode = m; store.set("sj.tmode", m); document.body.classList.toggle("tdemo", m==="demo"); document.querySelectorAll("#tlegend .tmode button").forEach(b => b.classList.toggle("on", b.dataset.m===m));
+    $("#tbannerB").textContent = m==="demo" ? "ILLUSTRATIVE" : "EVIDENCE"; $("#tbannerT").textContent = m==="demo" ? "road glow is a placeholder for review · nothing in this view is measured · answers still come only from evidence" : "14 roads carry published or modeled numbers · the other 61 are unknown and drawn as such";
+    if(on) seed(); else buildT(); }
+  document.querySelectorAll("#tlegend .tmode button").forEach(b => b.addEventListener("click", () => { Snd.tick(); setMode(b.dataset.m); }));
+  $("#trafficBtn").addEventListener("click", () => { Snd.tick(); setTraffic(!document.body.classList.contains("traffic")); });
+  addEventListener("keydown", e => { if(e.key==="t" || e.key==="T"){ if(document.activeElement && /input|textarea/i.test(document.activeElement.tagName)) return; $("#trafficBtn").click(); } });
+  document.addEventListener("visibilitychange", () => { if(document.hidden){ cancelAnimationFrame(raf); } else if(on){ last = 0; raf = requestAnimationFrame(frame); } });
+
+  // road inspection
+  function openRoad(k){
+    const t = T[k]; const g = roadGeom[k]; if(!t || !g) return;
+    const A = byId[t.a], B = byId[t.b]; Snd.click && Snd.click();
+    document.querySelectorAll("#roads path.road.show").forEach(p => p.classList.remove("show")); paths[k].classList.add("show");
+    const e = EVK[k]; const Af = e ? byId[e.from] : A, Bt = e ? byId[e.to] : B;
+    const lvl = e ? `${e.lvl} · ${e.lvl==="B" ? "published counts" : e.lvl==="C" ? "modeled" : "observed"}` : (tmode==="demo" && t.w!=null ? "Illustrative · not measured" : "D · Unknown");
+    const vol = e ? (e.rate!=null ? `${fmtRate(e.rate)} of 100 ${e.pop}` : e.men!=null ? `${fmtRate(e.men)} of 100 boys, ${fmtRate(e.women)} of 100 girls` : e.range ? `${fmtRate(e.range[0])} to ${fmtRate(e.range[1])} of 100 ${e.pop}` : e.trend) : (t.w==null ? "No evidence yet" : `Illustrative glow only`);
+    card.style.setProperty("--c", "#9ccfff"); $("#crumb").textContent = "Road";
+    cardBody.innerHTML = `<h2>${Af.t} <span style="color:var(--muted);font-weight:500">${t.dir===2?"⇄":"→"}</span> ${Bt.t}</h2>
+      <div class="kind"><b>Movement</b> · ${t.dir===2 ? "both directions" : "one direction"} <span class="tbadge${e ? " lv"+e.lvl : ""}">${e ? "Level " + e.lvl : (tmode==="demo" && t.w!=null ? "Illustrative" : "Unknown")}</span></div>
+      <p class="short">${e ? e.line : t.w==null ? "This road is on the map because it is real, not because anyone has counted it. Nobody has measured how many people take it. It stays open." : "No published evidence for this road yet. The glow is an illustrative placeholder for prototype review; it is not a measurement."}</p>
+      ${e && (e.rate!=null || e.men!=null || e.range) ? `<div class="tmeter"><i style="width:${Math.min(100, e.rate!=null ? e.rate : e.men!=null ? e.men : e.range[1])}%"></i></div>` : ""}
+      <div class="tgrid"><b>Volume</b><span>${vol}</span><b>Evidence</b><span>${lvl}</span><b>Population</b><span>${e ? e.pop : "Not defined yet"}</span><b>Period</b><span>${e ? e.period : "None"}</span><b>Source</b><span>${e ? e.src.map(([tt,u]) => `<a href="${u}" target="_blank" rel="noopener" style="color:#9ccfff">${tt}</a>`).join(" · ") : "None. Illustrative placeholder."}</span></div>
+      ${e && e.note ? `<p style="font-size:13px;color:var(--muted)">${e.note}</p>` : ""}
+      <p style="font-size:13px;color:var(--muted)">Heavy traffic is not a better road. Light traffic is not a closed one. Group patterns do not predict one person.</p>
+      <div class="sec"><h4>Go to</h4><div class="roads"><button class="rd" data-go="${t.a}"><i style="--c:${A.c||REGIONS[A.r].color}"></i>${A.t}</button><button class="rd" data-go="${t.b}"><i style="--c:${B.c||REGIONS[B.r].color}"></i>${B.t}</button></div></div>`;
+    cardBody.scrollTop = 0; cardBody.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", ()=> openNode(b.dataset.go)));
+    card.classList.add("open"); document.body.classList.add("cardopen");
+    if(typeof track==="function") track("road_open", { road: k });
+  }
+  $("#roads").addEventListener("click", e => {
+    if(!document.body.classList.contains("traffic")) return; if(drag && drag.moved) return;
+    const p = e.target.closest("path.road"); if(!p || !p.dataset.k || !T[p.dataset.k]) return; e.stopPropagation(); openRoad(p.dataset.k);
+  });
+
+
+  /* ---------- Evidence registry (v1, from the Research Coverage Matrix, 2026-11-10) ----------
+     Only roads with published or modeled evidence appear here. Everything else is Unknown (level D).
+     rate = "of 100" of the named population. range = [low, high] for modeled values. */
+  const EV = {
+    "recruit|divisions": { lvl:"B", pop:"high school varsity soccer players", period:"2024-25", men:5.9, women:7.9,
+      line:"About 6 of 100 high school boys and 8 of 100 girls go on to play NCAA soccer (DI 1.4 / 2.8, DII 1.7 / 2.2, DIII 2.8 / 3.0).",
+      note:"Comparison of two annual counts, not a cohort. Club-only players are not in the 100, so the true rate is lower.",
+      src:[["NCAA Research, Mar 2026","https://ncaaorg.s3.amazonaws.com/research/pro_beyond/RES_ProbabilityBeyondHSFiguresMethod.pdf"],["NFHS 2024-25 survey","https://a-us.storyblok.com/f/1022696/x/85a6414d04/2024-25-nfhs-high-school-athletics-participation-survey.pdf"]] },
+    "bridge|scholar": { lvl:"B", pop:"high school varsity soccer players", period:"2024-25", men:3.1, women:5.0,
+      line:"About 3 of 100 high school boys and 5 of 100 girls reach NCAA Division I or II, the divisions that can offer athletic money.",
+      note:"Reaching DI or DII is not the same as a full scholarship. Since the House settlement, soccer rosters are capped at 28 with no sport-specific scholarship caps.",
+      src:[["NCAA Research, Mar 2026","https://ncaaorg.s3.amazonaws.com/research/pro_beyond/RES_ProbabilityBeyondHSFiguresMethod.pdf"]] },
+    "injury|learn": { lvl:"B", pop:"youth athletes after ACL reconstruction (mean age 14)", period:"2018 meta-analysis", rate:79, alt:{ label:"return to any sport", rate:92 },
+      line:"After an ACL reconstruction, 79 of 100 young athletes return to their previous level and 92 of 100 return to some sport. Up to 32 of 100 suffer a second ACL injury.",
+      note:"One injury type only. Adults return to prior level at 65 of 100. No comparable data for concussion, growth-plate or overuse injuries.",
+      src:[["Kay et al., KSSTA 2018","https://doi.org/10.1007/s00167-018-4830-9"],["Pediatric RTS scoping review, 2023","https://pmc.ncbi.nlm.nih.gov/articles/PMC10606966"]] },
+    "degree|draft": { lvl:"C", pop:"NCAA men's soccer seniors", period:"2025-26", range:[1.2,1.4], women:{ range:[0.3,0.6], pop:"NCAA women's soccer seniors" },
+      line:"About 1 of 100 NCAA men's seniors is taken in the MLS SuperDraft (90 picks in December 2025). On the women's side there is no draft since 2024; roughly 30 to 45 college players sign NWSL deals a year, under 1 of 100 seniors.",
+      note:"Picks are published; the eligible pool (about 6,500 to 7,500 men) is estimated from NCAA participation. Women's figure is modeled from reported signings.",
+      src:[["2026 MLS SuperDraft","https://en.wikipedia.org/wiki/2026_MLS_SuperDraft"],["AP on NWSL without a draft","https://www.knkx.org/sports/2025-02-03/would-be-pro-soccer-players-navigate-nwsl-futures-without-a-college-draft"]] },
+    "draft|pro": { lvl:"B", pop:"2026 MLS SuperDraft picks", period:"as of Mar 2026", rate:12,
+      line:"12 of 100 SuperDraft picks (11 of 90) had signed an MLS first-team contract by March 2026.",
+      note:"Partial-season tally; signings continue through the year.",
+      src:[["2026 MLS SuperDraft","https://en.wikipedia.org/wiki/2026_MLS_SuperDraft"],["Spotrac recap","https://www.spotrac.com/news/_/id/3188/mls-superdraft-recap"]] },
+    "draft|semipro": { lvl:"B", pop:"2026 MLS SuperDraft picks", period:"as of Mar 2026", rate:39,
+      line:"39 of 100 SuperDraft picks signed in the second or third tier instead: 32 of 90 with MLS NEXT Pro or USL League One, 3 with USL Championship.",
+      note:"Most drafted players start below the first team.",
+      src:[["2026 MLS SuperDraft","https://en.wikipedia.org/wiki/2026_MLS_SuperDraft"]] },
+    "academy|pro": { lvl:"C", pop:"players in the 30 MLS academies (U15 to U19)", period:"2022-2025", range:[5,15],
+      line:"Somewhere between 5 and 15 of 100 MLS academy players get professional minutes with MLS NEXT Pro. 1,300+ academy players have appeared since 2022, and 200 MLS NEXT Pro players have signed MLS first-team deals in four seasons.",
+      note:"Numerators are published; the academy pool (roughly 1,000 to 1,500 listed players at a time) is modeled from the 35-per-club limit. The other 243 Elite Academies are not in this 100.",
+      src:[["MLS NEXT Pro: 200 signings","https://www.mlsnextpro.com/news/from-mls-next-pro-to-mls-200-first-team-signings"],["MLS Player Development Guidelines","https://matchcenter.mlsnextpro.com/news/mls-announces-updates-to-player-development-guidelines"]] },
+    "bridge|pro": { lvl:"C", pop:"all MLS NEXT players", period:"2026", range:[0.05,0.2],
+      line:"Fewer than 1 of 100 MLS NEXT players sign an MLS Homegrown contract: 30 Homegrown debuts in 2026 so far against 43,000+ players, and 483 since 2008.",
+      note:"Most MLS NEXT players are not in an MLS academy; the rate for the 30 MLS academies is far higher (see Academy Place to Pro Contract).",
+      src:[["MLS NEXT 2026-27 season","https://www.mlssoccer.com/news/mls-next-kicks-off-seventh-season-developing-the-next-generation-of-stars"],["MLS NEXT 2025-26","https://www.mlssoccer.com/news/mls-next-unveils-names-of-new-competition-tiers-ahead-of-2025-26-season"]] },
+    "choose|bridge": { lvl:"C", pop:"US Youth Soccer registered players (boys)", period:"2025-26", range:[1,2],
+      line:"About 1 to 2 of 100 registered youth players are in MLS NEXT (43,000+ players against 2.68 million US Youth Soccer registrations). The girls' side is unknown: ECNL and Girls Academy publish club counts, not players.",
+      note:"Registrations overlap across bodies, so the 100 is approximate.",
+      src:[["MLS NEXT 2025-26","https://www.mlssoccer.com/news/mls-next-unveils-names-of-new-competition-tiers-ahead-of-2025-26-season"],["US Youth Soccer","https://www.usyouthsoccer.org/newstag/partners"]] },
+    "play|g1": { lvl:"C", pop:"children who played soccer in the year", period:"2025", range:[35,50],
+      line:"Roughly 35 to 50 of 100 children who play soccer are registered with a sanctioning body (2.68 million US Youth Soccer, about 600,000 US Club, against roughly 7 million kids 6 to 17 who played).",
+      note:"Registrations overlap and include recreational programs, so the share in competitive club play is lower.",
+      src:[["US Youth Soccer","https://www.usyouthsoccer.org/newstag/partners"],["Aspen State of Soccer via YSBR","https://youthsportsbusinessreport.com/?p=20141"]] },
+    "pickup|sunday": { lvl:"C", pop:"adults who play outdoor soccer", period:"2024-25", range:[1.5,2.5],
+      line:"About 2 of 100 adults who play soccer are registered in an adult league (229,698 USASA registrations against roughly 11 million adult outdoor players). Almost all adult soccer is pickup and unregistered.",
+      note:"Adult share of the 16.8 million outdoor players is estimated from SFIA age bands.",
+      src:[["USASA 2024 registrations","https://usadultsoccer.com/wp-content/uploads/2025/02/2025-AGM-Voting-Report-with-2024-numbers.pdf"],["SFIA soccer hub","https://sfia.org/u-s-soccer-participation-data/"]] },
+    "sunday|masters": { lvl:"C", pop:"adult outdoor soccer players by age", period:"2018 to 2025", trend:"35 to 44: +118%; 45 to 54: +247%",
+      line:"Adults are coming back. Outdoor soccer play among 35 to 44 year olds grew 118% from 2018 to 2025, and 247% among 45 to 54 year olds.",
+      note:"Growth, not a rate. SFIA reads this as re-entry by the first youth-soccer generation.",
+      src:[["SFIA Soccer Spotlight 2026 (via SGB)","https://sgbonline.com/exec-sfia-sees-ripe-conditions-for-soccer-participation-surge-post-world-cup/"]] },
+    "you|play": { lvl:"C", pop:"American children", period:"2025", rate:21, alt:{ label:"ages 6 to 17 who played soccer in the past year", rate:14 },
+      line:"21 of 100 six-year-olds play soccer, more than any other sport, and the share falls every year after. Across ages 6 to 17, 14 of 100 played in the past year.",
+      note:"Entry is the one road soccer wins. Retention is the problem.",
+      src:[["SFIA data via Aspen / YSBR 2025","https://youthsportsbusinessreport.com/?p=29713"],["Aspen State of Soccer 2026 via YSBR","https://youthsportsbusinessreport.com/?p=20141"]] }
+  };
+  Object.entries(EV).forEach(([k,e]) => { const [from,to] = k.split("|"); const nk = rkey(from,to); EVK[nk] = Object.assign({ k:nk, from, to }, e); });
+  const FACTS = [
+    { keys:["how many kids play","how many children play","how many play soccer","how many americans play","participation"], h:"How many people play soccer in the U.S.?", body:"16.8 million Americans aged 6 and over played outdoor soccer in 2025, a record, up 15.8% in a year. 6.6 million played indoor. 5.5 million of the outdoor players were children aged 6 to 12.", lvl:"B", src:[["SFIA soccer hub","https://sfia.org/u-s-soccer-participation-data/"]] },
+    { keys:["high school players","how many high school","nfhs"], h:"How many play high school soccer?", body:"877,956 in 2024-25: 484,908 boys at 12,969 schools and 393,048 girls at 12,516 schools.", lvl:"B", src:[["NFHS 2024-25 survey","https://a-us.storyblok.com/f/1022696/x/85a6414d04/2024-25-nfhs-high-school-athletics-participation-survey.pdf"]] },
+    { keys:["how many college","ncaa players","how many ncaa"], h:"How many play NCAA soccer?", body:"28,746 men and 31,200 women in 2024-25. Division III has the most programs (406 men's, 416 women's). NAIA adds about 190 men's and 197 women's programs; 48 of 100 NAIA men are international.", lvl:"B", src:[["NCAA Research, Mar 2026","https://ncaaorg.s3.amazonaws.com/research/pro_beyond/RES_ProbabilityBeyondHSFiguresMethod.pdf"],["RosterWise division counts","https://rosterwise-app.pages.dev/soccer/insights/division-by-numbers/"]] },
+    { keys:["how many mls next","mls next players","academy players"], h:"How big is MLS NEXT?", body:"273 clubs, 2,189 teams and 43,000+ players in 2025-26; 318 clubs and 53,000+ players in 2026-27. 30 of those clubs are MLS academies.", lvl:"B", src:[["MLS NEXT 2025-26","https://www.mlssoccer.com/news/mls-next-unveils-names-of-new-competition-tiers-ahead-of-2025-26-season"],["MLS NEXT 2026-27","https://www.soccerwire.com/news/mls-next-announces-new-clubs-and-conferences-ahead-of-2026-27-season/"]] },
+    { keys:["cost","how much does","expensive","afford","price"], h:"What does youth soccer cost?", body:"$910 a year on average per child (Aspen, 2025). 26.9 of 100 participants say out-of-pocket cost has changed how they take part. The gap in regular play between the highest and lowest income tiers widened to 24.8 points in 2025.", lvl:"B", src:[["Aspen State of Play 2025","https://projectplay.org/state-of-play-2025/participation-trends"],["SFIA mid-year 2026 via SGB","https://sgbonline.com/exec-u-s-sports-and-fitness-participation-reaches-record-high-boosted-by-team-sports/"]] },
+    { keys:["quit","drop out","dropout","stop playing","retention","leave the game"], h:"When do kids stop playing?", body:"Soccer draws 21 of 100 six-year-olds, then loses share every year after. Regular play among 13 to 17 year olds fell 3% in 2024. Nobody counts the reason at the moment it happens; that is what the season check-in on this site will measure.", lvl:"B", src:[["SFIA data via Aspen / YSBR 2025","https://youthsportsbusinessreport.com/?p=29713"],["Aspen State of Play 2025","https://projectplay.org/state-of-play-2025/participation-trends"]] },
+    { keys:["referee","referees","officiating","officials"], h:"How many referees are there?", body:"About 126,000 U.S. Soccer referee licenses in 2024, almost all grassroots. Secondhand figure from a State Referee Committee workshop slide; no source links referees to a playing history.", lvl:"C", src:[["Referee workforce figure","https://redlib.hyperreal.coffee/r/Referees/comments/1jdllsg/total_us_referee_workforce_numbers"]] },
+    { keys:["adult league","usasa","sunday league","registered adults"], h:"How many adults play in registered leagues?", body:"229,698 USASA registrations in 2024, plus 22,003 through USSSA. Against about 11 million adult outdoor players, registered league play is about 2 of 100.", lvl:"B", src:[["USASA 2024 registrations","https://usadultsoccer.com/wp-content/uploads/2025/02/2025-AGM-Voting-Report-with-2024-numbers.pdf"]] }
+  ];
+  /* synonyms -> place ids. Longer phrases first. */
+  const SYN = [
+    ["high school varsity","recruit"],["high school","recruit"],["hs ","recruit"],["varsity","recruit"],
+    ["division i","divisions"],["division 1","divisions"],["d1","divisions"],["d2","divisions"],["d3","divisions"],["ncaa","divisions"],["college soccer","divisions"],["play in college","divisions"],["college","divisions"],["naia","divisions"],["university","divisions"],
+    ["walk-on","walkon"],["walk on","walkon"],["transfer","transfer"],["intramural","clubintra"],["college club","clubintra"],["degree","degree"],["graduate","degree"],
+    ["superdraft","draft"],["drafted","draft"],["draft","draft"],["pro trial","draft"],
+    ["mls next pro","pro"],["first team","pro"],["homegrown","pro"],["pro contract","pro"],["go pro","pro"],["turn pro","pro"],["professional","pro"],["mls","pro"],["nwsl","pro"],["pro","pro"],
+    ["academy","academy"],["mls next","academy"],["ecnl","academy"],["girls academy","academy"],
+    ["scholarship","scholar"],["released","released"],["cut from","notpicked"],["get cut","notpicked"],["got cut","notpicked"],["not picked","notpicked"],["not selected","notpicked"],["don't make","notpicked"],["dont make","notpicked"],["tryout","g3"],["try out","g3"],["selection","choose"],
+    ["acl","injury"],["injured","injury"],["injury","injury"],["injuries","injury"],
+    ["money runs out","money"],["can't afford","money"],["cost","money"],["afford","money"],
+    ["geography","geo"],["distance","geo"],["drive","geo"],["burnout","burnout"],["burn out","burnout"],["quit","burnout"],
+    ["sunday league","sunday"],["adult league","sunday"],["adult soccer","sunday"],["adults","sunday",1],["adult","sunday",1],["pickup","pickup"],["pick-up","pickup"],["futsal","futsal"],["over-30","masters"],["over 30","masters"],["masters","masters"],["walking soccer","masters"],
+    ["semi-pro","semipro"],["semi pro","semipro"],["semipro","semipro"],["usl","semipro"],["npsl","semipro"],["upsl","semipro"],
+    ["coach","coaching"],["coaching","coaching"],["referee","referee"],["ref ","referee"],["scout","scouting"],["agent","agency"],["analyst","analysis"],["analytics","analysis"],["media","media"],["club operations","clubops"],["own a club","owner"],["owner","owner"],["league office","league"],["federation","league"],
+    ["recreational","play"],["rec soccer","play"],["rec ","play"],["play for fun","play"],["kids","play",1],["children","play",1],["youth","play",1],["players","play",1],["learn","learn"],["training","learn"],["development","learn"],["compete","test"],["competition","test"],["club soccer","choose"],["club team","choose"],["travel team","choose"],["travel soccer","choose"],["pathway","bridge"]
+  ];
+  const ASK_EXAMPLES = ["What percentage of high school players play in college?","How many drafted players make MLS?","Academy vs high school: which road reaches pro?","How many kids come back after an ACL injury?","What happens to kids who get cut?","How many adults still play?"];
+
+  function parseAsk(q){
+    const s = " " + q.toLowerCase().replace(/[?!.,;:()]/g," ").replace(/\s+/g," ") + " ";
+    const hits = []; // [pos, id]
+    const used = [];
+    SYN.forEach(([k,id,weak]) => { let i = s.indexOf(" " + k); if(i<0) i = s.indexOf(k); if(i<0) return; if(used.some(([a,b]) => i < b && i + k.length > a)) return; used.push([i, i+k.length]); hits.push([i,id,!!weak]); });
+    hits.sort((a,b)=>a[0]-b[0]);
+    // generic words (kids, adults, players) only count when nothing specific was named
+    const strong = hits.filter(h => !h[2]); const use = strong.length ? strong : hits;
+    const ids = []; use.forEach(([,id]) => { if(!ids.includes(id)) ids.push(id); });
+    const fromIdx = s.indexOf(" from "); const compare = /\bvs\b|\bversus\b|\bor\b|\bcompared?\b|\bbetter\b|\bwhich\b/.test(s);
+    let origin = null; if(fromIdx >= 0){ const h = use.find(([pos]) => pos > fromIdx); if(h) origin = h[1]; }
+    if(!origin){ const ofIdx = s.indexOf(" of "); if(ofIdx >= 0){ const h = use.find(([pos]) => pos > ofIdx); if(h && use.length > 1) origin = h[1]; } }
+    return { ids, origin, compare, s };
+  }
+  const roadsTouching = (id) => Object.keys(EVK).filter(k => k.split("|").includes(id));
+  const unknownTouching = (id) => Object.keys(roadGeom).filter(k => k.split("|").includes(id) && !EVK[k] && T[k]);
+  function findAnswers(q){
+    const P = parseAsk(q); const out = { roads:[], facts:[], unknown:[], ids:P.ids };
+    FACTS.forEach(f => { if(f.keys.some(k => P.s.includes(k))) out.facts.push(f); });
+    const ids = P.ids; const add = (arr,k) => { if(!arr.includes(k)) arr.push(k); };
+    if(ids.length >= 2){
+      // direct roads between any two mentioned places, measured or not
+      for(let i=0;i<ids.length;i++) for(let j=i+1;j<ids.length;j++){ const k = rkey(ids[i], ids[j]); if(EVK[k]) add(out.roads,k); else if(roadGeom[k]) add(out.unknown,k); }
+      // comparison, or nothing direct: every measured road touching each place
+      if(P.compare || out.roads.length === 0){ ids.forEach(a => roadsTouching(a).forEach(k => add(out.roads,k))); }
+      // a named place with no evidence at all gets its unknown roads listed, so the gap is visible
+      ids.forEach(a => { if(!roadsTouching(a).length) unknownTouching(a).slice(0,4).forEach(k => add(out.unknown,k)); });
+    } else if(ids.length === 1){
+      roadsTouching(ids[0]).forEach(k => add(out.roads,k));
+      if(!out.roads.length) unknownTouching(ids[0]).slice(0,6).forEach(k => add(out.unknown,k));
+    }
+    return out;
+  }
+  const fmtRate = (v) => v < 1 ? (v < 0.1 ? "under 0.1" : v.toFixed(1)) : (v >= 10 ? Math.round(v) : (Math.round(v*10)/10)).toString();
+  function evCard(k, highlight){
+    const e = EVK[k]; const A = byId[e.from], B = byId[e.to];
+    let big = "", bar = "";
+    if(e.rate != null){ big = `<div class="big">${fmtRate(e.rate)}<small>of 100 ${e.pop}</small></div><div class="bar"><i style="width:${Math.min(100,e.rate)}%"></i></div>`; }
+    else if(e.men != null){ big = `<div class="big">${fmtRate(e.men)} <small>of 100 boys</small> &nbsp; ${fmtRate(e.women)} <small>of 100 girls</small></div><div class="bar"><i style="width:${Math.min(100,e.men)}%"></i></div><div class="bar"><i style="width:${Math.min(100,e.women)}%"></i></div>`; }
+    else if(e.range){ big = `<div class="big">${fmtRate(e.range[0])} to ${fmtRate(e.range[1])}<small>of 100 ${e.pop}</small></div><div class="bar"><i class="rng" style="width:${Math.min(100,e.range[1])}%"></i></div>`; }
+    else if(e.trend){ big = `<div class="big" style="font-size:20px">${e.trend}</div>`; }
+    const srcs = e.src.map(([t,u]) => `<a href="${u}" target="_blank" rel="noopener">${t}</a>`).join(" · ");
+    return `<div class="ans${highlight?" hi":""}"><h3>${A.t} → ${B.t}<span class="lvl ${e.lvl}">${e.lvl}</span></h3>${big}<p style="margin:6px 0 4px;font-size:14px;line-height:1.5">${e.line}</p><div class="meta">${e.note ? e.note + "<br>" : ""}Period: ${e.period}. Sources: ${srcs}</div><button class="go" data-road="${k}">Show this road on the map →</button></div>`;
+  }
+  function unknownCard(k){
+    const g = roadGeom[k]; const A = byId[g.a], B = byId[g.b];
+    return `<div class="ans unknown"><h3>${A.t} → ${B.t}<span class="lvl D">D</span></h3><p style="margin:6px 0 4px;font-size:14px;line-height:1.5">Nobody has measured this road. No federation, league or survey counts how many people take it. It stays open on the map, and the season check-in on this site is how it gets measured.</p><button class="go" data-road="${k}">Show this road on the map →</button></div>`;
+  }
+  function factCard(f){ const srcs = f.src.map(([t,u]) => `<a href="${u}" target="_blank" rel="noopener">${t}</a>`).join(" · "); return `<div class="ans"><h3>${f.h}<span class="lvl ${f.lvl}">${f.lvl}</span></h3><p style="margin:6px 0 4px;font-size:14px;line-height:1.5">${f.body}</p><div class="meta">Sources: ${srcs}</div></div>`; }
+  function answer(q){
+    q = (q||"").trim(); if(!q) return; Snd.tick && Snd.tick();
+    const r = findAnswers(q);
+    card.style.setProperty("--c", "#9ccfff"); $("#crumb").textContent = "Ask the map";
+    let html = `<h2 style="font-size:20px">${q.replace(/</g,"&lt;")}</h2>`;
+    const n = r.roads.length + r.facts.length;
+    if(!n && !r.unknown.length){
+      html += `<p class="short">I couldn't match that to a place on the map. Try naming two places, like high school and college, or academy and pro.</p><div class="sec"><h4>Try one of these</h4>${ASK_EXAMPLES.map(x => `<button class="go" data-q="${x}" style="display:block;text-align:left;margin:4px 0">${x}</button>`).join("")}</div>`;
+    } else {
+      if(r.roads.length > 1) html += `<p class="short">${r.roads.length} measured roads match. Each number is "of 100" of the named group, with its evidence level.</p>`;
+      r.roads.forEach((k,i) => html += evCard(k, i===0));
+      r.facts.forEach(f => html += factCard(f));
+      r.unknown.forEach(k => html += unknownCard(k));
+      html += `<p style="font-size:12px;color:var(--muted);margin-top:10px">Levels: A observed cohort · B published counts · C modeled with stated assumptions · D unknown. Heavy traffic is not a better road. Group numbers do not predict one person.</p>`;
+    }
+    cardBody.innerHTML = html; cardBody.scrollTop = 0;
+    cardBody.querySelectorAll("[data-road]").forEach(b => b.addEventListener("click", () => { const k = b.dataset.road; const g = roadGeom[k]; if(!g) return; flyTo((g.ax+g.bx)/2, (g.ay+g.by)/2, Math.max(state.zoom, 0.7)); openRoad(k); }));
+    cardBody.querySelectorAll("[data-q]").forEach(b => b.addEventListener("click", () => { $("#askIn").value = b.dataset.q; answer(b.dataset.q); }));
+    card.classList.add("open"); document.body.classList.add("cardopen");
+    if(typeof track==="function") track("ask", { q: q.slice(0,120), roads: r.roads.length, facts: r.facts.length, unknown: r.unknown.length });
+  }
+  $("#askForm").addEventListener("submit", e => { e.preventDefault(); answer($("#askIn").value); });
+  $("#askChips").innerHTML = ASK_EXAMPLES.slice(0,4).map(x => `<button type="button">${x}</button>`).join("");
+  $("#askChips").querySelectorAll("button").forEach(b => b.addEventListener("click", () => { $("#askIn").value = b.textContent; answer(b.textContent); }));
+  window.sjAsk = answer;
+  Object.keys(EVK).forEach(k => { if(paths[k]) paths[k].classList.add("ev"); });
+
+  // reseed when lite toggles (orientation) and restore preference
+  new MutationObserver(() => { if(on) seed(); }).observe(document.body, { attributes:true, attributeFilter:["class"] });
+  setMode(tmode);
+  if(store.get("sj.traffic", false)) setTraffic(true);
+})();
+</script>
+<script>
+/* =====================================================================
+   SEASON CHECK-IN
+   Same dot, next season. Four or five taps. The trail between seasons
+   stays on the board. Records to sj.checkins by the journey's public key.
+   ===================================================================== */
+(function(){
+  const CQ_ALL = [
+    { id:"change", q:"Since last time, what changed?", opts:[["same","Same place, still going"],["picked","Picked. Made the team or got the offer"],["notpicked","Not picked. Cut, or no offer came"],["released","Released. Was backed, isn't anymore"],["injured","Injured"],["stopped","Stopped playing organized soccer"],["adult","Playing adult or pickup soccer now"],["role","Coaching, refereeing or another role now"]] },
+    { id:"reason", q:"What was the main reason?", when: a => a.change === "stopped", opts:[["cost","Cost"],["distance","Distance"],["interest","Lost interest"],["school","School came first"],["family","Family"],["injury","Injury"],["other","Something else"]] },
+    { id:"age",    q:"How old is the player now?", opts:[["6-9","6 to 9"],["10-12","10 to 12"],["13-15","13 to 15"],["16-18","16 to 18"],["19-22","19 to 22"],["23+","23 and up"]] },
+    { id:"fn",     q:"Where is the player mostly, right now?", when: a => !["stopped","role"].includes(a.change), opts:[["play","Playing for fun. Rec, pickup, the backyard."],["test","Competing. A team, a league, games that count."],["learn","Training to get better. Sessions, reps, a trainer."],["choose","In a selection stretch. Tryouts, ID camps, recruiting."],["bridge","Backed. A club or school is covering the cost."],["none","Not playing right now"]] },
+    { id:"intend", q:"Planning to try out or move up next season?", opts:[["yes","Yes"],["no","No"],["notsure","Not sure yet"]] }
+  ];
+  const C = { i:0, a:{}, qs:[] };
+  const activeQs = () => CQ_ALL.filter(q => !q.when || q.when(C.a));
+  const jboxTitle = () => $("#journey .jtop span:nth-child(2)");
+  const SEASON_MS = 90 * 24 * 3600 * 1000;
+
+  function seasonsOf(){ const j = state.journey; if(!j) return []; if(!j.seasons || !j.seasons.length){ j.seasons = [{ season:1, at:j.at, pos:j.derived.pos, answers:j.answers }]; } return j.seasons; }
+  const fmtDate = (t) => new Date(t).toLocaleDateString(undefined, { month:"short", year:"numeric" });
+
+  function posAfter(prev, a){
+    const fn = a.fn && a.fn !== "none" ? a.fn : prev.fn;
+    switch(a.change){
+      case "picked": return fn === "bridge" ? "bridge" : fn;
+      case "notpicked": return "notpicked";
+      case "released": return "released";
+      case "injured": return "injury";
+      case "stopped": return { cost:"money", distance:"geo", interest:"burnout", injury:"injury" }[a.reason] || "g4";
+      case "adult": return (a.age === "19-22" || a.age === "23+") ? "sunday" : "pickup";
+      case "role": return prev.who === "parent" ? "coachkid" : "coaching";
+      default: { const a2 = Object.assign({}, prev, { age:a.age, fn }); return deriveJourney(a2).pos; }
+    }
+  }
+
+  window.openCheckin = function(){
+    if(!state.journey){ openJourney(); return; }
+    C.i = 0; C.a = {}; closeCard(); $("#mine").classList.remove("open"); $("#intro").classList.add("hide");
+    jEl.classList.remove("hide"); jEl.classList.add("checkin"); jboxTitle().textContent = "Season check-in"; renderCQ(); track("checkin_start");
+  };
+  function renderCQ(){
+    C.qs = activeQs(); const q = C.qs[C.i]; const last = seasonsOf().slice(-1)[0]; const ln = byId[last.pos];
+    $("#jq").textContent = q.q;
+    let lastLine = $("#journey .jlast"); if(!lastLine){ lastLine = document.createElement("div"); lastLine.className = "jlast"; $("#jq").after(lastLine); }
+    lastLine.innerHTML = `Last time (${fmtDate(last.at)}): the dot was at <b>${ln ? ln.t : last.pos}</b>.`;
+    $("#jopts").innerHTML = q.opts.map(([v,l]) => `<button data-v="${v}" class="${C.a[q.id]===v?"on":""}">${l}</button>`).join("");
+    $("#jdots").innerHTML = C.qs.map((_,k) => `<i class="${k===C.i?"on":k<C.i?"done":""}"></i>`).join("");
+    $("#jback").style.visibility = C.i ? "visible" : "hidden";
+    $("#jstep").textContent = `${C.i+1} of ${C.qs.length}`;
+    $("#jopts").querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+      Snd.click(); C.a[q.id] = b.dataset.v; C.qs = activeQs();
+      const idx = C.qs.findIndex(x => x.id === q.id);
+      if(idx < C.qs.length - 1){ C.i = idx + 1; renderCQ(); } else finishCheckin();
+    }));
+  }
+  // route the shared Back / Close buttons when in check-in mode
+  $("#jback").addEventListener("click", (e) => { if(!jEl.classList.contains("checkin")) return; e.stopImmediatePropagation(); if(C.i > 0){ C.i--; renderCQ(); } }, true);
+  $("#jclose").addEventListener("click", () => { if(jEl.classList.contains("checkin")){ jEl.classList.remove("checkin"); jboxTitle().textContent = "Build my journey"; const l = $("#journey .jlast"); if(l) l.remove(); } });
+  const _openJourney = window.openJourney; window.openJourney = function(){ jEl.classList.remove("checkin"); jboxTitle().textContent = "Build my journey"; const l = $("#journey .jlast"); if(l) l.remove(); return _openJourney.apply(this, arguments); };
+
+  function finishCheckin(){
+    const j = state.journey; const prev = j.answers; const a = C.a; const seasons = seasonsOf(); const from = seasons.slice(-1)[0].pos;
+    const fn = a.fn && a.fn !== "none" ? a.fn : prev.fn;
+    const recent = { picked:"picked", notpicked:"notpicked", released:"released" }[a.change] || prev.recent;
+    const a2 = Object.assign({}, prev, { age:a.age, fn, recent });
+    const d2 = deriveJourney(a2); d2.pos = posAfter(prev, a);
+    if(a.change === "injured" && !d2.attrs.includes("body")) d2.attrs.push("body");
+    if(["notpicked","released","stopped","injured"].includes(a.change) && !d2.attrs.includes("losing")) d2.attrs.push("losing");
+    const season = { season: seasons.length + 1, at: Date.now(), pos: d2.pos, from, change: a.change, reason: a.reason || null, intend: a.intend || null, answers: a2 };
+    seasons.push(season); j.answers = a2; j.derived = d2; j.at = Date.now();
+    d2.attrs.forEach(id => state.attrs.add(id)); renderCarry();
+    jEl.classList.add("hide"); jEl.classList.remove("checkin"); jboxTitle().textContent = "Build my journey"; const l = $("#journey .jlast"); if(l) l.remove();
+    Snd.whoosh(); track("checkin_complete", { season: season.season, change: a.change, reason: a.reason || "", from, to: d2.pos });
+    recordCheckin(season); drawSeasonTrails(); persist();
+    const n = byId[d2.pos];
+    travel(d2.pos, () => {
+      state.visited.add(d2.pos); $("#n_"+d2.pos).classList.add("visited"); if(!state.path.includes(d2.pos)) state.path.push(d2.pos);
+      state.current = d2.pos; lightRoads(); showRoadsFor(d2.pos); drawSeasonTrails();
+      d2.open.forEach(id => { const el = $("#n_"+id); if(el) el.classList.add("hilite"); });
+      renderJourneyCard(); card.classList.add("open"); document.body.classList.add("cardopen"); persist();
+      const { ox, oy } = camOffsets(); world.classList.add("fly"); state.px = (W/2 - n.x) - ox; state.py = (H/2 - n.y) - oy; clampCam(); applyCam();
+      setTimeout(() => world.classList.remove("fly"), 850); setTimeout(() => Snd.chime(), 300);
+    });
+  }
+  window.drawSeasonTrails = function(){
+    document.querySelectorAll("#roads path.road.season").forEach(p => p.classList.remove("season"));
+    const seasons = state.journey && state.journey.seasons; if(!seasons || seasons.length < 2) return;
+    for(let i=1;i<seasons.length;i++){ const path = findPath(seasons[i-1].pos, seasons[i].pos); if(!path) continue; for(let k=1;k<path.length;k++){ const el = document.querySelector(`#roads path.road[data-k="${rkey(path[k-1], path[k])}"]:not(.hit)`); if(el) el.classList.add("season"); } }
+  };
+  async function recordCheckin(season){
+    const j = state.journey; if(!j.key) return;
+    try{ const t = await sjCall("sj_checkin", { a: { key: j.key, change: season.change, reason: season.reason, age: season.answers.age, fn: (C.a.fn || season.answers.fn || "none"), intend: season.intend, pos: season.pos, src: SRC.first } }); renderTotals(t); }catch(e){}
+  }
+
+  /* ----- journey card additions: season timeline, check-in button, email nudge ----- */
+  const _renderJourneyCard = window.renderJourneyCard;
+  window.renderJourneyCard = function(){
+    _renderJourneyCard.apply(this, arguments);
+    const j = state.journey; if(!j) return; const seasons = seasonsOf(); const a = j.answers;
+    // timeline
+    if(seasons.length > 1){
+      const items = seasons.map(sn => { const n = byId[sn.pos]; const why = sn.change ? ({ same:"Same place", picked:"Picked", notpicked:"Not picked", released:"Released", injured:"Injured", stopped:"Stopped" + (sn.reason ? " · " + ({cost:"cost",distance:"distance",interest:"lost interest",school:"school",family:"family",injury:"injury",other:"other"}[sn.reason]) : ""), adult:"Adult game", role:"New role" })[sn.change] : "Mapped"; return `<div class="sn" style="--c:${n ? (n.c||REGIONS[n.r].color) : "#fff"}"><i>${sn.season}</i><div><b>${n ? n.t : sn.pos}</b><span>Season ${sn.season} · ${fmtDate(sn.at)} · ${why}</span></div></div>`; }).join("");
+      const sec = document.createElement("div"); sec.className = "sec"; sec.innerHTML = `<h4>The dot, season by season</h4><div class="seasons">${items}</div>`;
+      const jpos = cardBody.querySelector(".jpos"); if(jpos) jpos.after(sec); else cardBody.appendChild(sec);
+    }
+    // check-in button
+    const actions = cardBody.querySelector(".jactions");
+    if(actions){ const b = document.createElement("button"); b.className = "btn"; b.id = "checkinJ"; b.textContent = seasons.length > 1 ? "Next season check-in" : "Season check-in"; b.title = "Where is the dot now? Four or five taps."; b.addEventListener("click", () => { Snd.click(); openCheckin(); }); actions.insertBefore(b, actions.querySelector("#updateJ")); }
+    // email nudge
+    const minorPlayer = a.who === "player" && !["19-22","23+"].includes(a.age);
+    const box = document.createElement("div"); box.className = "nudge" + (j.subscribed ? " done" : "");
+    if(j.subscribed){ box.innerHTML = `<h4>Next season</h4><p>You'll get one note when the season turns, with a link that brings this dot back. Nothing else.</p>`; }
+    else if(minorPlayer){ box.innerHTML = `<h4>Come back next season</h4><p>The dot moves. If a parent adds their email on their device, they'll get one note when the season turns.</p><p class="fine">Players under 18 don't give an email here.</p>`; }
+    else { box.innerHTML = `<h4>Come back next season</h4><p>One note when the season turns, with a link that brings this dot back on any device.</p><form id="nudgeForm"><input type="email" id="nudgeEmail" placeholder="your@email.com" required autocomplete="email"><button type="submit">Remind me</button></form><p class="fine">Email only, no name. One note a season. Unsubscribe in one click.</p>`; }
+    const tiny = cardBody.querySelector("p.tiny"); if(tiny) tiny.before(box); else cardBody.appendChild(box);
+    const f = $("#nudgeForm"); if(f) f.addEventListener("submit", async e => { e.preventDefault(); const em = $("#nudgeEmail").value.trim(); if(!em) return; if(!j.key){ box.querySelector("p.fine").textContent = "Saving your dot first; try again in a moment."; return; } try{ await sjCall("sj_subscribe", { k: j.key, e: em }); j.subscribed = true; persist(); box.className = "nudge done"; box.innerHTML = `<h4>Next season</h4><p>Done. One note when the season turns, with a link back to this dot.</p>`; track("subscribe", {}); }catch(err){ box.querySelector("p.fine").textContent = "That email didn't go through. Check it and try again."; } });
+    // link to this dot
+    if(j.key){ const p = document.createElement("p"); p.className = "tiny"; p.innerHTML = `This dot has its own link: <a href="https://soccersjourney.com/?j=${j.key}" style="color:#9ccfff">soccersjourney.com/?j=${j.key.slice(0,8)}…</a> · opens it on any device`; const t2 = cardBody.querySelector("p.tiny"); if(t2) t2.after(p); }
+  };
+
+  /* ----- record the key when a journey is saved ----- */
+  const _recordJourney = window.recordJourney;
+  window.recordJourney = async function(a, pos){
+    try{ const t = await sjCall("sj_journey", { a: Object.assign({}, a, { pos, src: SRC.first }) }); renderTotals(t); if(state.journey){ state.journey.n = t.journeys; if(t.key) state.journey.key = t.key; seasonsOf(); persist(); if(card.classList.contains("open") && $("#crumb").textContent === "Your journey") renderJourneyCard(); } }catch(e){}
+  };
+
+  /* ----- arrival: ?j=<key> restores a dot; a dot older than a season opens the check-in ----- */
+  const JKEY = (() => { try{ const q = new URLSearchParams(location.search); const k = q.get("j"); if(k){ q.delete("j"); history.replaceState(null, "", location.pathname + (q.toString() ? "?" + q : "") + location.hash); } return k && /^[0-9a-f-]{36}$/i.test(k) ? k : null; }catch(e){ return null; } })();
+  const FORCE = /[?&]checkin=1/.test(location.search);
+  async function arrive(){
+    if(JKEY && !(state.journey && state.journey.key === JKEY)){
+      try{
+        const r = await sjCall("sj_journey_get", { k: JKEY });
+        if(r && r.answers){
+          const d = deriveJourney(r.answers); d.pos = r.pos || d.pos;
+          const seasons = [{ season:1, at: Date.parse(r.at), pos: r.pos, answers: r.answers }];
+          (r.checkins||[]).forEach(ci => seasons.push({ season: ci.season, at: Date.parse(ci.at), pos: ci.pos, from: seasons.slice(-1)[0].pos, change: ci.change, reason: ci.reason, intend: ci.intend, answers: Object.assign({}, r.answers, { age: ci.age, fn: ci.fn === "none" ? r.answers.fn : ci.fn }) }));
+          const last = seasons.slice(-1)[0];
+          state.journey = { answers: last.answers, derived: Object.assign(deriveJourney(last.answers), { pos: last.pos }), at: last.at, key: JKEY, seasons, subscribed: !!r.has_contact };
+          d.attrs.forEach(id => state.attrs.add(id)); renderCarry(); restoreJourney(); persist();
+          $("#intro").classList.add("hide"); drawSeasonTrails();
+          travel(last.pos, () => { state.current = last.pos; showRoadsFor(last.pos); drawSeasonTrails(); openCheckin(); });
+          return;
+        }
+      }catch(e){}
+    }
+    if(state.journey){
+      drawSeasonTrails();
+      if(FORCE || (Date.now() - (state.journey.at||0) > SEASON_MS)){ $("#intro").classList.add("hide"); setTimeout(openCheckin, 600); }
+    }
+  }
+  setTimeout(arrive, 300);
+})();
+</script>
 </body>
 </html>
