@@ -6,3 +6,5 @@ Static site for soccersjourney.com. One page, no build step.
 - `og.jpg` is the link preview image, `icon.png` the home-screen icon.
 
 Deploys to Vercel automatically on push to `main`.
+
+Live at https://soccersjourney.com
