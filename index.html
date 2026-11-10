@@ -418,6 +418,15 @@ body.lite #roads path.road.lit, body.lite #roads path.road.trail{animation:none}
 #credits .cnt{color:#fff;font-weight:600;margin-right:4px}
 #credits .cnt[hidden]{display:none}
 #credits .cnt b{font-variant-numeric:tabular-nums}
+
+/* ---------- tooltips ---------- */
+#tip{position:fixed;z-index:60;pointer-events:none;padding:7px 11px;border-radius:10px;background:rgba(10,14,34,.96);border:1px solid rgba(255,255,255,.16);color:#fff;font-size:12.5px;font-weight:500;white-space:nowrap;box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;transform:translateY(4px);transition:opacity .15s,transform .15s}
+#tip.on{opacity:1;transform:none}
+#tip::after{content:"";position:absolute;width:8px;height:8px;background:inherit;border:inherit;border-right:0;border-bottom:0;transform:rotate(45deg)}
+#tip.below::after{top:-5px;left:50%;margin-left:-4px}
+#tip.above::after{bottom:-5px;left:50%;margin-left:-4px;transform:rotate(225deg)}
+#tip.left::after{right:-5px;top:50%;margin-top:-4px;transform:rotate(135deg)}
+@media (hover:none){#tip{display:none}}
 </style>
 </head>
 <body class="no-select">
@@ -428,9 +437,9 @@ body.lite #roads path.road.lit, body.lite #roads path.road.trail{animation:none}
   <nav class="links" aria-label="Links"><a href="https://www.instagram.com/jeremiahwhiteiii/" target="_blank" rel="noopener">@jeremiahwhiteiii</a><a href="https://www.wsvlabs.com" target="_blank" rel="noopener">WSV Labs</a><a href="https://www.whitesportventures.com" target="_blank" rel="noopener">White Sports Ventures</a></nav>
   <div class="tools">
     <button class="btn icon" id="journeyBtn" title="Build my journey">⌖</button>
-    <button class="btn icon" id="shareBtn" title="Share">↗</button>
-    <button class="btn icon" id="mineBtn" title="Your map">◎</button>
-    <button class="btn icon" id="sndBtn" title="Sound">♪</button>
+    <button class="btn icon" id="shareBtn" title="Share my journey">↗</button>
+    <button class="btn icon" id="mineBtn" title="Your map: path and attributes">◎</button>
+    <button class="btn icon" id="sndBtn" title="Sound on / off">♪</button>
     <button class="btn icon" id="helpBtn" title="How this works">?</button>
   </div>
 </header>
@@ -456,6 +465,7 @@ body.lite #roads path.road.lit, body.lite #roads path.road.trail{animation:none}
   </div>
 </div>
 
+<div id="tip" role="tooltip"></div>
 <div id="hint">Drag to move · scroll or pinch to zoom · click anywhere and you travel there · gold = an institution bears the risk</div>
 <nav id="regions" aria-label="Territories"></nav>
 <footer id="credits"><span class="cnt" id="counterFoot" hidden><b data-n="journeys">0</b> journeys mapped ·</span> Soccer's Journey · The Five Functions · <a href="https://www.instagram.com/jeremiahwhiteiii/" target="_blank" rel="noopener">Jeremiah White III · @jeremiahwhiteiii</a> · <a href="https://www.wsvlabs.com" target="_blank" rel="noopener">WSV Labs</a> · <a href="https://www.whitesportventures.com" target="_blank" rel="noopener">White Sports Ventures</a></footer>
@@ -467,7 +477,7 @@ body.lite #roads path.road.lit, body.lite #roads path.road.trail{animation:none}
 
 <div id="viewtools">
   <button class="btn icon" id="trailBtn" title="Show or hide your trail">≈</button>
-  <button class="btn icon" id="tiltBtn" title="Flat / 3D">◩</button>
+  <button class="btn icon" id="tiltBtn" title="Flat view / 3D view">◩</button>
   <button class="btn icon" id="zinBtn" title="Zoom in">+</button>
   <button class="btn icon" id="zoutBtn" title="Zoom out">−</button>
   <button class="btn icon" id="homeBtn" title="Back to the field">⌂</button>
@@ -1457,7 +1467,7 @@ $("#jclose").addEventListener("click", () => { Snd.click(); jEl.classList.add("h
 
 function finishJourney(){
   const a = J.answers; const d = deriveJourney(a);
-  state.journey = { answers: a, derived: d, at: Date.now() };
+  state.journey = { answers: a, derived: d, at: Date.now() }; restoreJourney();
   d.attrs.forEach(id => state.attrs.add(id)); renderCarry(); persist();
   jEl.classList.add("hide"); Snd.whoosh(); track("journey_complete", { pos: d.pos, age: a.age, who: a.who, recent: a.recent }); recordJourney(a, d.pos);
   const n = byId[d.pos];
@@ -1540,7 +1550,7 @@ $("#shareDl").addEventListener("click", () => track("share_done", { how:"downloa
 /* ---------- entry points ---------- */
 $("#journeyBtn").addEventListener("click", () => { Snd.click(); if(state.journey){ const d = state.journey.derived; openNode(d.pos); setTimeout(() => { if(state.current === d.pos) renderJourneyCard(); }, 2600); } else openJourney(); });
 $("#shareBtn").addEventListener("click", () => { Snd.click(); shareJourney(); });
-function restoreJourney(){ $("#journeyBtn").title = state.journey ? "Your journey" : "Build my journey"; }
+function restoreJourney(){ const b = $("#journeyBtn"); const t = state.journey ? "Your journey: back to your dot" : "Build my journey"; b.removeAttribute("title"); b.dataset.tip = t; }
 restoreJourney();
 
 /* =====================================================================
@@ -1564,6 +1574,32 @@ function renderTotals(t){
 }
 (async () => { try{ const key = "sj.hit." + new Date().toISOString().slice(0,10); const already = store.get(key, false); const t = already ? await sjCall("sj_totals") : await sjCall("sj_hit"); if(!already) store.set(key, true); renderTotals(t); }catch(e){ /* stay hidden */ } })();
 async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", { a: Object.assign({}, a, { pos }) }); renderTotals(t); if(state.journey) { state.journey.n = t.journeys; persist(); } }catch(e){} }
+
+/* ---------- tooltips (hover and keyboard focus; hidden on touch devices) ---------- */
+(function(){
+  const tip = $("#tip"); let timer = null;
+  function labelOf(el){ if(el.title){ el.dataset.tip = el.title; el.removeAttribute("title"); } return el.dataset.tip || ""; }
+  function show(el){
+    const text = labelOf(el); if(!text) return;
+    tip.textContent = text; tip.className = "";
+    const r = el.getBoundingClientRect(); tip.style.left = "0px"; tip.style.top = "0px"; tip.classList.add("on");
+    const w = tip.offsetWidth, h = tip.offsetHeight; let x, y, cls;
+    if(r.right > innerWidth - 160){ cls = "left"; x = r.left - w - 10; y = r.top + r.height/2 - h/2; }
+    else if(r.top < 120){ cls = "below"; x = r.left + r.width/2 - w/2; y = r.bottom + 10; }
+    else { cls = "above"; x = r.left + r.width/2 - w/2; y = r.top - h - 10; }
+    x = Math.max(8, Math.min(innerWidth - w - 8, x)); y = Math.max(8, Math.min(innerHeight - h - 8, y));
+    tip.style.left = x + "px"; tip.style.top = y + "px"; tip.classList.add(cls);
+  }
+  function hide(){ clearTimeout(timer); tip.classList.remove("on"); }
+  document.querySelectorAll("#hud .btn.icon, #viewtools .btn.icon, #carry, #lens .seg button").forEach(el => {
+    if(el.matches("#lens .seg button")) el.dataset.tip = "See every card as the " + el.textContent.toLowerCase();
+    if(el.id === "carry") el.dataset.tip = "Attributes you carry. Tap for your map";
+    el.addEventListener("mouseenter", () => { clearTimeout(timer); timer = setTimeout(() => show(el), 140); });
+    el.addEventListener("mouseleave", hide); el.addEventListener("mousedown", hide);
+    el.addEventListener("focus", () => show(el)); el.addEventListener("blur", hide);
+  });
+  addEventListener("scroll", hide, true);
+})();
 
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
