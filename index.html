@@ -366,6 +366,9 @@ body.cardopen #regions{right:432px;}
 /* ---------- lite mode (phones): fewer and smaller GPU layers ---------- */
 body.lite #board{display:none}
 #boardImg{display:none;position:absolute;left:0;top:0;width:3300px;height:2380px;pointer-events:none;user-select:none;-webkit-user-select:none}
+#pcv{display:none;position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+body.phone #pcv{display:block}
+body.phone #world{display:none !important}
 body.phone #boardImg{display:block}
 body.phone #world, body.phone #world.fly{transition:none !important}
 body.phone *{backdrop-filter:none !important;-webkit-backdrop-filter:none !important}
@@ -658,6 +661,7 @@ body.lite #roads path.road.season{filter:none}
     <div id="nodes"><div id="avatar"><div class="ring"></div><div class="shadow"></div><div class="ball"></div></div></div>
     <div id="signs"></div>
   </div>
+  <canvas id="pcv" aria-hidden="true"></canvas>
 </div>
 
 <div id="tip" role="tooltip"></div>
@@ -1417,7 +1421,7 @@ scene.addEventListener("pointermove", e => {
 function endPtr(e){ drag.pts.delete(e.pointerId); if(drag.pts.size<2){ drag.dist=0; drag.mid=null; } if(drag.pts.size===0){ drag.on=false; scene.classList.remove("dragging"); document.body.classList.remove("gesturing"); try{ scene.releasePointerCapture(e.pointerId); }catch(err){} setTimeout(()=> drag.moved=false, 0); } }
 scene.addEventListener("pointerup", endPtr); scene.addEventListener("pointercancel", endPtr);
 scene.addEventListener("wheel", e => { e.preventDefault(); world.classList.remove("fly"); const f = Math.exp(-e.deltaY*0.0012); const z0 = state.zoom; state.zoom *= f; clampCam(); const z1 = state.zoom; const cos = Math.cos((state.flat?0:state.tilt)*Math.PI/180) || 1; const sx = e.clientX - innerWidth/2, sy = e.clientY - innerHeight/2; state.px += sx*(1/z1 - 1/z0); state.py += (sy/cos)*(1/z1 - 1/z0); clampCam(); applyCam(); $("#hint").classList.add("hide"); }, {passive:false});
-scene.addEventListener("click", e => { if(drag.moved) return; if(e.target===scene || e.target===world || e.target.id==="board") { /* click on empty board closes card */ closeCard(); } });
+scene.addEventListener("click", e => { if(drag.moved) return; if(e.target && e.target.id === "pcv"){ const hit = window.sjCanvasHit ? window.sjCanvasHit(e.clientX, e.clientY) : null; if(hit){ openNode(hit); } else closeCard(); return; } if(e.target===scene || e.target===world || e.target.id==="board") { /* click on empty board closes card */ closeCard(); } });
 
 $("#zinBtn").addEventListener("click", ()=>{ Snd.click(); world.classList.add("fly"); state.zoom*=1.25; clampCam(); applyCam(); });
 $("#zoutBtn").addEventListener("click", ()=>{ Snd.click(); world.classList.add("fly"); state.zoom/=1.25; clampCam(); applyCam(); });
@@ -1629,7 +1633,7 @@ function persist(){ store.set("state", { visited:[...state.visited], attrs:[...s
 function restore(){
   const s = store.get("state", null);
   if(s){ state.visited = new Set(s.visited||[]); state.attrs = new Set(s.attrs||[]); state.path = s.path||[]; state.pov = s.pov||"player"; state.sound = s.sound!==false; state.at = byId[s.at] ? s.at : "you"; state.trail = Array.isArray(s.trail) ? s.trail : []; state.trailOn = s.trailOn !== false; state.journey = (s.journey && s.journey.derived && byId[s.journey.derived.pos]) ? s.journey : null; }
-  if(typeof PHONE !== "undefined" && PHONE) state.flat = true; // phones start flat: the tilted 3D board is what runs iOS Safari out of memory
+  if(typeof PHONE !== "undefined" && PHONE){ state.flat = true; state.px = W/2 - FIELD.x; state.py = H/2 - FIELD.y - 40; } // phones start flat and centred on the Field
   restAvatar(state.at); avatarColor(state.at);
   state.visited.forEach(id => { const el = $("#n_"+id); if(el) el.classList.add("visited"); });
   renderCarry(); lightRoads(); setPov(state.pov); renderSnd(); $("#trailBtn").style.opacity = state.trailOn ? 1 : .5;
@@ -2555,6 +2559,75 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
     }
   }
   setTimeout(arrive, 300);
+})();
+</script>
+
+<script>
+/* ---------- phone renderer: one canvas the size of the screen, drawn from the same state the page already keeps ---------- */
+(function(){
+  if(!document.body.classList.contains("phone")) return;
+  const cv = document.getElementById("pcv"), ctx = cv.getContext("2d", { alpha: false });
+  const img = document.getElementById("boardImg");
+  const DPR = Math.min(devicePixelRatio || 1, 2);
+  let cw = 0, ch = 0, ver = 0, dirty = true;
+  function size(){ cw = innerWidth; ch = innerHeight; cv.width = Math.round(cw*DPR); cv.height = Math.round(ch*DPR); dirty = true; }
+  addEventListener("resize", size); size();
+  // geometry cache for roads
+  const paths = new Map();
+  function path2d(el){ let p = paths.get(el); if(!p){ p = new Path2D(el.getAttribute("d")); paths.set(el, p); } return p; }
+  // what changed: classes on pieces and roads, body flags
+  const mo = new MutationObserver(() => { ver++; dirty = true; });
+  mo.observe(document.getElementById("nodes"), { attributes: true, attributeFilter: ["class"], subtree: true });
+  mo.observe(document.getElementById("roads"), { attributes: true, attributeFilter: ["class"], subtree: true });
+  mo.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+  const origApply = window.applyCamNow; window.applyCamNow = function(){ origApply(); dirty = true; };
+  img.addEventListener("load", () => { dirty = true; });
+  const nodeEls = {}; NODES.forEach(n => { nodeEls[n.id] = document.getElementById("n_"+n.id); });
+  const R = { fn: 70, bridge: 60, gate: 36, place: 33, attr: 30, tryit: 30, break: 36, lens: 33, center: 16 };
+  const radius = (n) => R[n.k] || 33;
+  function cam(){ const z = state.zoom; return { z, ox: cw/2 + z*(state.px - 1650), oy: ch/2 + z*(state.py - 1190) }; }
+  window.sjCanvasHit = function(sx, sy){
+    const { z, ox, oy } = cam(); const wx = (sx - ox)/z, wy = (sy - oy)/z; let best = null, bd = 1e9;
+    NODES.forEach(n => { const d = Math.hypot(n.x - wx, n.y - wy); const r = radius(n) + 14/z; if(d < r && d < bd){ bd = d; best = n.id; } });
+    return best;
+  };
+  let lastSig = "";
+  function draw(){
+    const { z, ox, oy } = cam();
+    const av = avatarEl; const ax = parseFloat(av.style.left)||1300, ay = parseFloat(av.style.top)||850, hop = parseFloat(av.style.getPropertyValue("--hop"))||0, ac = av.style.getPropertyValue("--c") || "#fff";
+    const sig = [z.toFixed(4), ox.toFixed(1), oy.toFixed(1), ax, ay, hop, ac, ver, img.complete].join("|");
+    if(sig === lastSig && !dirty) return; lastSig = sig; dirty = false;
+    ctx.setTransform(1,0,0,1,0,0); ctx.fillStyle = "#070b18"; ctx.fillRect(0,0,cv.width,cv.height);
+    ctx.setTransform(DPR*z, 0, 0, DPR*z, DPR*ox, DPR*oy);
+    if(img.complete && img.naturalWidth) ctx.drawImage(img, 0, 0, 3300, 2380);
+    // roads that are lit
+    const traffic = document.body.classList.contains("traffic");
+    ctx.lineCap = "round";
+    document.querySelectorAll("#roads path.road").forEach(el => {
+      const c = el.classList; let stroke = null, width = 3, dash = null;
+      if(c.contains("season") || c.contains("trail")){ stroke = "#ffd34d"; width = 5; }
+      else if(c.contains("show")){ stroke = "rgba(255,255,255,.55)"; width = 3.5; }
+      else if(c.contains("lit")){ stroke = "rgba(255,255,255,.3)"; width = 3; }
+      else if(traffic && c.contains("tr")){ stroke = c.contains("hit") ? "rgba(255,211,77,.9)" : "rgba(255,255,255,.28)"; width = c.contains("t3") ? 5 : c.contains("t2") ? 4 : c.contains("t1") ? 3 : 2; if(c.contains("t0")) dash = [6, 10]; }
+      if(!stroke) return;
+      ctx.strokeStyle = stroke; ctx.lineWidth = width/Math.max(z, 0.25)*0.6; ctx.setLineDash(dash || []); ctx.stroke(path2d(el));
+    });
+    ctx.setLineDash([]);
+    // piece states: visited, hilite (next to the dot), current
+    NODES.forEach(n => {
+      const el = nodeEls[n.id]; if(!el) return; const c = el.classList; const r = radius(n);
+      if(c.contains("hilite")){ ctx.strokeStyle = n.c || "#fff"; ctx.lineWidth = 4/z*0.6; ctx.beginPath(); ctx.arc(n.x, n.y, r + 8, 0, Math.PI*2); ctx.stroke(); }
+      if(c.contains("visited")){ ctx.strokeStyle = n.c || "#9ccfff"; ctx.lineWidth = 2.5/z*0.6; ctx.globalAlpha = .9; ctx.beginPath(); ctx.arc(n.x, n.y, r + 3, 0, Math.PI*2); ctx.stroke(); ctx.globalAlpha = 1; }
+    });
+    // the dot
+    ctx.fillStyle = "rgba(0,0,0,.35)"; ctx.beginPath(); ctx.ellipse(ax, ay + 10, 16 + hop*0.15, 7, 0, 0, Math.PI*2); ctx.fill();
+    const by = ay - 6 - hop;
+    ctx.strokeStyle = ac; ctx.lineWidth = 2/z*0.6; ctx.globalAlpha = .7; ctx.beginPath(); ctx.arc(ax, ay, 26, 0, Math.PI*2); ctx.stroke(); ctx.globalAlpha = 1;
+    const g = ctx.createRadialGradient(ax - 6, by - 6, 2, ax, by, 19); g.addColorStop(0, "#ffffff"); g.addColorStop(0.6, "#dfe6ff"); g.addColorStop(1, "#aeb8e6");
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(ax, by, 17, 0, Math.PI*2); ctx.fill();
+  }
+  function loop(){ try{ draw(); }catch(e){} requestAnimationFrame(loop); }
+  requestAnimationFrame(loop);
 })();
 </script>
 </body>
