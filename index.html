@@ -367,6 +367,12 @@ body.cardopen #regions{right:432px;}
 body.lite #board{display:none}
 #boardImg{display:none;position:absolute;left:0;top:0;width:3300px;height:2380px;pointer-events:none;user-select:none;-webkit-user-select:none}
 body.phone #boardImg{display:block}
+body.phone #world, body.phone #world.fly{transition:none !important}
+body.phone *{backdrop-filter:none !important;-webkit-backdrop-filter:none !important}
+body.phone .node .puck{transition:none !important;filter:none !important}
+body.phone .plate, body.phone .sign{transition:none !important}
+body.phone #hud{background:linear-gradient(180deg, rgba(7,11,24,.98), rgba(7,11,24,.9) 70%, rgba(7,11,24,0))}
+body.phone #card, body.phone #ask form, body.phone #lens, body.phone #regions.x, body.phone #carry, body.phone #legend, body.phone #tlegend, body.phone #tbanner, body.phone #askCtx, body.phone #ask .chips button, body.phone .btn, body.phone .chip, body.phone .seg{background-color:rgba(12,17,38,.96)}
 body.phone #world{will-change:auto;transform-style:flat;transform:scale(var(--zoom)) translate(var(--px),var(--py))}
 body.phone #scene{perspective:none}
 body.phone #plates,body.phone #signs,body.phone #board,body.phone .node .label,body.phone #tiltBtn{display:none !important}
@@ -1284,13 +1290,21 @@ function clampCam(){
   const lim = 1600; state.px = Math.max(-lim, Math.min(lim, state.px)); state.py = Math.max(-lim*0.75, Math.min(lim*0.75, state.py));
 }
 function flyTo(x, y, z){
-  world.classList.add("fly");
+  const tween = document.body.classList.contains("phone");
+  if(!tween) world.classList.add("fly");
+  const from = { zoom: state.zoom, px: state.px, py: state.py };
   if(z) state.zoom = z;
   const cardOpen = $("#card").classList.contains("open");
   let ox = 0, oy = 0;
   if(cardOpen){ if(isMobile()) oy = (innerHeight*0.26)/(state.zoom*Math.cos((state.flat?0:state.tilt)*Math.PI/180)); else ox = (parseInt(getComputedStyle(document.documentElement).getPropertyValue("--card-w"))/2 + 8)/state.zoom; }
   state.px = (W/2 - x) - ox; state.py = (H/2 - y) - oy;
-  clampCam(); applyCam();
+  clampCam();
+  if(tween){
+    const to = { zoom: state.zoom, px: state.px, py: state.py }; const t0 = performance.now(), dur = 420;
+    cancelAnimationFrame(flyTo._raf);
+    const step = (now) => { const u = Math.min(1, (now - t0)/dur), e = 1 - Math.pow(1 - u, 3); state.zoom = from.zoom + (to.zoom - from.zoom)*e; state.px = from.px + (to.px - from.px)*e; state.py = from.py + (to.py - from.py)*e; applyCamNow(); if(u < 1) flyTo._raf = requestAnimationFrame(step); };
+    flyTo._raf = requestAnimationFrame(step);
+  } else { applyCam(); }
   clearTimeout(flyTo._t); flyTo._t = setTimeout(()=> world.classList.remove("fly"), 800);
 }
 
@@ -1369,7 +1383,7 @@ const drag = { on:false, moved:false, x:0, y:0, pts:new Map(), dist:0 };
 scene.addEventListener("pointerdown", e => {
   Snd.ensure();
   drag.pts.set(e.pointerId, {x:e.clientX, y:e.clientY});
-  if(drag.pts.size===1){ drag.on = true; drag.moved=false; drag.x=e.clientX; drag.y=e.clientY; world.classList.remove("fly"); }
+  if(drag.pts.size===1){ drag.on = true; drag.moved=false; drag.x=e.clientX; drag.y=e.clientY; world.classList.remove("fly"); cancelAnimationFrame(flyTo._raf); }
   if(drag.pts.size===2){ const [a,b]=[...drag.pts.values()]; drag.dist = Math.hypot(a.x-b.x,a.y-b.y); drag.mid = {x:(a.x+b.x)/2, y:(a.y+b.y)/2}; }
   document.body.classList.add("gesturing");
 });
