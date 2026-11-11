@@ -729,6 +729,22 @@ body.lite #roads path.road.season{filter:none}
 </div>
 
 <script>
+/* ---------- error and crash reporting (so a failure on a phone can be read, not guessed) ---------- */
+(function(){
+  const snap = () => { try{ let st = {}; try{ st = state; }catch(e){} const state_ = st || {}; return { z: +(state_.zoom||0).toFixed(3), px: Math.round(state_.px||0), py: Math.round(state_.py||0), flat: !!state_.flat, traffic: document.body.classList.contains("traffic"), card: document.body.classList.contains("cardopen"), lite: document.body.classList.contains("lite"), phone: document.body.classList.contains("phone"), dpr: devicePixelRatio, w: innerWidth, h: innerHeight, t: Date.now() }; }catch(e){ return { t: Date.now() }; } };
+  const send = (kind, msg, stack, extra) => { try{ const p = { kind, msg: String(msg||"").slice(0,500), stack: String(stack||"").slice(0,2000), ua: navigator.userAgent, state: Object.assign(snap(), extra||{}) }; const U = "https://phbbkwbquzpwaolgtdir.supabase.co", K = "sb_publishable_CttFnDTUgNCj85265esVVA_bBJLuDkn"; fetch(U + "/rest/v1/rpc/sj_log_error", { method:"POST", headers:{ "content-type":"application/json", apikey: K, authorization: "Bearer " + K }, body: JSON.stringify({ p }), keepalive: true }).catch(()=>{}); }catch(e){} };
+  window.addEventListener("error", e => send("js", e.message, e.error && e.error.stack, { at: (e.filename||"").slice(-40) + ":" + e.lineno }));
+  window.addEventListener("unhandledrejection", e => send("promise", e.reason && (e.reason.message || e.reason), e.reason && e.reason.stack));
+  // heartbeat: if the page comes back as a reload within seconds of a heartbeat, the browser most likely killed it (memory)
+  try{
+    const HB = "sj.hb"; const last = JSON.parse(sessionStorage.getItem(HB) || "null");
+    const nav = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
+    if(last && nav && nav.type === "reload" && Date.now() - last.t < 20000) send("crash_reload", "page reloaded within " + Math.round((Date.now()-last.t)/1000) + "s of a heartbeat", "", { before: last });
+    setInterval(() => { try{ sessionStorage.setItem(HB, JSON.stringify(snap())); }catch(e){} }, 2000);
+    window.addEventListener("pagehide", () => { try{ sessionStorage.removeItem(HB); }catch(e){} });
+  }catch(e){}
+  window.sjReport = send;
+})();
 /* =====================================================================
    CONTENT
    Everything the map says lives here. Edit text freely; the engine
