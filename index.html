@@ -23,7 +23,7 @@
 <link rel="apple-touch-icon" href="/icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,500,50,0;9..144,600,50,0;9..144,700,50,0&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --tilt:52deg; --zoom:0.62; --px:0px; --py:0px;
@@ -32,10 +32,15 @@
   --play:#5ef17a; --test:#ff8a3d; --learn:#3fd0ff; --choose:#e45cff; --path:#ffd34d;
   --college:#6d7cff; --adult:#2fd4b8; --work:#ff6a7a; --lens:#b48cff; --beyond:#ffb347; --break:#ff5470; --field:#ffffff;
   --hud:60px; --card-w:400px;
-  --font:"Inter", "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+  --font:"IBM Plex Sans", "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+  --head:"Fraunces", "Iowan Old Style", Georgia, serif;
 }
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;overflow:hidden;touch-action:pan-x pan-y;background:var(--bg);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;font-feature-settings:"ss01","cv11"}
+html,body{height:100%;margin:0;overflow:hidden;touch-action:pan-x pan-y;background:var(--bg);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased}
+/* authored voice: the serif carries headlines, place names and the handoff questions; the sans carries everything you read small or tap */
+h2,.brand b,#intro h2,.node .label,.node.fn .puck,.node.bridge .puck,.gq b,.gq em,#jq{font-family:var(--head);font-variation-settings:"SOFT" 50,"WONK" 0;font-style:normal}
+.node .label{font-weight:700}
+.node.fn .puck small,.node.bridge .puck small{font-family:var(--font)}
 button{font-family:inherit;color:inherit;cursor:pointer}
 body.no-select, body.no-select *{user-select:none;-webkit-user-select:none}
 
@@ -286,6 +291,7 @@ body.far .node .label{transition:opacity .3s}
 .art .coins i:nth-child(odd){background:#2a3156;box-shadow:none;border:1.5px solid #3a4270}
 
 /* ---------- mobile ---------- */
+@media (max-width:760px){.brand b{font-size:15.5px;white-space:nowrap}}
 @media (max-width:760px){
   :root{--hud:56px;--card-w:100vw}
   .brand span{display:none}
@@ -438,7 +444,7 @@ body.lite #roads path.road.lit, body.lite #roads path.road.trail{animation:none}
 #card .jactions .btn{flex:1;justify-content:center;text-decoration:none}
 .sbox img{display:block;width:100%;max-height:62vh;object-fit:contain;border-radius:14px;margin:14px 0;background:#070b18}
 #sharefmt{display:flex;gap:4px;background:rgba(255,255,255,.06);border-radius:10px;padding:3px}
-#sharefmt button{border:0;background:transparent;color:var(--muted);font:600 12px/1 Inter,system-ui,sans-serif;letter-spacing:.04em;text-transform:uppercase;padding:7px 12px;border-radius:8px;transition:background .15s,color .15s}
+#sharefmt button{border:0;background:transparent;color:var(--muted);font:600 12px/1 var(--font);letter-spacing:.04em;text-transform:uppercase;padding:7px 12px;border-radius:8px;transition:background .15s,color .15s}
 #sharefmt button.on{background:rgba(255,255,255,.14);color:#fff}
 #share.story .sbox img{max-height:68vh}
 .srow{display:flex;gap:8px}
@@ -501,18 +507,18 @@ body.hasdot #askCtx{display:inline-block}
 .thread .old h2{font-size:16px}
 .fallnote{font-size:12px;color:#ffd9a0;background:rgba(255,211,77,.08);border:1px solid rgba(255,211,77,.25);border-radius:10px;padding:8px 10px;margin:0 0 10px}
 #ask form{display:flex;gap:6px;align-items:center;padding:6px 6px 6px 14px;border-radius:999px;background:rgba(10,14,32,.86);border:1px solid rgba(150,205,255,.35);backdrop-filter:blur(10px);box-shadow:0 14px 40px rgba(0,0,0,.45)}
-#ask input{flex:1;background:transparent;border:0;color:#fff;font:500 14px/1.3 Inter,system-ui,sans-serif;outline:0;min-width:0}
+#ask input{flex:1;background:transparent;border:0;color:#fff;font:500 14px/1.3 var(--font);outline:0;min-width:0}
 #ask input::placeholder{color:#7f88ad}
-#ask #aiBtn{border:1px solid rgba(255,255,255,.18);border-radius:999px;background:transparent;color:#7f88ad;font:700 10px/1 Inter,system-ui,sans-serif;letter-spacing:.08em;padding:7px 9px;cursor:pointer;flex:0 0 auto}
+#ask #aiBtn{border:1px solid rgba(255,255,255,.18);border-radius:999px;background:transparent;color:#7f88ad;font:700 10px/1 var(--font);letter-spacing:.08em;padding:7px 9px;cursor:pointer;flex:0 0 auto}
 #ask #aiBtn.on{border-color:rgba(150,205,255,.7);color:#fff;background:rgba(150,205,255,.16)}
 .thinking{color:var(--muted)}
 .think{display:inline-flex;gap:4px;margin-right:6px;vertical-align:middle}
 .think i{width:6px;height:6px;border-radius:50%;background:#9ccfff;animation:dotp 1.1s infinite ease-in-out}
 .think i:nth-child(2){animation-delay:.18s}.think i:nth-child(3){animation-delay:.36s}
 @keyframes dotp{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}
-#ask button.go{border:0;border-radius:999px;background:rgba(150,205,255,.22);color:#fff;font:700 12px/1 Inter,system-ui,sans-serif;letter-spacing:.06em;padding:9px 14px;cursor:pointer}
+#ask button.go{border:0;border-radius:999px;background:rgba(150,205,255,.22);color:#fff;font:700 12px/1 var(--font);letter-spacing:.06em;padding:9px 14px;cursor:pointer}
 #ask .chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
-#ask .chips button{border:1px solid rgba(255,255,255,.12);background:rgba(10,14,32,.7);color:#c7cde6;border-radius:999px;padding:5px 11px;font:500 12px/1.2 Inter,system-ui,sans-serif;cursor:pointer;backdrop-filter:blur(8px)}
+#ask .chips button{border:1px solid rgba(255,255,255,.12);background:rgba(10,14,32,.7);color:#c7cde6;border-radius:999px;padding:5px 11px;font:500 12px/1.2 var(--font);cursor:pointer;backdrop-filter:blur(8px)}
 #ask .chips button:hover{border-color:rgba(150,205,255,.5);color:#fff}
 body.cardopen #ask{width:min(640px, calc(100vw - var(--card-w) - 56px));left:calc((100vw - var(--card-w) - 28px) / 2)}
 @media (min-width:1101px){
@@ -555,14 +561,14 @@ body.traffic #tlegend{display:flex}
 #tlegend .l0 i{border-top:2px dashed rgba(255,255,255,.3)}
 #tlegend .lk{color:#ffd9a0;font-weight:600;margin-top:2px}
 #tlegend .tmode{display:flex;gap:3px;background:rgba(255,255,255,.06);border-radius:8px;padding:2px;margin-bottom:4px}
-#tlegend .tmode button{flex:1;border:0;background:transparent;color:var(--muted);font:600 11px/1 Inter,system-ui,sans-serif;padding:6px 8px;border-radius:6px;cursor:pointer}
+#tlegend .tmode button{flex:1;border:0;background:transparent;color:var(--muted);font:600 11px/1 var(--font);padding:6px 8px;border-radius:6px;cursor:pointer}
 #tlegend .tmode button.on{background:rgba(255,255,255,.14);color:#fff}
 body.tdemo #tbanner{background:rgba(255,179,71,.14);border-color:rgba(255,179,71,.55);color:#ffd9a0}
 body:not(.tdemo) #tbanner{background:rgba(150,205,255,.12);border-color:rgba(150,205,255,.45);color:#cfe6ff}
 .legs{display:flex;flex-direction:column;gap:6px;margin:8px 0 12px}
 .leg{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:rgba(150,205,255,.08);border:1px solid rgba(150,205,255,.25)}
 .leg.dark{background:rgba(255,255,255,.03);border-style:dashed;border-color:rgba(255,255,255,.18)}
-.leg i{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);display:grid;place-items:center;font:700 11px/1 Inter,system-ui,sans-serif;color:#fff;font-style:normal}
+.leg i{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.1);display:grid;place-items:center;font:700 11px/1 var(--font);color:#fff;font-style:normal}
 .leg b{display:block;font-size:13.5px;font-weight:600;color:#fff}
 .leg.dark b{color:#aab2d0}
 .leg > div > span{font-size:12px;color:var(--muted)}
@@ -586,7 +592,7 @@ body.lite #roads path.road.season{filter:none}
 .seasons .sn{display:grid;grid-template-columns:18px 1fr;gap:10px;align-items:start;padding:0 0 12px;position:relative}
 .seasons .sn:before{content:"";position:absolute;left:8px;top:18px;bottom:-2px;width:2px;background:rgba(255,255,255,.12)}
 .seasons .sn:last-child:before{display:none}
-.seasons .sn i{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.08);border:2px solid var(--c);display:grid;place-items:center;font:700 9px/1 Inter,system-ui,sans-serif;color:#fff;margin-top:1px}
+.seasons .sn i{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.08);border:2px solid var(--c);display:grid;place-items:center;font:700 9px/1 var(--font);color:#fff;margin-top:1px}
 .seasons .sn:last-child i{background:var(--c);box-shadow:0 0 12px var(--c)}
 .seasons .sn b{display:block;font-size:14px;color:#fff;font-weight:600}
 .seasons .sn span{font-size:12.5px;color:var(--muted)}
@@ -607,7 +613,7 @@ body.lite #roads path.road.season{filter:none}
 .jfrom .roadsum b{color:#fff}
 .jfrom .askh{margin:12px 0 6px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#9ccfff;font-weight:600}
 .jfrom .chips{display:flex;flex-wrap:wrap;gap:6px}
-.jfrom .chips button{border:1px solid rgba(150,205,255,.28);background:rgba(10,14,32,.5);color:#dbe4ff;border-radius:999px;padding:6px 11px;font:500 12px/1.25 Inter,system-ui,sans-serif;cursor:pointer;text-align:left}
+.jfrom .chips button{border:1px solid rgba(150,205,255,.28);background:rgba(10,14,32,.5);color:#dbe4ff;border-radius:999px;padding:6px 11px;font:500 12px/1.25 var(--font);cursor:pointer;text-align:left}
 .jfrom .chips button:hover{border-color:rgba(150,205,255,.7);color:#fff}
 .waysin{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:14px 0 6px}
 .waysin .btn{font-size:13px}
@@ -615,9 +621,9 @@ body.lite #roads path.road.season{filter:none}
 .nudge h4{margin:0 0 6px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#ffd9a0;font-weight:600}
 .nudge p{font-size:13px;margin:0 0 8px;color:#dde2f5}
 .nudge form{display:flex;gap:6px}
-.nudge input{flex:1;min-width:0;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:9px 12px;color:#fff;font:500 14px/1.2 Inter,system-ui,sans-serif;outline:0}
+.nudge input{flex:1;min-width:0;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:9px 12px;color:#fff;font:500 14px/1.2 var(--font);outline:0}
 .nudge input:focus{border-color:rgba(255,211,77,.6)}
-.nudge button{border:0;border-radius:10px;background:#ffd34d;color:#0b1020;font:700 13px/1 Inter,system-ui,sans-serif;padding:9px 14px;cursor:pointer}
+.nudge button{border:0;border-radius:10px;background:#ffd34d;color:#0b1020;font:700 13px/1 var(--font);padding:9px 14px;cursor:pointer}
 .nudge .fine{font-size:11.5px;color:var(--muted);margin:8px 0 0}
 .nudge.done p{color:#bfffd2}
 #journey.checkin .jbox{box-shadow:0 0 0 1px rgba(255,211,77,.4), 0 30px 80px rgba(0,0,0,.6)}
@@ -1771,9 +1777,9 @@ function drawShareCard(fmtName){
   const g = c.createLinearGradient(0,0,0,H); g.addColorStop(0,"#0b1128"); g.addColorStop(1,"#070b18"); c.fillStyle = g; c.fillRect(0,0,W,H);
   const rg = c.createRadialGradient(540,F.cy,40,540,F.cy,700); rg.addColorStop(0,"rgba(63,208,255,.10)"); rg.addColorStop(1,"rgba(0,0,0,0)"); c.fillStyle = rg; c.fillRect(0,0,W,H);
   c.fillStyle = "#fff"; c.textAlign = "left"; c.textBaseline = "alphabetic";
-  c.font = "700 64px Inter, system-ui, sans-serif"; c.fillText(a.who === "parent" ? "Our soccer journey" : a.who === "player" ? "My soccer journey" : "A soccer journey", 72, F.titleY);
-  c.font = "500 30px Inter, system-ui, sans-serif"; c.fillStyle = "#aab2d0"; c.fillText(journeyLine(a), 72, F.titleY + 52);
-  if(j.seasons && j.seasons.length > 1){ const sn = j.seasons; const line = sn.map(x => (byId[x.pos] ? byId[x.pos].t : x.pos)).join("  →  "); c.font = "600 26px Inter, system-ui, sans-serif"; c.fillStyle = "#ffd34d"; c.fillText(`Season ${sn.length}: ` + line, 72, F.titleY + 96); }
+  c.font = "600 64px Fraunces, Georgia, serif"; c.fillText(a.who === "parent" ? "Our soccer journey" : a.who === "player" ? "My soccer journey" : "A soccer journey", 72, F.titleY);
+  c.font = "500 30px \"IBM Plex Sans\", system-ui, sans-serif"; c.fillStyle = "#aab2d0"; c.fillText(journeyLine(a), 72, F.titleY + 52);
+  if(j.seasons && j.seasons.length > 1){ const sn = j.seasons; const line = sn.map(x => (byId[x.pos] ? byId[x.pos].t : x.pos)).join("  →  "); c.font = "600 26px \"IBM Plex Sans\", system-ui, sans-serif"; c.fillStyle = "#ffd34d"; c.fillText(`Season ${sn.length}: ` + line, 72, F.titleY + 96); }
   // board
   const cx = 540, cy = F.cy, R = F.R;
   c.fillStyle = "rgba(255,255,255,.04)"; c.beginPath(); c.arc(cx, cy, R+40, 0, Math.PI*2); c.fill();
@@ -1781,18 +1787,18 @@ function drawShareCard(fmtName){
   const pads = { play:[cx-R*0.7, cy, cssColor("var(--play)"), "PLAY"], test:[cx, cy-R*0.7, cssColor("var(--test)"), "TEST"], learn:[cx+R*0.7, cy, cssColor("var(--learn)"), "LEARN"], choose:[cx, cy+R*0.7, cssColor("var(--choose)"), "CHOOSE"], bridge:[cx+R*0.72, cy+R*0.72, cssColor("var(--path)"), "PATHWAY"] };
   // gold arc
   c.strokeStyle = "rgba(255,211,77,.9)"; c.lineWidth = 6; c.lineCap = "round"; c.beginPath(); c.moveTo(cx+R*1.35, cy+R*1.25); c.quadraticCurveTo(cx+R*1.0, cy+R*1.0, pads.bridge[0], pads.bridge[1]); c.stroke();
-  Object.entries(pads).forEach(([id,[x,y,col,label]]) => { const r = id==="bridge" ? 44 : 54; c.fillStyle = col; c.shadowColor = col; c.shadowBlur = 30; c.beginPath(); c.arc(x,y,r,0,Math.PI*2); c.fill(); c.shadowBlur = 0; c.fillStyle = "#0b1020"; c.font = `800 ${id==="bridge"?18:22}px Inter, system-ui, sans-serif`; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(label, x, y); });
+  Object.entries(pads).forEach(([id,[x,y,col,label]]) => { const r = id==="bridge" ? 44 : 54; c.fillStyle = col; c.shadowColor = col; c.shadowBlur = 30; c.beginPath(); c.arc(x,y,r,0,Math.PI*2); c.fill(); c.shadowBlur = 0; c.fillStyle = "#0b1020"; c.font = `800 ${id==="bridge"?18:22}px \"IBM Plex Sans\", system-ui, sans-serif`; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(label, x, y); });
   c.fillStyle = "#fff"; c.beginPath(); c.arc(cx, cy, 9, 0, Math.PI*2); c.fill();
   // crossroads row
   const cross = ["notpicked","injury","money","geo","burnout"]; const rowY = cy + R + 130; const gap = 190; const startX = cx - gap*2;
-  cross.forEach((id,i) => { const x = startX + i*gap; const on = d.pos===id || d.flags.includes(id); roundRect(c, x-78, rowY-30, 156, 60, 18); c.fillStyle = on ? "rgba(255,84,112,.22)" : "rgba(255,255,255,.04)"; c.fill(); c.strokeStyle = on ? cssColor("var(--break)") : "rgba(255,255,255,.1)"; c.lineWidth = 2; c.stroke(); c.fillStyle = on ? "#fff" : "#8a90ad"; c.font = "600 20px Inter, system-ui, sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(byId[id].t, x, rowY); });
+  cross.forEach((id,i) => { const x = startX + i*gap; const on = d.pos===id || d.flags.includes(id); roundRect(c, x-78, rowY-30, 156, 60, 18); c.fillStyle = on ? "rgba(255,84,112,.22)" : "rgba(255,255,255,.04)"; c.fill(); c.strokeStyle = on ? cssColor("var(--break)") : "rgba(255,255,255,.1)"; c.lineWidth = 2; c.stroke(); c.fillStyle = on ? "#fff" : "#8a90ad"; c.font = "600 20px \"IBM Plex Sans\", system-ui, sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(byId[id].t, x, rowY); });
   // position marker
   let px, py; if(pads[d.pos]){ [px,py] = pads[d.pos]; } else { const k = cross.indexOf(d.pos); px = startX + k*gap; py = rowY; }
   c.strokeStyle = "#fff"; c.lineWidth = 5; c.beginPath(); if(pads[d.pos]){ c.arc(px, py, 74, 0, Math.PI*2); } else { roundRect(c, px-88, py-40, 176, 80, 24); } c.stroke();
-  c.fillStyle = "#fff"; c.font = "800 22px Inter, system-ui, sans-serif"; c.textAlign = "center"; c.textBaseline = "alphabetic"; c.fillText("YOU ARE HERE", px, py - (pads[d.pos] ? 96 : 58));
+  c.fillStyle = "#fff"; c.font = "800 22px \"IBM Plex Sans\", system-ui, sans-serif"; c.textAlign = "center"; c.textBaseline = "alphabetic"; c.fillText("YOU ARE HERE", px, py - (pads[d.pos] ? 96 : 58));
   // attributes
-  c.textAlign = "left"; c.textBaseline = "alphabetic"; c.fillStyle = "#aab2d0"; c.font = "600 22px Inter, system-ui, sans-serif"; c.fillText("ALREADY CARRYING", 72, rowY + 112);
-  let x = 72, y = rowY + 140; c.font = "500 24px Inter, system-ui, sans-serif";
+  c.textAlign = "left"; c.textBaseline = "alphabetic"; c.fillStyle = "#aab2d0"; c.font = "600 22px \"IBM Plex Sans\", system-ui, sans-serif"; c.fillText("ALREADY CARRYING", 72, rowY + 112);
+  let x = 72, y = rowY + 140; c.font = "500 24px \"IBM Plex Sans\", system-ui, sans-serif";
   const maxY = F.ctaY - 46 - 56; // last chip row must clear the divider
   const chip = (t) => { const w = c.measureText(t).width + 44; if(x + w > 1008){ x = 72; y += 58; } if(y > maxY) return false; roundRect(c, x, y, w, 46, 23); c.fillStyle = "rgba(255,179,71,.14)"; c.fill(); c.strokeStyle = "rgba(255,179,71,.5)"; c.lineWidth = 2; c.stroke(); c.fillStyle = "#fff"; c.textBaseline = "middle"; c.fillText(t, x+22, y+24); c.textBaseline = "alphabetic"; x += w + 12; return true; };
   const rowsFit = Math.max(1, Math.floor((maxY - y) / 58) + 1);
@@ -1805,13 +1811,15 @@ function drawShareCard(fmtName){
   const cy2 = F.ctaY;
   c.fillStyle = "rgba(255,255,255,.08)"; c.fillRect(72, cy2 - 46, 936, 1);
   c.textAlign = "left"; c.textBaseline = "alphabetic";
-  c.fillStyle = "#aab2d0"; c.font = "600 22px Inter, system-ui, sans-serif"; c.fillText("WHERE IS YOUR DOT?", 72, cy2);
-  c.fillStyle = "#fff"; c.font = "800 40px Inter, system-ui, sans-serif"; c.fillText("Map yours at soccersjourney.com", 72, cy2 + 46);
-  c.fillStyle = "#aab2d0"; c.font = "500 24px Inter, system-ui, sans-serif"; c.fillText((j.n ? `Journey #${fmt(j.n)} · ` : "") + "The Five Functions · @JeremiahWhiteIII", 72, cy2 + 84);
+  c.fillStyle = "#aab2d0"; c.font = "600 22px \"IBM Plex Sans\", system-ui, sans-serif"; c.fillText("WHERE IS YOUR DOT?", 72, cy2);
+  c.fillStyle = "#fff"; c.font = "600 40px Fraunces, Georgia, serif"; c.fillText("Map yours at soccersjourney.com", 72, cy2 + 46);
+  c.fillStyle = "#aab2d0"; c.font = "500 24px \"IBM Plex Sans\", system-ui, sans-serif"; c.fillText((j.n ? `Journey #${fmt(j.n)} · ` : "") + "The Five Functions · @JeremiahWhiteIII", 72, cy2 + 84);
   return cv;
 }
 let shareFmt = store.get("sj.cardfmt", matchMedia("(hover:none)").matches ? "story" : "post");
 function renderShareImage(){
+  /* make sure the serif is in before the card draws, then redraw once it lands */
+  if(document.fonts && !renderShareImage._fontsReady){ document.fonts.load('600 64px Fraunces').then(() => { renderShareImage._fontsReady = true; if(!$("#share").classList.contains("hide")) renderShareImage(); }); }
   const cv = drawShareCard(shareFmt); const url = cv.toDataURL("image/png");
   $("#shareImg").src = url; $("#shareDl").href = url; $("#shareDl").download = shareFmt === "story" ? "soccers-journey-story.png" : "soccers-journey.png";
   $("#share").classList.toggle("story", shareFmt === "story");
