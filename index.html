@@ -365,6 +365,13 @@ body.cardopen #regions{right:432px;}
 
 /* ---------- lite mode (phones): fewer and smaller GPU layers ---------- */
 body.lite #board{display:none}
+body.phone #world{will-change:auto;transform-style:flat}
+body.phone.isflat #scene{perspective:none}
+body.gesturing #roads path.road, body.gesturing .node .puck, body.gesturing .node .label, body.gesturing .plate{transition:none !important}
+body.gesturing .node .puck, body.gesturing .plate{box-shadow:none !important}
+body.phone #roads path.road.season, body.phone #roads path.road.trail, body.phone #roads path.road.lit{filter:none !important}
+body.phone .sign .board-t, body.phone .sign .board-s{backdrop-filter:none;-webkit-backdrop-filter:none}
+body.phone .plate{backdrop-filter:none;-webkit-backdrop-filter:none}
 body.lite #roads{width:1650px;height:1190px;transform-origin:0 0;transform:scale(2)}
 body.lite #roads .fieldDisc{filter:none}
 body.lite .plate{transform:translate(-50%,-50%);box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--c) 32%, transparent);background:color-mix(in srgb, var(--c) 9%, rgba(16,22,48,.6))}
@@ -1231,15 +1238,21 @@ const Snd = {
 
 /* ---------- camera ---------- */
 const world = $("#world"), scene = $("#scene");
-function applyCam(){
+let camRaf = 0;
+function applyCam(){ if(camRaf) return; camRaf = requestAnimationFrame(() => { camRaf = 0; applyCamNow(); }); }
+function applyCamNow(){
+  document.body.classList.toggle("isflat", !!state.flat);
   world.style.setProperty("--tilt", (state.flat?0:state.tilt)+"deg");
   world.style.setProperty("--zoom", state.zoom);
   world.style.setProperty("--px", state.px+"px");
   world.style.setProperty("--py", state.py+"px");
   document.body.classList.toggle("far", state.zoom < (isMobile() ? 0.33 : 0.5));
 }
+// the board is one big layer; on a phone its texture is 3300 x zoom x devicePixelRatio wide, so the zoom ceiling follows pixel density
+const ZMAX = () => !isMobile() ? 1.1 : (devicePixelRatio >= 3 ? 0.55 : devicePixelRatio >= 2 ? 0.7 : 0.95);
+const ZMIN = () => isMobile() ? 0.14 : 0.28;
 function clampCam(){
-  state.zoom = Math.min(isMobile() ? 0.95 : 1.1, Math.max(isMobile() ? 0.12 : 0.28, state.zoom));
+  state.zoom = Math.min(ZMAX(), Math.max(ZMIN(), state.zoom));
   const lim = 1600; state.px = Math.max(-lim, Math.min(lim, state.px)); state.py = Math.max(-lim*0.75, Math.min(lim*0.75, state.py));
 }
 function flyTo(x, y, z){
@@ -1329,14 +1342,25 @@ scene.addEventListener("pointerdown", e => {
   Snd.ensure();
   drag.pts.set(e.pointerId, {x:e.clientX, y:e.clientY});
   if(drag.pts.size===1){ drag.on = true; drag.moved=false; drag.x=e.clientX; drag.y=e.clientY; world.classList.remove("fly"); }
-  if(drag.pts.size===2){ const [a,b]=[...drag.pts.values()]; drag.dist = Math.hypot(a.x-b.x,a.y-b.y); }
+  if(drag.pts.size===2){ const [a,b]=[...drag.pts.values()]; drag.dist = Math.hypot(a.x-b.x,a.y-b.y); drag.mid = {x:(a.x+b.x)/2, y:(a.y+b.y)/2}; }
+  document.body.classList.add("gesturing");
 });
 scene.addEventListener("pointermove", e => {
   if(!drag.pts.has(e.pointerId)) return;
   drag.pts.set(e.pointerId, {x:e.clientX, y:e.clientY});
   if(drag.pts.size===2){
-    const [a,b]=[...drag.pts.values()]; const d = Math.hypot(a.x-b.x,a.y-b.y);
-    if(drag.dist){ state.zoom *= d/drag.dist; clampCam(); applyCam(); } drag.dist = d; drag.moved = true; return;
+    const [a,b]=[...drag.pts.values()]; const d = Math.hypot(a.x-b.x,a.y-b.y); const mx = (a.x+b.x)/2, my = (a.y+b.y)/2;
+    document.body.classList.add("gesturing");
+    if(drag.dist){
+      const z0 = state.zoom; state.zoom *= d/drag.dist; clampCam(); const z1 = state.zoom;
+      const cos = Math.cos((state.flat?0:state.tilt)*Math.PI/180) || 1;
+      const sx = mx - innerWidth/2, sy = my - innerHeight/2;
+      // keep the point under the fingers still, then follow the fingers
+      state.px += sx*(1/z1 - 1/z0); state.py += (sy/cos)*(1/z1 - 1/z0);
+      if(drag.mid){ state.px += (mx - drag.mid.x)/z1; state.py += (my - drag.mid.y)/(z1*cos); }
+      clampCam(); applyCam();
+    }
+    drag.dist = d; drag.mid = {x:mx, y:my}; drag.moved = true; return;
   }
   if(!drag.on) return;
   const dx = e.clientX-drag.x, dy = e.clientY-drag.y;
@@ -1348,9 +1372,9 @@ scene.addEventListener("pointermove", e => {
   drag.x = e.clientX; drag.y = e.clientY; clampCam(); applyCam();
   $("#hint").classList.add("hide");
 });
-function endPtr(e){ drag.pts.delete(e.pointerId); if(drag.pts.size<2) drag.dist=0; if(drag.pts.size===0){ drag.on=false; scene.classList.remove("dragging"); try{ scene.releasePointerCapture(e.pointerId); }catch(err){} setTimeout(()=> drag.moved=false, 0); } }
+function endPtr(e){ drag.pts.delete(e.pointerId); if(drag.pts.size<2){ drag.dist=0; drag.mid=null; } if(drag.pts.size===0){ drag.on=false; scene.classList.remove("dragging"); document.body.classList.remove("gesturing"); try{ scene.releasePointerCapture(e.pointerId); }catch(err){} setTimeout(()=> drag.moved=false, 0); } }
 scene.addEventListener("pointerup", endPtr); scene.addEventListener("pointercancel", endPtr);
-scene.addEventListener("wheel", e => { e.preventDefault(); world.classList.remove("fly"); const f = Math.exp(-e.deltaY*0.0012); state.zoom *= f; clampCam(); applyCam(); $("#hint").classList.add("hide"); }, {passive:false});
+scene.addEventListener("wheel", e => { e.preventDefault(); world.classList.remove("fly"); const f = Math.exp(-e.deltaY*0.0012); const z0 = state.zoom; state.zoom *= f; clampCam(); const z1 = state.zoom; const cos = Math.cos((state.flat?0:state.tilt)*Math.PI/180) || 1; const sx = e.clientX - innerWidth/2, sy = e.clientY - innerHeight/2; state.px += sx*(1/z1 - 1/z0); state.py += (sy/cos)*(1/z1 - 1/z0); clampCam(); applyCam(); $("#hint").classList.add("hide"); }, {passive:false});
 scene.addEventListener("click", e => { if(drag.moved) return; if(e.target===scene || e.target===world || e.target.id==="board") { /* click on empty board closes card */ closeCard(); } });
 
 $("#zinBtn").addEventListener("click", ()=>{ Snd.click(); world.classList.add("fly"); state.zoom*=1.25; clampCam(); applyCam(); });
@@ -1563,6 +1587,7 @@ function persist(){ store.set("state", { visited:[...state.visited], attrs:[...s
 function restore(){
   const s = store.get("state", null);
   if(s){ state.visited = new Set(s.visited||[]); state.attrs = new Set(s.attrs||[]); state.path = s.path||[]; state.pov = s.pov||"player"; state.sound = s.sound!==false; state.at = byId[s.at] ? s.at : "you"; state.trail = Array.isArray(s.trail) ? s.trail : []; state.trailOn = s.trailOn !== false; state.journey = (s.journey && s.journey.derived && byId[s.journey.derived.pos]) ? s.journey : null; }
+  if(typeof PHONE !== "undefined" && PHONE) state.flat = true; // phones start flat: the tilted 3D board is what runs iOS Safari out of memory
   restAvatar(state.at); avatarColor(state.at);
   state.visited.forEach(id => { const el = $("#n_"+id); if(el) el.classList.add("visited"); });
   renderCarry(); lightRoads(); setPov(state.pov); renderSnd(); $("#trailBtn").style.opacity = state.trailOn ? 1 : .5;
@@ -1577,6 +1602,8 @@ let lastTap = 0; document.addEventListener("touchend", e => { const now = Date.n
 
 /* ---------- go ---------- */
 const LITE = isMobile() || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) || /iPhone|iPad|Android/i.test(navigator.userAgent);
+const PHONE = isMobile() && /iPhone|Android|Mobile/i.test(navigator.userAgent);
+if(PHONE) document.body.classList.add("phone");
 if(LITE) document.body.classList.add("lite");
 build(); restore(); applyCam();
 addEventListener("resize", ()=>{ clampCam(); applyCam(); });
