@@ -68,6 +68,10 @@ body.no-select, body.no-select *{user-select:none;-webkit-user-select:none}
 #roads{position:absolute;inset:0;transform:translateZ(2px);overflow:visible;pointer-events:none}
 #roads path.road{fill:none;stroke:rgba(255,255,255,.0);stroke-width:3;stroke-linecap:round;transition:stroke .45s, stroke-width .45s, opacity .45s;opacity:0}
 #roads path.road.show{opacity:1;stroke:rgba(255,255,255,.42)}
+#roads path.road.rare{stroke-dasharray:3 11;stroke-width:2}
+#roads path.road.rare.show{stroke:rgba(255,255,255,.26)}
+#roads path.road.rare.trail{stroke-width:2.5}
+body.traffic #roads path.road.tr.rare{stroke-width:2!important;stroke-dasharray:3 11!important;stroke:rgba(255,255,255,.1)}
 #roads path.road.gold.show{stroke:rgba(255,211,77,.7)}
 #roads path.road.trail{opacity:1;stroke:rgba(255,255,255,.85);stroke-width:3.5}
 #roads path.road.gold.trail{stroke:#ffd34d}
@@ -182,6 +186,7 @@ body.far .node .label{transition:opacity .3s}
 #legend i.trail{background:#fff;box-shadow:0 0 8px #fff}
 #viewtools{position:fixed;right:14px;bottom:14px;z-index:10;display:flex;flex-direction:column;gap:6px}
 #viewtools .btn.icon{width:40px;height:40px}
+@media (min-width:761px){body.cardopen #viewtools{right:calc(var(--card-w) + 28px)}}
 #hint{position:fixed;left:50%;bottom:60px;transform:translateX(-50%);z-index:9;font-size:13px;color:var(--muted);background:var(--glass);padding:8px 14px;border-radius:999px;border:1px solid var(--line);pointer-events:none;transition:opacity .5s;white-space:nowrap}
 #hint.hide{opacity:0}
 
@@ -530,6 +535,25 @@ body.lite #roads path.road.season{filter:none}
 .seasons .sn:last-child i{background:var(--c);box-shadow:0 0 12px var(--c)}
 .seasons .sn b{display:block;font-size:14px;color:#fff;font-weight:600}
 .seasons .sn span{font-size:12.5px;color:var(--muted)}
+.jfrom .gq{margin:0 0 12px;padding:10px 12px;border-left:3px solid var(--c, #fff);background:rgba(255,255,255,.04);border-radius:0 10px 10px 0}
+.jfrom .gq i{display:block;font-style:normal;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.jfrom .gq b{font-size:17px;line-height:1.25;color:#fff}
+.jfrom .gq em{display:block;font-style:italic;font-size:14px;color:#fff;margin-bottom:8px;opacity:.85}
+.jfrom .gq .sub{display:block;margin-top:5px;font-size:13px;color:#dde2f5;line-height:1.45}
+.jfrom .gq .money{display:block;margin-top:9px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08);font-size:12.5px;color:#ffd9a0;line-height:1.45}
+.jfrom .gq small{display:block;margin-top:7px;font-size:12px;color:#aab4d8;line-height:1.4}
+.jfrom .fl{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;padding:9px 11px;margin:6px 0;border-radius:12px;border:1px solid rgba(255,236,180,.22);background:rgba(255,236,180,.05);color:inherit;font:inherit;cursor:pointer}
+.jfrom .fl:hover{border-color:rgba(255,236,180,.5)}
+.jfrom .fl .lvl{flex:0 0 auto;margin-top:1px}
+.jfrom .fl span{font-size:13px;line-height:1.4;color:#e4e9fb}
+.jfrom .fl span b{color:#fff}
+.jfrom .fl.fact{border-color:rgba(150,205,255,.25);background:rgba(150,205,255,.05)}
+.jfrom .roadsum{font-size:12px;color:var(--muted);margin:8px 0 0;line-height:1.4}
+.jfrom .roadsum b{color:#fff}
+.jfrom .askh{margin:12px 0 6px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#9ccfff;font-weight:600}
+.jfrom .chips{display:flex;flex-wrap:wrap;gap:6px}
+.jfrom .chips button{border:1px solid rgba(150,205,255,.28);background:rgba(10,14,32,.5);color:#dbe4ff;border-radius:999px;padding:6px 11px;font:500 12px/1.25 Inter,system-ui,sans-serif;cursor:pointer;text-align:left}
+.jfrom .chips button:hover{border-color:rgba(150,205,255,.7);color:#fff}
 .nudge{margin-top:14px;padding:12px 14px;border-radius:14px;background:rgba(255,211,77,.07);border:1px solid rgba(255,211,77,.3)}
 .nudge h4{margin:0 0 6px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#ffd9a0;font-weight:600}
 .nudge p{font-size:13px;margin:0 0 8px;color:#dde2f5}
@@ -586,7 +610,7 @@ body.lite #roads path.road.season{filter:none}
 <div id="hint">Drag to move · scroll or pinch to zoom · click anywhere and you travel there · gold = an institution bears the risk</div>
 <nav id="regions" aria-label="Territories"></nav>
 <div id="ask"><form id="askForm" autocomplete="off"><input id="askIn" type="text" placeholder="Ask the map: what percentage of high school players play in college?" aria-label="Ask the map"><button class="go" type="submit">ASK</button></form><div class="chips" id="askChips"></div></div>
-<div id="tbanner"><b id="tbannerB">EVIDENCE</b> <span id="tbannerT">17 roads carry published or modeled numbers · the other 58 are unknown and drawn as such</span></div>
+<div id="tbanner"><b id="tbannerB">EVIDENCE</b> <span id="tbannerT">17 roads carry published or modeled numbers · the other 61 are unknown and drawn as such</span></div>
 <div id="tlegend"><div class="tmode"><button data-m="evidence" class="on">Evidence</button><button data-m="demo">Illustrative</button></div><div class="l3"><i style="border-top-color:rgba(255,236,180,.7)"></i> Measured road (evidence)</div><div class="l3"><i></i> Heavier traffic</div><div class="l2"><i></i> Moderate</div><div class="l1"><i></i> Lighter</div><div class="l0"><i></i> Unknown: no evidence yet</div><div class="lk">Flow is annual movement, not live tracking</div></div>
 <footer id="credits"><span class="cnt" id="counterFoot" hidden><b data-n="journeys">0</b> journeys mapped ·</span> Soccer's Journey · The Five Functions · <a href="https://www.instagram.com/jeremiahwhiteiii/" target="_blank" rel="noopener">Jeremiah White III · @jeremiahwhiteiii</a> · <a href="https://www.wsvlabs.com" target="_blank" rel="noopener">WSV Labs</a> · <a href="https://www.whitesportventures.com" target="_blank" rel="noopener">White Sports Ventures</a></footer>
 
@@ -602,6 +626,7 @@ body.lite #roads path.road.season{filter:none}
   <button class="btn icon" id="zinBtn" title="Zoom in">+</button>
   <button class="btn icon" id="zoutBtn" title="Zoom out">−</button>
   <button class="btn icon" id="homeBtn" title="Back to the field">⌂</button>
+  <button class="btn icon" id="resetMapBtn" title="Reset the map: clear your dot and start over">↺</button>
 </div>
 
 <aside id="card" aria-live="polite">
@@ -974,6 +999,7 @@ const ROADS = [
   ["you","play"],["you","test"],["you","learn"],["you","choose"],
   ["pickup","a_lead"],["clubops","a_system"],["divisions","a_fit"],["you","a_fit"],
   ["play","g1"],["g1","test"],["test","g2"],["g2","learn"],["learn","g3"],["g3","choose"],["choose","g4"],["g4","play"],
+  ["learn","bridge","rare"],["test","choose","rare"],["choose","recruit"],
   ["choose","bridge","gold"],["g3","notpicked"],["choose","notpicked"],["g4","pickup"],["g4","burnout"],
   ["notpicked","recruit"],["notpicked","sunday"],["notpicked","coaching"],["notpicked","a_selection"],["notpicked","learn"],
   ["injury","learn"],["injury","medical"],["injury","a_body"],
@@ -1228,7 +1254,7 @@ function build(){
     const bend = Math.min(90, len*0.16); const cx = mx - dy/len*bend, cy = my + dx/len*bend;
     roadGeom[rkey(a,b)] = { a, b, ax:A.x, ay:A.y, cx, cy, bx:B.x, by:B.y };
     (adj[a] = adj[a]||[]).push(b); (adj[b] = adj[b]||[]).push(a);
-    svg += `<path class="road${gold?" gold":""}" data-k="${rkey(a,b)}" data-a="${a}" data-b="${b}" d="M ${A.x} ${A.y} Q ${cx} ${cy} ${B.x} ${B.y}"/>`;
+    svg += `<path class="road${gold==="rare"?" rare":gold?" gold":""}" data-k="${rkey(a,b)}" data-a="${a}" data-b="${b}" d="M ${A.x} ${A.y} Q ${cx} ${cy} ${B.x} ${B.y}"/>`;
   });
   rg.innerHTML = svg;
 
@@ -1467,6 +1493,9 @@ function lightRoads(){ const n = state.trail.length; document.querySelectorAll("
 function renderCarry(){ document.querySelectorAll("#coins .coin").forEach(c => c.classList.toggle("on", state.attrs.has(c.dataset.attr))); $("#carryN").textContent = state.attrs.size; NODES.filter(n=>n.k==="attr").forEach(n => $("#n_"+n.id).classList.toggle("earned", state.attrs.has(n.attrRef))); }
 
 /* ---------- Your Map ---------- */
+window.resetMap = function(){ state.visited.clear(); state.attrs.clear(); state.path=[]; state.hist=[]; state.current=null; state.at="you"; state.trail = []; state.journey = null; restAvatar("you"); avatarColor("you"); document.querySelectorAll(".node").forEach(d=>d.classList.remove("visited","earned","hilite")); renderCarry(); lightRoads(); showRoadsFor(null); persist(); renderMine(); closeCard(); $("#mine").classList.remove("open"); if(window.sjEvidence){ window.sjEvidence.setTraffic(false); window.sjEvidence.refreshChips(); } Snd.click(); flyTo(FIELD.x, FIELD.y, isMobile()?0.42:0.62); if(typeof track==="function") track("reset_map", {}); };
+  (function(){ let arm = 0; const b = $("#resetMapBtn"); const toast = (m) => { let el = $("#toast"); if(!el){ el = document.createElement("div"); el.id = "toast"; document.body.appendChild(el); } el.textContent = m; el.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("on"), 2600); };
+    b.addEventListener("click", () => { if(Date.now() - arm > 3000){ arm = Date.now(); Snd.click(); toast(state.journey ? "Tap ↺ again to clear your dot and start the map over." : "Tap ↺ again to clear the map."); return; } arm = 0; window.resetMap(); toast("Map reset. Start here."); }); })();
 function renderMine(){
   const total = NODES.length;
   let html = `<div class="stat"><b>${state.visited.size}</b> of ${total} places explored · <b>${state.attrs.size}</b> of 12 attributes carried</div>`;
@@ -1477,7 +1506,8 @@ function renderMine(){
   $("#mineBody").innerHTML = html;
   $("#mineBody").querySelectorAll("[data-go]").forEach(el => el.addEventListener("click", ()=> openNode(el.dataset.go)));
   $("#mineJourney").addEventListener("click", ()=>{ Snd.click(); openJourney(); });
-  $("#resetBtn").addEventListener("click", e=>{ const b=e.currentTarget; if(!b.dataset.arm){ b.dataset.arm="1"; b.textContent="Tap again to clear"; Snd.click(); setTimeout(()=>{ b.dataset.arm=""; b.textContent="Start over"; }, 2500); return; } state.visited.clear(); state.attrs.clear(); state.path=[]; state.hist=[]; state.current=null; state.at="you"; state.trail = []; state.journey = null; restAvatar("you"); avatarColor("you"); document.querySelectorAll(".node").forEach(d=>d.classList.remove("visited","earned")); renderCarry(); lightRoads(); showRoadsFor(null); persist(); renderMine(); closeCard(); Snd.click(); flyTo(FIELD.x, FIELD.y, isMobile()?0.42:0.62); });
+  $("#resetBtn").addEventListener("click", e=>{ const b=e.currentTarget; if(!b.dataset.arm){ b.dataset.arm="1"; b.textContent="Tap again to clear"; Snd.click(); setTimeout(()=>{ b.dataset.arm=""; b.textContent="Start over"; }, 2500); return; } window.resetMap(); });
+
   $("#fieldBtn").addEventListener("click", ()=>{ $("#mine").classList.remove("open"); Snd.whoosh(); flyTo(FIELD.x, FIELD.y, isMobile()?0.42:0.62); });
 }
 function toggleMine(){ const m = $("#mine"); const open = !m.classList.contains("open"); if(open){ renderMine(); closeCard(); } m.classList.toggle("open", open); Snd.click(); }
@@ -1605,7 +1635,9 @@ function renderJourneyCard(){
   const j = state.journey; if(!j) return; const a = j.answers, d = j.derived; const n = byId[d.pos]; const r = REGIONS[n.r]; const color = n.c || r.color;
   card.style.setProperty("--c", color); $("#crumb").textContent = "Your journey";
   let html = `<h2>${a.who === "parent" ? "Your player's dot" : "Your dot"} is here.</h2><div class="kind"><b>${journeyLine(a)}</b></div>`;
-  html += `<div class="sec jpos"><div class="jchip" style="--c:${color}"><i></i>${n.t}${n.sub?` · ${n.sub}`:""}</div><p class="short">${n.s}</p>${n.pov ? `<p class="povtext" style="--c:${color}">${n.pov[state.pov]}</p>` : ""}</div>`;
+  html += `<div class="sec jpos"><div class="jchip" style="--c:${color}"><i></i>${n.t}${n.sub?` · ${n.sub}`:""}</div><p class="short">${n.s}</p></div>`;
+  html += `<div class="sec jfrom" id="jfrom"></div>`;
+  if(n.pov) html += `<div class="sec"><p class="povtext" style="--c:${color};margin-top:0">${n.pov[state.pov]}</p></div>`;
   if(d.flags.length){ html += `<div class="sec"><h4>Also in play</h4><div class="roads">${d.flags.filter(f=>f!==d.pos).map(id => { const m = byId[id]; return `<button data-go="${id}" style="--rc:${m.c||REGIONS[m.r].color}"><i></i>${m.t}</button>`; }).join("")}</div></div>`; }
   html += `<div class="sec"><h4>Roads open from here</h4><div class="roads">${d.open.map(id => { const m = byId[id]; return `<button data-go="${id}" style="--rc:${m.c||REGIONS[m.r].color}"><i></i>${m.t}</button>`; }).join("")}</div></div>`;
   html += `<div class="sec"><h4>What ${a.who === "player" ? "you" : "the player"} already carr${a.who === "player" ? "y" : "ies"}</h4><div class="roads">${d.attrs.map(id => `<button data-go="a_${id}" style="--rc:var(--beyond)"><i></i>${ATTR[id].t}</button>`).join("")}</div></div>`;
@@ -1613,6 +1645,7 @@ function renderJourneyCard(){
   html += `<p class="tiny" style="margin-top:12px">Saved on this device. Come back when the dot moves.</p>`;
   cardBody.innerHTML = html; cardBody.scrollTop = 0;
   cardBody.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => openNode(b.dataset.go)));
+  if(window.sjEvidence){ window.sjEvidence.fillFromHere($("#jfrom"), d.pos); window.sjEvidence.refreshChips(); }
   $("#shareJ").addEventListener("click", () => { Snd.click(); shareJourney(); });
   $("#updateJ").addEventListener("click", () => { Snd.click(); openJourney(); });
   $("#backBtn").style.visibility = "hidden"; $("#nextBtn").style.visibility = "hidden";
@@ -1771,7 +1804,7 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
   const TRAFFIC_DEMO = {
     "you|play":[.9,1],"you|test":[.5,1],"you|learn":[.6,1],"you|choose":[.35,1],
     "play|g1":[.8,1],"g1|test":[.8,1],"test|g2":[.6,1],"g2|learn":[.6,1],"learn|g3":[.5,1],"g3|choose":[.5,1],"choose|g4":[.45,1],"g4|play":[.45,1],
-    "choose|bridge":[.12,1],"g3|notpicked":[.4,1],"choose|notpicked":[.55,1],"g4|pickup":[.35,1],"g4|burnout":[.3,1],
+    "choose|bridge":[.12,1],"learn|bridge":[null,1],"test|choose":[null,1],"choose|recruit":[.5,1],"g3|notpicked":[.4,1],"choose|notpicked":[.55,1],"g4|pickup":[.35,1],"g4|burnout":[.3,1],
     "notpicked|recruit":[.15,1],"notpicked|sunday":[.4,1],"notpicked|coaching":[null,1],"notpicked|learn":[.35,2],
     "injury|learn":[.5,2],"injury|medical":[null,1],"money|play":[.5,1],"money|scholar":[.1,1],"money|futsal":[null,1],
     "geo|learn":[null,1],"geo|sunday":[.35,1],"burnout|pickup":[.45,1],
@@ -1883,7 +1916,7 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
     store.set("sj.traffic", !!v); if(typeof track==="function") track("traffic_toggle", { on: !!v });
   }
   function setMode(m){ tmode = m; store.set("sj.tmode", m); document.body.classList.toggle("tdemo", m==="demo"); document.querySelectorAll("#tlegend .tmode button").forEach(b => b.classList.toggle("on", b.dataset.m===m));
-    $("#tbannerB").textContent = m==="demo" ? "ILLUSTRATIVE" : "EVIDENCE"; $("#tbannerT").textContent = m==="demo" ? "road glow is a placeholder for review · nothing in this view is measured · answers still come only from evidence" : "17 roads carry published or modeled numbers · the other 58 are unknown and drawn as such";
+    $("#tbannerB").textContent = m==="demo" ? "ILLUSTRATIVE" : "EVIDENCE"; $("#tbannerT").textContent = m==="demo" ? "road glow is a placeholder for review · nothing in this view is measured · answers still come only from evidence" : "17 roads carry published or modeled numbers · the other 61 are unknown and drawn as such";
     if(on) seed(); else buildT(); }
   document.querySelectorAll("#tlegend .tmode button").forEach(b => b.addEventListener("click", () => { Snd.tick(); setMode(b.dataset.m); }));
   $("#trafficBtn").addEventListener("click", () => { Snd.tick(); setTraffic(!document.body.classList.contains("traffic")); });
@@ -1994,6 +2027,7 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
     { keys:["how many college","ncaa players","how many ncaa"], h:"How many play NCAA soccer?", body:"28,746 men and 31,200 women in 2024-25. Division III has the most programs (406 men's, 416 women's). NAIA adds about 190 men's and 197 women's programs; 48 of 100 NAIA men are international.", lvl:"B", src:[["NCAA Research, Mar 2026","https://ncaaorg.s3.amazonaws.com/research/pro_beyond/RES_ProbabilityBeyondHSFiguresMethod.pdf"],["RosterWise division counts","https://rosterwise-app.pages.dev/soccer/insights/division-by-numbers/"]] },
     { keys:["how many mls next","mls next players","academy players"], h:"How big is MLS NEXT?", body:"273 clubs, 2,189 teams and 43,000+ players in 2025-26; 318 clubs and 53,000+ players in 2026-27. 30 of those clubs are MLS academies.", lvl:"B", src:[["MLS NEXT 2025-26","https://www.mlssoccer.com/news/mls-next-unveils-names-of-new-competition-tiers-ahead-of-2025-26-season"],["MLS NEXT 2026-27","https://www.soccerwire.com/news/mls-next-announces-new-clubs-and-conferences-ahead-of-2026-27-season/"]] },
     { keys:["cost","how much does","expensive","afford","price"], h:"What does youth soccer cost?", body:"$910 a year on average per child (Aspen, 2025). 26.9 of 100 participants say out-of-pocket cost has changed how they take part. The gap in regular play between the highest and lowest income tiers widened to 24.8 points in 2025.", lvl:"B", src:[["Aspen State of Play 2025","https://projectplay.org/state-of-play-2025/participation-trends"],["SFIA mid-year 2026 via SGB","https://sgbonline.com/exec-u-s-sports-and-fitness-participation-reaches-record-high-boosted-by-team-sports/"]] },
+    { keys:["what age","which age","how old","at what age","age do kids","age does","start travel","start club","start academy","when do kids start","when does development","when does selection","age groups","u13","typical age","ages for"], h:"At what age does each function usually start?", body:"Recreation: almost everyone enters here, usually at 4 to 7 (U6 is the youngest standard age group). Competition: tryout-based travel teams usually start at 8 to 10, with 9v9 at U11 and U12. Development: training as its own program usually begins at 12 to 13; MLS NEXT's youngest age group is U13, and clubs run pre-academy programs below that. Selection: tryouts happen every year from the first travel team, but the high-stakes window is 13 to 16: MLS NEXT runs talent ID at U13 and U14, and NCAA Division I coaches may first contact a player on June 15 after sophomore year. Pathway: academy backing from about 13, college from 18. Two skips exist and are rare: competition straight to selection, and development straight to pathway. Ages are program rules and common practice, not a measured cohort.", lvl:"C", src:[["U.S. Soccer Player Development Initiatives (U6 to U12)","https://www.azsoccerassociation.org/wp-content/uploads/sites/186/2024/08/US-Soccer-Player-Development-Initiatives-PDI.pdf"],["MLS NEXT 2025-26 initiatives (U13 and U14 talent ID)","https://www.mlssoccer.com/news/mls-next-announces-transformative-sporting-initiatives-for-the-2025-26-season"],["NCAA recruiting dates (SoccerWire)","https://www.soccerwire.com/soccer-blog/ncaa-recruiting-rules-for-youth-soccer-players-what-you-need-to-know/"],["Club soccer age-by-age guide","https://myclubscout.com/blog/club-soccer-age-by-age-guide"]] },
     { keys:["five functions","each function","which function","function split","how many in play","how many in test","how many in learn","registered by program","recreation vs","rec vs","travel vs","classic","academy players nc","north carolina"], h:"Of 100 registered youth players, how many sit in each function?", body:"Coding three state associations' registration categories onto the functions (155,883 players, NC, GA and IN): PLAY 57 (recreation and TOPSoccer), TEST 38 (every tier you must be picked for: classic, challenge, travel, select), LEARN 5 (North Carolina's developmental academy tier; the other two states do not separate it). CHOOSE is an event, not a place to be registered, so it shows up as the 38 who passed through a tryout. PATHWAY is not in state registration at all. Private trainers, camps and futsal are invisible to registrars, so LEARN is undercounted.", lvl:"C", src:[["NCYSA Registrar Report, Jan 2025","https://www.ncsoccer.org/wp-content/uploads/sites/167/2025/01/Registrar-Report-_AGM-Jan-2025.pdf"],["Georgia Soccer credentials report, Aug 2026","https://www.georgiasoccer.org/wp-content/uploads/sites/175/2026/08/26-SAGM-credentials-report_080126.pdf"],["Indiana Soccer President's Report 2023-24","https://soccerindiana.org/wp-content/uploads/sites/173/2025/01/2023-2024-Presidents-Report.pdf"]] },
     { keys:["released mid-season","re-roster","rerostered","switch clubs","change clubs","club pass","dual rostered","play up","guest play","move clubs","left their club"], h:"How many players change clubs during a season?", body:"North Carolina's registrar logs it. In the 2024-25 season, 529 competitive and academy players (1.6 of 100) were released by their association mid-season and 336 (1.0 of 100) re-rostered with a new one; 570 moved between teams inside their club; 961 were dual-rostered and 3,079 used a club pass to play up or across teams (5 of 100 of all registered players). This is the only published, player-level movement log found so far at any state association, and it covers a single state's in-season moves, not the tryout window where most movement happens.", lvl:"B", src:[["NCYSA Registrar Report, Jan 2025","https://www.ncsoccer.org/wp-content/uploads/sites/167/2025/01/Registrar-Report-_AGM-Jan-2025.pdf"]] },
     { keys:["whole system","ecosystem cost","total cost","pay-to-play","pay to play","federation budget","us soccer budget","u.s. soccer revenue","how much money"], h:"What does the whole youth system cost, and who could pay?", body:"Families spend about $1,188 a year on soccer (Aspen, 2022 data) and roughly 4 million youth players are registered, so the system runs on something like $4 to 5 billion of family money a year. U.S. Soccer's entire budget was $264 million of revenue and $262 million of expenses in fiscal 2025, about 5 cents on every dollar families spend. Nobody is in a position to make the whole thing free.", lvl:"C", src:[["U.S. Soccer FY2025 audited financial statements","https://www.ussoccer.com/governance/financial-information"],["Aspen cost data via Centro","https://withcentro.com/blog/us-youth-soccer-participation-statistics-2026"],["Aspen State of Play 2025","https://projectplay.org/state-of-play-2025/participation-trends"]] },
@@ -2037,7 +2071,8 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
   // path for a trip: never through the center hub unless it is an endpoint; prefer measured roads when lengths tie
   function tripPath(from, to){
     if(from===to) return [from];
-    const cost = (a,b) => EVK[rkey(a,b)] ? 0.9 : 1;
+    // roads have a direction (the way the game runs); going against it is allowed but costly, so trips follow the flow
+    const cost = (a,b) => { const k = rkey(a,b); if(RARE.has(k)) return 6; if(k === rkey("notpicked","recruit")) return 2.5; const t = T[k]; const rev = t && t.dir === 1 && t.a !== a; const base = EVK[k] ? 0.9 : 1; return rev ? base + 7 : base; };
     const dist = { [from]:0 }, prev = {}, seen = new Set(); const q = [from];
     while(q.length){ q.sort((a,b) => dist[a]-dist[b]); const cur = q.shift(); if(seen.has(cur)) continue; seen.add(cur); if(cur===to) break;
       for(const nx of (adj[cur]||[])){ if(nx==="you" && nx!==to) continue; const d = dist[cur] + cost(cur,nx); if(dist[nx]==null || d < dist[nx]){ dist[nx] = d; prev[nx] = cur; if(!seen.has(nx)) q.push(nx); } } }
@@ -2079,8 +2114,12 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
     const srcs = e.src.map(([t,u]) => `<a href="${u}" target="_blank" rel="noopener">${t}</a>`).join(" · ");
     return `<div class="ans${highlight?" hi":""}"><h3>${A.t} → ${B.t}<span class="lvl ${e.lvl}">${e.lvl}</span></h3>${big}<p style="margin:6px 0 4px;font-size:14px;line-height:1.5">${e.line}</p><div class="meta">${e.note ? e.note + "<br>" : ""}Period: ${e.period}. Sources: ${srcs}</div><button class="go" data-road="${k}">Show this road on the map →</button></div>`;
   }
+  const RARE_K = rkey("learn","bridge"), RARE_K2 = rkey("test","choose"); const RARE = new Set([RARE_K, RARE_K2]);
   function unknownCard(k){
     const g = roadGeom[k]; const A = byId[g.a], B = byId[g.b];
+    if(k === rkey("notpicked","recruit")) return `<div class="ans unknown"><h3>Not Picked → The Recruiting Gate<span class="lvl D">D</span></h3><p style="margin:6px 0 4px;font-size:14px;line-height:1.5">The high-school-only road. A player who was not picked by a club keeps playing for the school and is still seen by college coaches. It happens, and it is the thinner road: most college players come through a travel club or an academy first. Nobody counts the split.</p><button class="go" data-road="${k}">Show this road on the map →</button></div>`;
+    if(k === RARE_K2) return `<div class="ans unknown"><h3>TEST → CHOOSE<span class="lvl D">D</span></h3><p style="margin:6px 0 4px;font-size:14px;line-height:1.5"><b>Rare.</b> An advanced player is pulled into a selection stretch straight from competition, with no development program in between: a tryout or ID event asks the question before any training block has been done. The usual road runs through Development first. Nobody counts how often the skip happens; it is drawn thin and dashed for that reason.</p><button class="go" data-road="${k}">Show this road on the map →</button></div>`;
+    if(k === RARE_K) return `<div class="ans unknown"><h3>LEARN → PATHWAY<span class="lvl D">D</span></h3><p style="margin:6px 0 4px;font-size:14px;line-height:1.5"><b>Rare.</b> An advanced player is backed straight out of training, with no selection event in between: a club or academy decides to invest before any tryout asks the question. The usual road runs through Selection, where skills are tested under rising pressure first. Nobody counts how often the skip happens; it is drawn thin and dashed for that reason.</p><button class="go" data-road="${k}">Show this road on the map →</button></div>`;
     return `<div class="ans unknown"><h3>${A.t} → ${B.t}<span class="lvl D">D</span></h3><p style="margin:6px 0 4px;font-size:14px;line-height:1.5">Nobody has measured this road. Every organization counts the people inside its own walls once a year; nothing follows a player across. It stays open on the map. The season check-in on this site is the instrument that measures it.</p><button class="go" data-road="${k}">Show this road on the map →</button></div>`;
   }
   function factCard(f){ const srcs = f.src.map(([t,u]) => `<a href="${u}" target="_blank" rel="noopener">${t}</a>`).join(" · "); return `<div class="ans"><h3>${f.h}<span class="lvl ${f.lvl}">${f.lvl}</span></h3><p style="margin:6px 0 4px;font-size:14px;line-height:1.5">${f.body}</p><div class="meta">Sources: ${srcs}</div></div>`; }
@@ -2096,9 +2135,12 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
       html += `<div class="legs">${legs.map((l,i) => { const A = byId[l.from], B = byId[l.to]; const e = EVK[l.k]; const v = e ? (e.rate!=null ? fmtRate(e.rate)+" of 100" : e.men!=null ? fmtRate(e.men)+" / "+fmtRate(e.women)+" of 100" : e.range ? fmtRate(e.range[0])+" to "+fmtRate(e.range[1])+" of 100" : "trend") : "not measured"; return `<div class="leg ${e?"":"dark"}"><i>${i+1}</i><div><b>${A.t} → ${B.t}</b><span>${v}</span></div><span class="lvl ${e?e.lvl:"D"}">${e?e.lvl:"D"}</span></div>`; }).join("")}</div>`;
       r.facts.forEach(f => html += factCard(f));
       legs.forEach(l => { html += l.ev ? evCard(l.k, false) : unknownCard(l.k); });
+      const skipH = `<h4 style="margin:14px 0 6px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">The rare skip</h4>`;
+      if(r.ids.includes("learn") && r.ids.includes("bridge") && !legs.some(l => l.k === RARE_K)) html += skipH + unknownCard(RARE_K);
+      if(r.ids.includes("test") && r.ids.includes("choose") && !legs.some(l => l.k === RARE_K2)) html += skipH + unknownCard(RARE_K2);
       html += `<p style="font-size:12px;color:var(--muted);margin-top:10px">Levels: A observed cohort · B published counts · C modeled with stated assumptions · D unknown. Heavy traffic is not a better road. Group numbers do not predict one person.</p>`;
     } else if(!n && !r.unknown.length){
-      html += `<p class="short">I couldn't match that to a place on the map. Try naming two places, like high school and college, or academy and pro.</p><div class="sec"><h4>Try one of these</h4>${ASK_EXAMPLES.map(x => `<button class="go" data-q="${x}" style="display:block;text-align:left;margin:4px 0">${x}</button>`).join("")}</div>`;
+      html += `<p class="short">I couldn't match that to a place on the map. Try naming two places, like high school and college, or academy and pro.</p><div class="sec"><h4>Try one of these</h4>${chipsFor(dotPos()).map(x => `<button class="go" data-q="${x}" style="display:block;text-align:left;margin:4px 0">${x}</button>`).join("")}</div>`;
     } else {
       if(r.roads.length > 1) html += `<p class="short">${r.roads.length} measured roads match. Each number is "of 100" of the named group, with its evidence level.</p>`;
       // a direct question (one place or none) leads with the matching fact; a road question leads with the roads
@@ -2112,10 +2154,68 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
     cardBody.querySelectorAll("[data-q]").forEach(b => b.addEventListener("click", () => { $("#askIn").value = b.dataset.q; answer(b.dataset.q); }));
     card.classList.add("open"); document.body.classList.add("cardopen");
     if(typeof track==="function") track("ask", { q: q.slice(0,120), roads: r.roads.length, facts: r.facts.length, unknown: r.unknown.length });
+    const more = chipsFor(dotPos(), q).slice(0,2); if(more.length){ const d = document.createElement("div"); d.className = "sec jfrom"; d.innerHTML = `<div class="askh">Keep going</div><div class="chips">${more.map(x => `<button type="button" data-q="${x}">${x}</button>`).join("")}</div>`; cardBody.appendChild(d); d.querySelectorAll("[data-q]").forEach(b => b.addEventListener("click", () => { $("#askIn").value = b.dataset.q; lastQ = b.dataset.q; if(typeof track==="function") track("ask_chip", { q: b.dataset.q.slice(0,80), pos: dotPos(), where:"followup" }); answer(b.dataset.q); })); }
   }
   $("#askForm").addEventListener("submit", e => { e.preventDefault(); answer($("#askIn").value); });
-  $("#askChips").innerHTML = ASK_EXAMPLES.slice(0,4).map(x => `<button type="button">${x}</button>`).join("");
-  $("#askChips").querySelectorAll("button").forEach(b => b.addEventListener("click", () => { $("#askIn").value = b.textContent; answer(b.textContent); }));
+  /* ----- questions that know where the dot is ----- */
+  const Q = {
+    hs2col:"What percentage of high school players play in college?", draft:"How many drafted players make MLS?", acadVsHs:"Academy vs high school: which road reaches pro?",
+    acl:"How many kids come back after an ACL injury?", cut:"What happens to kids who get cut?", adults:"How many adults still play?",
+    quit:"When do kids quit soccer?", track:"Does anyone track players moving between the five functions?", split:"Of 100 registered players, how many are in rec vs travel?",
+    cost:"What does youth soccer cost?", refs:"How many referees are there?", hsCount:"How many play high school soccer?",
+    clubs:"How many players change clubs mid-season?", mlsnext:"How many MLS NEXT players are there?", scholar:"How many high school players get a scholarship?",
+    leagues:"How many adults play in registered leagues?", ncaa:"How many NCAA players are there?", ages:"At what age does each function usually start?"
+  };
+  const REGION_Q = { field:["ages","quit","split","track"], college:["hs2col","scholar","ncaa","hsCount"], backed:["draft","acadVsHs","mlsnext","track"], cross:["cut","acl","cost","quit"], adult:["adults","leagues","quit","track"], work:["refs","track","hsCount","clubs"], lens:["track","split","quit","cost"], beyond:["track","quit","adults","cost"] };
+  const NODE_Q = { play:["ages","split","quit"], test:["ages","split","clubs"], learn:["ages","acadVsHs","mlsnext"], choose:["cut","ages","acadVsHs"], g1:["ages","split","quit"], g2:["ages","clubs","acadVsHs"], g3:["ages","cut","acadVsHs"], g4:["quit","cut","adults"], bridge:["draft","hs2col","acadVsHs"], notpicked:["cut","quit","adults"], injury:["acl","quit","cost"], money:["cost","quit","split"], burnout:["quit","cut","adults"], geo:["cost","quit","split"], recruit:["hs2col","scholar","hsCount"], divisions:["hs2col","ncaa","draft"], scholar:["scholar","hs2col","ncaa"], academy:["mlsnext","acadVsHs","draft"], pro:["draft","acadVsHs","mlsnext"], draft:["draft","hs2col","acadVsHs"], released:["cut","acadVsHs","adults"], semipro:["draft","adults","leagues"], sunday:["leagues","adults","quit"], pickup:["adults","quit","cost"], masters:["adults","leagues","refs"], referee:["refs","track","adults"], coaching:["refs","track","quit"] };
+  function chipsFor(id, exclude){ const n = byId[id]; let keys = (NODE_Q[id] || (n && REGION_Q[n.r]) || REGION_Q.field).slice(); REGION_Q.field.forEach(k => { if(!keys.includes(k)) keys.push(k); }); ["track","quit","hs2col","cut"].forEach(k => { if(!keys.includes(k)) keys.push(k); }); return keys.map(k => Q[k]).filter(q => q && q !== exclude).slice(0, 4); }
+  const dotPos = () => (state.journey && state.journey.derived && byId[state.journey.derived.pos]) ? state.journey.derived.pos : (state.at || "you");
+  let lastQ = "";
+  function refreshChips(){ const el = $("#askChips"); if(!el) return; const pos = dotPos(); el.innerHTML = chipsFor(pos, lastQ).map(x => `<button type="button" data-q="${x}">${x}</button>`).join(""); el.querySelectorAll("button").forEach(b => b.addEventListener("click", () => { $("#askIn").value = b.dataset.q; lastQ = b.dataset.q; if(typeof track==="function") track("ask_chip", { q: b.dataset.q.slice(0,80), pos, where:"panel" }); answer(b.dataset.q); refreshChips(); })); }
+  refreshChips();
+  const oneLine = (t) => { if(!t) return ""; t = t.replace(/^No\.\s+/, ""); const re = /[.!?](?=\s|$)/g; let m; while((m = re.exec(t))){ const i = m.index; if(/\b[A-Z]\.[A-Z]$/.test(t.slice(0, i)) || /\b(U\.S|Dr|St|vs|No)$/.test(t.slice(0, i))) continue; return t.slice(0, i+1).replace(/\s*\([^)]*\)\s*\.$/, "."); } return t; };
+  function fillFromHere(el, pos){
+    if(!el || !byId[pos]) return; const n = byId[pos];
+    const all = Object.keys(roadGeom).filter(k => k.split("|").includes(pos)); const measured = all.filter(k => EVK[k]); const dark = all.length - measured.length;
+    const ORD = { you:-1, play:0, g1:0.5, test:1, g2:1.5, learn:2, g3:2.5, choose:3, g4:3.2, bridge:4, scholar:5, recruit:5, academy:5, pro:6, draft:6 };
+    const ord = (id) => ORD[id] != null ? ORD[id] : (byId[id] && byId[id].r === "cross" ? 3.5 : 7);
+    const items = measured.map(k => EVK[k]).sort((a,b) => (ord(a.from) - ord(b.from)) || (ord(a.to) - ord(b.to)) || (a.lvl||"D").localeCompare(b.lvl||"D")).slice(0,3);
+    // The Youth Soccer System (Jeremiah White III): five layers, four handoffs, one money flow. Text verbatim from the framework.
+    const H = {
+      h1:{ tag:"Handoff 1: Recreation to Competition", q:"Does the kid want more?", sub:"The answer comes from the child, not the parent." },
+      h2:{ tag:"Handoff 2: Competition to Development", q:"What can the player do in May that they could not in September?", sub:"If nobody can show you, it is competition with a different logo." },
+      h3:{ tag:"Handoff 3: Development to Selection", q:"Who is grading, and what are they selling?", sub:"The evidence has to leave the building, or somebody outside it has to be able to check it." },
+      h4:{ tag:"Handoff 4: Selection to Pathway", q:"What was measured, and where did the player fall short?", sub:"The narrowest gate should be the most transparent. A no without a reason is not scarcity. It is laziness." },
+      val:{ tag:"Layer 5: value appears here", q:"A player signs. A scholarship or a fee moves.", sub:"For most families the top is college, and the family paid to get there." },
+      back:{ tag:"Where the system breaks: no way back", q:"Sideways and backward are directions.", sub:"Today the only exit is out, and a player who steps down a layer resets to zero." },
+      out:{ tag:"The majority outcome", q:"Most players get selected out. That is not the system failing. That is the system working.", sub:"The system is designed for the few who climb. It has no design for the many who don't. So every exit feels like a fall." },
+      cost:{ tag:"Where the system breaks: cost and value never meet", q:"The family pays at every layer. Nothing flows back.", sub:"The value shows up at the last one, and no layer learns from the one above it." },
+      dev:{ tag:"Where the system breaks: development is invisible", q:"The family cannot tell what it bought.", sub:"A season that develops a player and one that doesn't cost the same. Nobody can tell them apart from outside." }
+    };
+    const LAYER = { play:"Recreation gives you the game.", test:"Competition tests you.", learn:"Development changes you.", choose:"Selection sorts you.", bridge:"Pathway invests in what survives." };
+    const MONEY = { play:"The family pays almost nothing. It buys the game. The one layer we got right.", test:"The family pays, and the fee jumps. Travel, uniforms, tournaments, a badge. Some of it is real cost. Most of it is the feeling of being on a path.", learn:"The family pays, and the fee cannot be checked. A season that develops a player and one that doesn't cost the same.", choose:"The family pays, and the fee pays for staying. Retention pays this club. Progression pays the next one." };
+    const POSH = { play:"h1", g1:"h1", test:"h2", g2:"h2", learn:"h3", g3:"h3", choose:"h4", bridge:"val", g4:"back", notpicked:"out", released:"out", money:"cost", injury:"back", burnout:"back", geo:"cost" };
+    const AGES = { play:"Almost everyone enters here, usually at 4 to 7.", g1:"The first tryout usually comes at 8 to 10.", test:"Travel and tryout teams usually start at 8 to 10.", g2:"Training as its own program usually begins around 12 to 13.", learn:"Academies begin at U13, around 12 to 13. Pre-academy programs start earlier.", g3:"The high-stakes window is 13 to 16: academy ID at 13, college contact from 16.", choose:"The high-stakes window is 13 to 16: academy ID at 13, college contact opens June 15 after sophomore year.", bridge:"Academy backing from about 13, college at 18, a first pro contract most often at 16 to 19.", g4:"Most who leave do so by 14." };
+    const hk = POSH[pos]; const h = hk ? H[hk] : null;
+    let html = h ? `<p class="gq">${LAYER[pos] ? `<em>${LAYER[pos]}</em>` : ""}<i>${h.tag}</i><b>${h.q}</b><span class="sub">${h.sub}</span>${MONEY[pos] ? `<span class="money">${MONEY[pos]}</span>` : ""}${AGES[pos] ? `<small>${AGES[pos]}</small>` : ""}</p>` : "";
+    html += `<h4>From here, of 100</h4>`;
+    items.forEach(e => { const A = byId[e.from], B = byId[e.to]; const label = e.from === "you" ? "Into " + (B ? B.t : e.to) : (A ? A.t : e.from) + " → " + (B ? B.t : e.to); html += `<button class="fl" data-road="${e.k}"><span class="lvl ${e.lvl||"D"}">${e.lvl||"D"}</span><span><b>${label}.</b> ${oneLine(e.line || e.trend || "")}</span></button>`; });
+    if(!items.length){
+      const f = FACTS.find(x => x.keys.includes("track")) || FACTS[0]; const q = FACTS.find(x => x.keys.includes("quit"));
+      html += `<button class="fl fact" data-q="${Q.track}"><span class="lvl ${f.lvl||"D"}">${f.lvl||"D"}</span><span><b>Nobody counts this road.</b> ${oneLine(f.body)}</span></button>`;
+      if(q && (n.r === "field" || n.r === "cross")) html += `<button class="fl fact" data-q="${Q.quit}"><span class="lvl ${q.lvl||"B"}">${q.lvl||"B"}</span><span><b>Quitting is the biggest road on the map.</b> ${oneLine(q.body.slice(q.body.indexOf("U.S. Soccer")))}</span></button>`;
+    } else if(n.r === "field" || n.r === "cross"){
+      const q = FACTS.find(x => x.keys.includes("quit")); if(q && items.length < 3) html += `<button class="fl fact" data-q="${Q.quit}"><span class="lvl ${q.lvl||"B"}">${q.lvl||"B"}</span><span><b>Quitting is the biggest road on the map.</b> ${oneLine(q.body.slice(q.body.indexOf("U.S. Soccer")))}</span></button>`;
+    }
+    html += `<p class="roadsum"><b>${all.length}</b> road${all.length===1?"":"s"} lead${all.length===1?"s":""} from here. <b>${measured.length}</b> ${measured.length===1?"has":"have"} a number${dark ? `, <b>${dark}</b> ${dark===1?"has":"have"} never been measured` : ""}. Each number is "of 100" of a named group, not a prediction for one player.</p>`;
+    html += `<div class="askh">Ask the map about this spot</div><div class="chips">${chipsFor(pos).slice(0,3).map(x => `<button type="button" data-q="${x}">${x}</button>`).join("")}</div>`;
+    el.innerHTML = html;
+    el.querySelectorAll("[data-road]").forEach(b => b.addEventListener("click", () => { const k = b.dataset.road; setTraffic(true); const g = roadGeom[k]; if(g) flyTo((g.ax+g.bx)/2, (g.ay+g.by)/2, Math.max(state.zoom, 0.7)); if(typeof track==="function") track("from_here_road", { k, pos }); openRoad(k); }));
+    el.querySelectorAll("[data-q]").forEach(b => b.addEventListener("click", () => { const q = b.dataset.q; setTraffic(true); $("#askIn").value = q; lastQ = q; if(typeof track==="function") track("ask_chip", { q: q.slice(0,80), pos, where:"card" }); answer(q); refreshChips(); }));
+    if(typeof track==="function") track("from_here", { pos, measured: measured.length, dark });
+  }
+  window.sjEvidence = { fillFromHere, chipsFor, refreshChips, setTraffic, openRoad, answer };
+  { const jf = document.getElementById("jfrom"); if(jf && state.journey && state.journey.derived) fillFromHere(jf, state.journey.derived.pos); }
   window.sjAsk = answer;
   Object.keys(EVK).forEach(k => { if(paths[k]) paths[k].classList.add("ev"); });
 
@@ -2237,11 +2337,11 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
     // email nudge
     const minorPlayer = a.who === "player" && !["19-22","23+"].includes(a.age);
     const box = document.createElement("div"); box.className = "nudge" + (j.subscribed ? " done" : "");
-    if(j.subscribed){ box.innerHTML = `<h4>Next season</h4><p>You'll get one note when the season turns, with a link that brings this dot back. Nothing else.</p>`; }
-    else if(minorPlayer){ box.innerHTML = `<h4>Come back next season</h4><p>The dot moves. If a parent adds their email on their device, they'll get one note when the season turns.</p><p class="fine">Players under 18 don't give an email here.</p>`; }
-    else { box.innerHTML = `<h4>Come back next season</h4><p>One note when the season turns, with a link that brings this dot back on any device.</p><form id="nudgeForm"><input type="email" id="nudgeEmail" placeholder="your@email.com" required autocomplete="email"><button type="submit">Remind me</button></form><p class="fine">Email only, no name. One note a season. Unsubscribe in one click.</p>`; }
-    const tiny = cardBody.querySelector("p.tiny"); if(tiny) tiny.before(box); else cardBody.appendChild(box);
-    const f = $("#nudgeForm"); if(f) f.addEventListener("submit", async e => { e.preventDefault(); const em = $("#nudgeEmail").value.trim(); if(!em) return; if(!j.key){ box.querySelector("p.fine").textContent = "Saving your dot first; try again in a moment."; return; } try{ await sjCall("sj_subscribe", { k: j.key, e: em }); j.subscribed = true; persist(); box.className = "nudge done"; box.innerHTML = `<h4>Next season</h4><p>Done. One note when the season turns, with a link back to this dot.</p>`; track("subscribe", {}); }catch(err){ box.querySelector("p.fine").textContent = "That email didn't go through. Check it and try again."; } });
+    if(j.subscribed){ box.innerHTML = `<h4>Your dot is saved</h4><p>You'll get one note when the season turns, with a link that brings this dot back. Nothing else.</p>`; }
+    else if(minorPlayer){ box.innerHTML = `<h4>Your dot is saved</h4><p>Come back when the season ends and tell the map what happened. If a parent adds their email on their device, they'll get one note when the season turns.</p><p class="fine">Players under 18 don't give an email here.</p>`; }
+    else { box.innerHTML = `<h4>Your dot is saved</h4><p>Come back when the season ends and tell the map what happened. One note when the season turns, with a link that brings this dot back on any device.</p><form id="nudgeForm"><input type="email" id="nudgeEmail" placeholder="your@email.com" required autocomplete="email"><button type="submit">Remind me</button></form><p class="fine">Email only, no name. One note a season. Unsubscribe in one click.</p>`; }
+    const jfrom = cardBody.querySelector("#jfrom"); const tiny = cardBody.querySelector("p.tiny"); if(jfrom) jfrom.after(box); else if(tiny) tiny.before(box); else cardBody.appendChild(box);
+    const f = $("#nudgeForm"); if(f) f.addEventListener("submit", async e => { e.preventDefault(); const em = $("#nudgeEmail").value.trim(); if(!em) return; if(!j.key){ box.querySelector("p.fine").textContent = "Saving your dot first; try again in a moment."; return; } try{ await sjCall("sj_subscribe", { k: j.key, e: em }); j.subscribed = true; persist(); box.className = "nudge done"; box.innerHTML = `<h4>Your dot is saved</h4><p>Done. One note when the season turns, with a link back to this dot.</p>${j.key ? `<p class="fine">Bookmark it: <a href="https://soccersjourney.com/?j=${j.key}" style="color:#9ccfff">soccersjourney.com/?j=${j.key.slice(0,8)}…</a></p>` : ""}`; track("subscribe", { at: "landing", pos: (state.journey && state.journey.derived) ? state.journey.derived.pos : "" }); }catch(err){ box.querySelector("p.fine").textContent = "That email didn't go through. Check it and try again."; } });
     // link to this dot
     if(j.key){ const p = document.createElement("p"); p.className = "tiny"; p.innerHTML = `This dot has its own link: <a href="https://soccersjourney.com/?j=${j.key}" style="color:#9ccfff">soccersjourney.com/?j=${j.key.slice(0,8)}…</a> · opens it on any device`; const t2 = cardBody.querySelector("p.tiny"); if(t2) t2.after(p); }
   };
