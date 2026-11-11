@@ -460,7 +460,7 @@ body.traffic #roads path.road.hit{pointer-events:visibleStroke;cursor:pointer}
 #trafficBtn.on .tlight i.g{background:#5cff8a;box-shadow:0 0 6px #5cff8a}
 #trafficBtn:not(.on):hover .tlight i.g{background:#5cff8a88}
 /* ask bar */
-#ask{position:fixed;left:50%;top:calc(var(--hud) + 54px);transform:translateX(-50%);z-index:21;width:min(640px, calc(100vw - 28px));display:flex;flex-direction:column;gap:8px}
+#ask{position:fixed;left:50%;top:calc(var(--hud) + 64px);transform:translateX(-50%);z-index:21;width:min(640px, calc(100vw - 28px));display:flex;flex-direction:column;gap:8px}
 #ask .chips,#askCtx{transition:opacity .45s, transform .45s}
 body.askquiet #ask .chips, body.askquiet #askCtx{opacity:0;transform:translateY(-6px);pointer-events:none}
 #askCtx{display:none;align-self:center;font-size:11px;color:#aab4d8;background:rgba(10,14,32,.7);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:4px 10px;backdrop-filter:blur(8px)}
@@ -487,6 +487,16 @@ body.hasdot #askCtx{display:inline-block}
 #ask .chips button{border:1px solid rgba(255,255,255,.12);background:rgba(10,14,32,.7);color:#c7cde6;border-radius:999px;padding:5px 11px;font:500 12px/1.2 Inter,system-ui,sans-serif;cursor:pointer;backdrop-filter:blur(8px)}
 #ask .chips button:hover{border-color:rgba(150,205,255,.5);color:#fff}
 body.cardopen #ask{width:min(640px, calc(100vw - var(--card-w) - 56px));left:calc((100vw - var(--card-w) - 28px) / 2)}
+@media (min-width:1101px){
+  body:not(.cardopen) #lens{left:calc(50% - 520px);transform:none}
+  body:not(.cardopen) #ask{left:calc(50% - 100px);transform:none;top:calc(var(--hud) + 6px);width:620px}
+  #ask .chips{justify-content:flex-start}
+}
+@media (min-width:761px) and (max-width:1499px){ body.cardopen #lens{left:calc((100vw - var(--card-w) - 28px) / 2)} }
+@media (min-width:1500px){
+  body.cardopen #lens{left:calc((100vw - var(--card-w) - 28px) / 2 - 520px);transform:none}
+  body.cardopen #ask{left:calc((100vw - var(--card-w) - 28px) / 2 - 100px);transform:none;top:calc(var(--hud) + 6px);width:620px}
+}
 @media (max-width:760px){#ask{top:calc(var(--hud) + 92px)}body.cardopen #ask{width:calc(100vw - 28px);left:50%}body.cardopen #ask .chips,body.cardopen #askCtx{display:none}}
 /* answer cards */
 .ans{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:10px 0;background:rgba(255,255,255,.03)}
