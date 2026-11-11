@@ -460,17 +460,32 @@ body.traffic #roads path.road.hit{pointer-events:visibleStroke;cursor:pointer}
 #trafficBtn.on .tlight i.g{background:#5cff8a;box-shadow:0 0 6px #5cff8a}
 #trafficBtn:not(.on):hover .tlight i.g{background:#5cff8a88}
 /* ask bar */
-#ask{position:fixed;left:50%;top:calc(var(--hud) + 54px);transform:translateX(-50%);z-index:11;width:min(640px, calc(100vw - 28px));display:none;flex-direction:column;gap:8px}
-body.traffic #ask{display:flex}
+#ask{position:fixed;left:50%;top:calc(var(--hud) + 54px);transform:translateX(-50%);z-index:21;width:min(640px, calc(100vw - 28px));display:flex;flex-direction:column;gap:8px}
+#askCtx{display:none;align-self:center;font-size:11px;color:#aab4d8;background:rgba(10,14,32,.7);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:4px 10px;backdrop-filter:blur(8px)}
+#askCtx b{color:#fff;font-weight:600}
+body.hasdot #askCtx{display:inline-block}
+.thread{margin-top:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:8px}
+.thread summary{cursor:pointer;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);list-style:none}
+.thread summary::-webkit-details-marker{display:none}
+.thread .old{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(255,255,255,.1);opacity:.85}
+.thread .old h2{font-size:16px}
+.fallnote{font-size:12px;color:#ffd9a0;background:rgba(255,211,77,.08);border:1px solid rgba(255,211,77,.25);border-radius:10px;padding:8px 10px;margin:0 0 10px}
 #ask form{display:flex;gap:6px;align-items:center;padding:6px 6px 6px 14px;border-radius:999px;background:rgba(10,14,32,.86);border:1px solid rgba(150,205,255,.35);backdrop-filter:blur(10px);box-shadow:0 14px 40px rgba(0,0,0,.45)}
 #ask input{flex:1;background:transparent;border:0;color:#fff;font:500 14px/1.3 Inter,system-ui,sans-serif;outline:0;min-width:0}
 #ask input::placeholder{color:#7f88ad}
+#ask #aiBtn{border:1px solid rgba(255,255,255,.18);border-radius:999px;background:transparent;color:#7f88ad;font:700 10px/1 Inter,system-ui,sans-serif;letter-spacing:.08em;padding:7px 9px;cursor:pointer;flex:0 0 auto}
+#ask #aiBtn.on{border-color:rgba(150,205,255,.7);color:#fff;background:rgba(150,205,255,.16)}
+.thinking{color:var(--muted)}
+.think{display:inline-flex;gap:4px;margin-right:6px;vertical-align:middle}
+.think i{width:6px;height:6px;border-radius:50%;background:#9ccfff;animation:dotp 1.1s infinite ease-in-out}
+.think i:nth-child(2){animation-delay:.18s}.think i:nth-child(3){animation-delay:.36s}
+@keyframes dotp{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}
 #ask button.go{border:0;border-radius:999px;background:rgba(150,205,255,.22);color:#fff;font:700 12px/1 Inter,system-ui,sans-serif;letter-spacing:.06em;padding:9px 14px;cursor:pointer}
 #ask .chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 #ask .chips button{border:1px solid rgba(255,255,255,.12);background:rgba(10,14,32,.7);color:#c7cde6;border-radius:999px;padding:5px 11px;font:500 12px/1.2 Inter,system-ui,sans-serif;cursor:pointer;backdrop-filter:blur(8px)}
 #ask .chips button:hover{border-color:rgba(150,205,255,.5);color:#fff}
 body.cardopen #ask{width:min(640px, calc(100vw - var(--card-w) - 56px))}
-@media (max-width:760px){#ask{top:calc(var(--hud) + 92px)}#ask .chips{display:none}body.cardopen #ask{display:none}}
+@media (max-width:760px){#ask{top:calc(var(--hud) + 92px)}body.cardopen #ask{width:calc(100vw - 28px)}body.cardopen #ask .chips,body.cardopen #askCtx{display:none}}
 /* answer cards */
 .ans{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:10px 0;background:rgba(255,255,255,.03)}
 .ans h3{margin:0 0 4px;font-size:15px;font-weight:700;line-height:1.3}
@@ -554,6 +569,8 @@ body.lite #roads path.road.season{filter:none}
 .jfrom .chips{display:flex;flex-wrap:wrap;gap:6px}
 .jfrom .chips button{border:1px solid rgba(150,205,255,.28);background:rgba(10,14,32,.5);color:#dbe4ff;border-radius:999px;padding:6px 11px;font:500 12px/1.25 Inter,system-ui,sans-serif;cursor:pointer;text-align:left}
 .jfrom .chips button:hover{border-color:rgba(150,205,255,.7);color:#fff}
+.waysin{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:14px 0 6px}
+.waysin .btn{font-size:13px}
 .nudge{margin-top:14px;padding:12px 14px;border-radius:14px;background:rgba(255,211,77,.07);border:1px solid rgba(255,211,77,.3)}
 .nudge h4{margin:0 0 6px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#ffd9a0;font-weight:600}
 .nudge p{font-size:13px;margin:0 0 8px;color:#dde2f5}
@@ -609,7 +626,7 @@ body.lite #roads path.road.season{filter:none}
 <div id="tip" role="tooltip"></div>
 <div id="hint">Drag to move · scroll or pinch to zoom · click anywhere and you travel there · gold = an institution bears the risk</div>
 <nav id="regions" aria-label="Territories"></nav>
-<div id="ask"><form id="askForm" autocomplete="off"><input id="askIn" type="text" placeholder="Ask the map: what percentage of high school players play in college?" aria-label="Ask the map"><button class="go" type="submit">ASK</button></form><div class="chips" id="askChips"></div></div>
+<div id="ask"><form id="askForm" autocomplete="off"><input id="askIn" type="text" placeholder="Ask the map anything: my 11 year old got cut, what usually happens next?" aria-label="Ask the map"><button class="go" type="submit">ASK</button></form><div class="chips" id="askChips"></div></div>
 <div id="tbanner"><b id="tbannerB">EVIDENCE</b> <span id="tbannerT">17 roads carry published or modeled numbers · the other 61 are unknown and drawn as such</span></div>
 <div id="tlegend"><div class="tmode"><button data-m="evidence" class="on">Evidence</button><button data-m="demo">Illustrative</button></div><div class="l3"><i style="border-top-color:rgba(255,236,180,.7)"></i> Measured road (evidence)</div><div class="l3"><i></i> Heavier traffic</div><div class="l2"><i></i> Moderate</div><div class="l1"><i></i> Lighter</div><div class="l0"><i></i> Unknown: no evidence yet</div><div class="lk">Flow is annual movement, not live tracking</div></div>
 <footer id="credits"><span class="cnt" id="counterFoot" hidden><b data-n="journeys">0</b> journeys mapped ·</span> Soccer's Journey · The Five Functions · <a href="https://www.instagram.com/jeremiahwhiteiii/" target="_blank" rel="noopener">Jeremiah White III · @jeremiahwhiteiii</a> · <a href="https://www.wsvlabs.com" target="_blank" rel="noopener">WSV Labs</a> · <a href="https://www.whitesportventures.com" target="_blank" rel="noopener">White Sports Ventures</a></footer>
@@ -662,6 +679,7 @@ body.lite #roads path.road.season{filter:none}
       <div class="art"><div class="ring"><i style="--c:var(--play);left:0;top:50%"></i><i style="--c:var(--test);left:50%;top:0"></i><i style="--c:var(--learn);left:100%;top:50%"></i><i style="--c:var(--choose);left:50%;top:100%"></i><b></b></div></div>
       <h2>Soccer's Journey. A map, not a ladder.</h2>
       <p>Five functions shape every player: Play, Test, Learn, Choose, and Pathway. Four sit around the player, not above each other. The fifth arrives from outside. You can be in any of them at any age. Explore in any direction.</p>
+      <div class="waysin"><button class="btn primary" id="wayDot">Place my dot</button><button class="btn" id="wayAsk">Ask the map a question</button><button class="btn" id="wayExplore">Just explore</button></div>
       <p class="devicenote">Works best on a desktop or tablet. Works on your phone too, with a smaller view.</p>
       <div class="counter" id="counterIntro" hidden><i></i><span><b data-n="journeys">0</b> journeys mapped <small id="counterToday"></small></span></div>
     </div>
@@ -1493,7 +1511,7 @@ function lightRoads(){ const n = state.trail.length; document.querySelectorAll("
 function renderCarry(){ document.querySelectorAll("#coins .coin").forEach(c => c.classList.toggle("on", state.attrs.has(c.dataset.attr))); $("#carryN").textContent = state.attrs.size; NODES.filter(n=>n.k==="attr").forEach(n => $("#n_"+n.id).classList.toggle("earned", state.attrs.has(n.attrRef))); }
 
 /* ---------- Your Map ---------- */
-window.resetMap = function(){ state.visited.clear(); state.attrs.clear(); state.path=[]; state.hist=[]; state.current=null; state.at="you"; state.trail = []; state.journey = null; restAvatar("you"); avatarColor("you"); document.querySelectorAll(".node").forEach(d=>d.classList.remove("visited","earned","hilite")); renderCarry(); lightRoads(); showRoadsFor(null); persist(); renderMine(); closeCard(); $("#mine").classList.remove("open"); if(window.sjEvidence){ window.sjEvidence.setTraffic(false); window.sjEvidence.refreshChips(); } Snd.click(); flyTo(FIELD.x, FIELD.y, isMobile()?0.42:0.62); if(typeof track==="function") track("reset_map", {}); };
+window.resetMap = function(){ state.visited.clear(); state.attrs.clear(); state.path=[]; state.hist=[]; state.current=null; state.at="you"; state.trail = []; state.journey = null; restAvatar("you"); avatarColor("you"); document.querySelectorAll(".node").forEach(d=>d.classList.remove("visited","earned","hilite")); renderCarry(); lightRoads(); showRoadsFor(null); persist(); renderMine(); closeCard(); $("#mine").classList.remove("open"); if(window.sjEvidence){ window.sjEvidence.setTraffic(false); window.sjEvidence.refreshChips(); } if(window.sjAskCtx) window.sjAskCtx(); Snd.click(); flyTo(FIELD.x, FIELD.y, isMobile()?0.42:0.62); if(typeof track==="function") track("reset_map", {}); };
   (function(){ let arm = 0; const b = $("#resetMapBtn"); const toast = (m) => { let el = $("#toast"); if(!el){ el = document.createElement("div"); el.id = "toast"; document.body.appendChild(el); } el.textContent = m; el.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("on"), 2600); };
     b.addEventListener("click", () => { if(Date.now() - arm > 3000){ arm = Date.now(); Snd.click(); toast(state.journey ? "Tap ↺ again to clear your dot and start the map over." : "Tap ↺ again to clear the map."); return; } arm = 0; window.resetMap(); toast("Map reset. Start here."); }); })();
 function renderMine(){
@@ -1521,6 +1539,9 @@ $("#sndBtn").addEventListener("click", ()=>{ state.sound = !state.sound; renderS
 let slideI = 0; const slides = document.querySelectorAll(".slide");
 function showSlide(i){ slideI = i; slides.forEach((s,j)=> s.classList.toggle("on", j===i)); document.querySelectorAll("#dots i").forEach((d,j)=> d.classList.toggle("on", j===i)); const last = i===slides.length-1; $("#nextSlide").textContent = last ? "Build my journey" : "Next"; $("#skipIntro").textContent = last ? "Just explore" : "Skip"; }
 function hideIntro(){ $("#intro").classList.add("hide"); store.set("introOff", !!$("#introOff").checked); Snd.whoosh(); }
+$("#wayDot").addEventListener("click", ()=>{ Snd.click(); hideIntro(); openJourney(); });
+$("#wayExplore").addEventListener("click", ()=>{ Snd.click(); hideIntro(); });
+$("#wayAsk").addEventListener("click", ()=>{ Snd.click(); hideIntro(); setTimeout(() => { const i = $("#askIn"); if(i){ i.focus(); i.placeholder = "Ask anything about youth soccer. The map answers from its evidence."; } }, 350); });
 $("#nextSlide").addEventListener("click", ()=>{ Snd.click(); if(slideI < slides.length-1) showSlide(slideI+1); else { hideIntro(); openJourney(); } });
 $("#skipIntro").addEventListener("click", ()=>{ Snd.click(); hideIntro(); });
 $("#helpBtn").addEventListener("click", ()=>{ Snd.click(); showSlide(0); $("#intro").classList.remove("hide"); });
@@ -1645,7 +1666,7 @@ function renderJourneyCard(){
   html += `<p class="tiny" style="margin-top:12px">Saved on this device. Come back when the dot moves.</p>`;
   cardBody.innerHTML = html; cardBody.scrollTop = 0;
   cardBody.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => openNode(b.dataset.go)));
-  if(window.sjEvidence){ window.sjEvidence.fillFromHere($("#jfrom"), d.pos); window.sjEvidence.refreshChips(); }
+  if(window.sjEvidence){ window.sjEvidence.fillFromHere($("#jfrom"), d.pos); window.sjEvidence.refreshChips(); } if(window.sjAskCtx) window.sjAskCtx();
   $("#shareJ").addEventListener("click", () => { Snd.click(); shareJourney(); });
   $("#updateJ").addEventListener("click", () => { Snd.click(); openJourney(); });
   $("#backBtn").style.visibility = "hidden"; $("#nextBtn").style.visibility = "hidden";
@@ -2123,22 +2144,27 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
     return `<div class="ans unknown"><h3>${A.t} → ${B.t}<span class="lvl D">D</span></h3><p style="margin:6px 0 4px;font-size:14px;line-height:1.5">Nobody has measured this road. Every organization counts the people inside its own walls once a year; nothing follows a player across. It stays open on the map. The season check-in on this site is the instrument that measures it.</p><button class="go" data-road="${k}">Show this road on the map →</button></div>`;
   }
   function factCard(f){ const srcs = f.src.map(([t,u]) => `<a href="${u}" target="_blank" rel="noopener">${t}</a>`).join(" · "); return `<div class="ans"><h3>${f.h}<span class="lvl ${f.lvl}">${f.lvl}</span></h3><p style="margin:6px 0 4px;font-size:14px;line-height:1.5">${f.body}</p><div class="meta">Sources: ${srcs}</div></div>`; }
-  function answer(q){
+  function legsHtml(legs){
+    return `<div class="legs">${legs.map((l,i) => { const A = byId[l.from], B = byId[l.to]; const e = EVK[l.k]; const v = e ? (e.rate!=null ? fmtRate(e.rate)+" of 100" : e.men!=null ? fmtRate(e.men)+" / "+fmtRate(e.women)+" of 100" : e.range ? fmtRate(e.range[0])+" to "+fmtRate(e.range[1])+" of 100" : "trend") : "not measured"; return `<div class="leg ${e?"":"dark"}"><i>${i+1}</i><div><b>${A.t} → ${B.t}</b><span>${v}</span></div><span class="lvl ${e?e.lvl:"D"}">${e?e.lvl:"D"}</span></div>`; }).join("")}</div>`;
+  }
+  const LEVELS_NOTE = `<p style="font-size:12px;color:var(--muted);margin-top:10px">Levels: A observed cohort · B published counts · C modeled with stated assumptions · D unknown. Heavy traffic is not a better road. Group numbers do not predict one person.</p>`;
+  function parserAnswer(q, note){
     q = (q||"").trim(); if(!q) return; Snd.tick && Snd.tick();
     const r = findAnswers(q);
     card.style.setProperty("--c", "#9ccfff"); $("#crumb").textContent = "Ask the map";
     let html = `<h2 style="font-size:20px">${q.replace(/</g,"&lt;")}</h2>`;
+    if(note) html += `<p class="fallnote">${note}</p>`;
     const n = r.roads.length + r.facts.length;
     if(r.chain){
       const legs = r.chain, m = legs.filter(l => l.ev).length, u = legs.length - m;
       html += `<p class="short">That trip is ${legs.length} road${legs.length>1?"s":""} on the map. ${m} ${m===1?"has":"have"} a number, ${u} ${u===1?"has":"have"} never been measured. ${u ? "The legs cannot be multiplied into one figure: each measured one counts a different group of people, and the dark ones are dark." : ""}</p>`;
-      html += `<div class="legs">${legs.map((l,i) => { const A = byId[l.from], B = byId[l.to]; const e = EVK[l.k]; const v = e ? (e.rate!=null ? fmtRate(e.rate)+" of 100" : e.men!=null ? fmtRate(e.men)+" / "+fmtRate(e.women)+" of 100" : e.range ? fmtRate(e.range[0])+" to "+fmtRate(e.range[1])+" of 100" : "trend") : "not measured"; return `<div class="leg ${e?"":"dark"}"><i>${i+1}</i><div><b>${A.t} → ${B.t}</b><span>${v}</span></div><span class="lvl ${e?e.lvl:"D"}">${e?e.lvl:"D"}</span></div>`; }).join("")}</div>`;
+      html += legsHtml(legs);
       r.facts.forEach(f => html += factCard(f));
       legs.forEach(l => { html += l.ev ? evCard(l.k, false) : unknownCard(l.k); });
       const skipH = `<h4 style="margin:14px 0 6px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">The rare skip</h4>`;
       if(r.ids.includes("learn") && r.ids.includes("bridge") && !legs.some(l => l.k === RARE_K)) html += skipH + unknownCard(RARE_K);
       if(r.ids.includes("test") && r.ids.includes("choose") && !legs.some(l => l.k === RARE_K2)) html += skipH + unknownCard(RARE_K2);
-      html += `<p style="font-size:12px;color:var(--muted);margin-top:10px">Levels: A observed cohort · B published counts · C modeled with stated assumptions · D unknown. Heavy traffic is not a better road. Group numbers do not predict one person.</p>`;
+      html += LEVELS_NOTE;
     } else if(!n && !r.unknown.length){
       html += `<p class="short">I couldn't match that to a place on the map. Try naming two places, like high school and college, or academy and pro.</p><div class="sec"><h4>Try one of these</h4>${chipsFor(dotPos()).map(x => `<button class="go" data-q="${x}" style="display:block;text-align:left;margin:4px 0">${x}</button>`).join("")}</div>`;
     } else {
@@ -2147,16 +2173,68 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
       if(r.facts.length && r.ids.length < 2){ r.facts.forEach(f => html += factCard(f)); r.roads.forEach(k => html += evCard(k, false)); }
       else { r.roads.forEach((k,i) => html += evCard(k, i===0)); r.facts.forEach(f => html += factCard(f)); }
       r.unknown.forEach(k => html += unknownCard(k));
-      html += `<p style="font-size:12px;color:var(--muted);margin-top:10px">Levels: A observed cohort · B published counts · C modeled with stated assumptions · D unknown. Heavy traffic is not a better road. Group numbers do not predict one person.</p>`;
+      html += LEVELS_NOTE;
     }
+    mountAnswer(withThread(html)); thread.unshift(html);
+    lightAnswer(r.chain ? r.chain.map(l => l.k) : r.roads.concat(r.unknown));
+    if(typeof track==="function") track("ask", { q: q.slice(0,120), roads: r.roads.length, facts: r.facts.length, unknown: r.unknown.length, via: note ? "fallback" : "parser" });
+    const more = chipsFor(dotPos(), q).slice(0,2); if(more.length){ const d = document.createElement("div"); d.className = "sec jfrom"; d.innerHTML = `<div class="askh">Keep going</div><div class="chips">${more.map(x => `<button type="button" data-q="${x}">${x}</button>`).join("")}</div>`; cardBody.appendChild(d); d.querySelectorAll("[data-q]").forEach(b => b.addEventListener("click", () => { $("#askIn").value = b.dataset.q; lastQ = b.dataset.q; if(typeof track==="function") track("ask_chip", { q: b.dataset.q.slice(0,80), pos: dotPos(), where:"followup" }); answer(b.dataset.q); })); }
+  }
+  function mountAnswer(html){
     cardBody.innerHTML = html; cardBody.scrollTop = 0;
     cardBody.querySelectorAll("[data-road]").forEach(b => b.addEventListener("click", () => { const k = b.dataset.road; const g = roadGeom[k]; if(!g) return; flyTo((g.ax+g.bx)/2, (g.ay+g.by)/2, Math.max(state.zoom, 0.7)); openRoad(k); }));
     cardBody.querySelectorAll("[data-q]").forEach(b => b.addEventListener("click", () => { $("#askIn").value = b.dataset.q; answer(b.dataset.q); }));
     card.classList.add("open"); document.body.classList.add("cardopen");
-    if(typeof track==="function") track("ask", { q: q.slice(0,120), roads: r.roads.length, facts: r.facts.length, unknown: r.unknown.length });
-    const more = chipsFor(dotPos(), q).slice(0,2); if(more.length){ const d = document.createElement("div"); d.className = "sec jfrom"; d.innerHTML = `<div class="askh">Keep going</div><div class="chips">${more.map(x => `<button type="button" data-q="${x}">${x}</button>`).join("")}</div>`; cardBody.appendChild(d); d.querySelectorAll("[data-q]").forEach(b => b.addEventListener("click", () => { $("#askIn").value = b.dataset.q; lastQ = b.dataset.q; if(typeof track==="function") track("ask_chip", { q: b.dataset.q.slice(0,80), pos: dotPos(), where:"followup" }); answer(b.dataset.q); })); }
+  }
+
+  /* ----- Ask the map, answered by a model bound to the registry; the parser is the fallback ----- */
+  const AI = { on: true, url: SJ.url + "/functions/v1/ask-map", busy: false };
+  const thread = []; // earlier answers in this session, newest first
+  function withThread(html){ const old = thread.slice(0, 4); const out = html + (old.length ? `<details class="thread"><summary>Earlier answers (${old.length}) ▾</summary>${old.map(h => `<div class="old">${h}</div>`).join("")}</details>` : ""); return out; }
+  function lightAnswer(keys){ document.querySelectorAll("#roads path.road.show").forEach(p => p.classList.remove("show")); keys.forEach(k => { if(paths[k]) paths[k].classList.add("show"); }); }
+  function thinkingCard(q){
+    card.style.setProperty("--c", "#9ccfff"); $("#crumb").textContent = "Ask the map";
+    mountAnswer(`<h2 style="font-size:20px">${q.replace(/</g,"&lt;")}</h2><p class="short thinking"><span class="think"><i></i><i></i><i></i></span> Reading the map…</p>`);
+  }
+  function renderAI(q, a){
+    card.style.setProperty("--c", "#9ccfff"); $("#crumb").textContent = "Ask the map";
+    let html = `<h2 style="font-size:20px">${q.replace(/</g,"&lt;")}</h2>`;
+    html += `<p class="short">${String(a.text||"").replace(/</g,"&lt;")}</p>`;
+    let legs = null;
+    if(!a.trip && !a.off_map && /\b(to|into|through)\b|->|→/i.test(q)){ const P = parseAsk(q); if(P.ids.length === 2 && !P.compare && P.ids[0] !== P.ids[1]) a.trip = { from: P.ids[0], to: P.ids[1] }; }
+    if(a.trip && byId[a.trip.from] && byId[a.trip.to]){ const path = tripPath(a.trip.from, a.trip.to); if(path && path.length > 1){ legs = []; for(let k=1;k<path.length;k++){ const key = rkey(path[k-1], path[k]); legs.push({ k:key, from:path[k-1], to:path[k], ev: !!EVK[key] }); } } }
+    if(legs){ const m = legs.filter(l => l.ev).length, u = legs.length - m; html += `<p class="short" style="font-size:13px;color:var(--muted)">That trip is ${legs.length} road${legs.length>1?"s":""} on the map. ${m} ${m===1?"has":"have"} a number, ${u} ${u===1?"has":"have"} never been measured.</p>` + legsHtml(legs); }
+    const shown = new Set();
+    if(legs){ legs.forEach(l => { if(shown.has(l.k)) return; shown.add(l.k); html += l.ev ? evCard(l.k, false) : unknownCard(l.k); }); (a.roads||[]).forEach(k => { if(shown.has(k) || !EVK[k]) return; shown.add(k); html += evCard(k, false); }); }
+    else (a.roads||[]).forEach((k,i) => { if(shown.has(k)) return; shown.add(k); html += EVK[k] ? evCard(k, i===0) : (roadGeom[k] ? unknownCard(k) : ""); });
+    (a.facts||[]).forEach(id => { const f = FACTS[Number(String(id).replace(/^f/,""))]; if(f) html += factCard(f); });
+    if(a.place && byId[a.place] && !a.off_map){ const n = byId[a.place]; html += `<div class="sec"><h4>Where this sits on the map</h4><div class="roads"><button data-go="${a.place}" style="--rc:${n.c||REGIONS[n.r].color}"><i></i>${n.t}</button></div></div>`; }
+    if(a.off_map && a.place && byId[a.place]){ const n = byId[a.place]; html += `<div class="sec"><h4>Nearest place on the map</h4><div class="roads"><button data-go="${a.place}" style="--rc:${n.c||REGIONS[n.r].color}"><i></i>${n.t}</button></div></div>`; }
+    if(a.followups && a.followups.length) html += `<div class="sec jfrom"><div class="askh">Keep going</div><div class="chips">${a.followups.map(x => `<button type="button" data-q="${String(x).replace(/"/g,"&quot;")}">${String(x).replace(/</g,"&lt;")}</button>`).join("")}</div></div>`;
+    html += LEVELS_NOTE;
+    html += `<p style="font-size:11px;color:var(--muted);margin-top:4px">Answered from the map's own registry. The map picks which roads and facts fit the question; every number comes from a cited source on the map. If it got the question wrong, try naming two places.</p>`;
+    mountAnswer(withThread(html)); thread.unshift(html);
+    cardBody.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => openNode(b.dataset.go)));
+    lightAnswer((legs ? legs.map(l => l.k) : []).concat(a.roads||[]));
+    if(typeof track==="function") track("ask", { q: q.slice(0,120), roads: (a.roads||[]).length, facts: (a.facts||[]).length, via: a.cached ? "ai-cache" : "ai", off: !!a.off_map });
+  }
+  async function answer(q){
+    q = (q||"").trim(); if(!q) return;
+    if(!AI.on || AI.busy) return parserAnswer(q);
+    AI.busy = true; thinkingCard(q); lastQ = q;
+    try{
+      const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 12000);
+      const r = await fetch(AI.url, { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ q, pos: dotPos() }), signal: ctl.signal }); clearTimeout(t);
+      const j = await r.json(); if(!r.ok || j.error) throw new Error(j.error || r.status);
+      renderAI(q, j); refreshChips();
+    }catch(e){ const why = String(e && e.message || e); parserAnswer(q, why.includes("abort") ? "The smart answer didn't come back in time, so this is the word match. Try again in a moment." : "The smart answer isn't available right now, so this is the word match."); if(typeof track==="function") track("ask_fallback", { q: q.slice(0,80), why: why.slice(0,40) }); }
+    finally{ AI.busy = false; }
   }
   $("#askForm").addEventListener("submit", e => { e.preventDefault(); answer($("#askIn").value); });
+  AI.on = true;
+  { const c = document.createElement("div"); c.id = "askCtx"; $("#ask").appendChild(c); }
+  window.sjAskCtx = function(){ const el = $("#askCtx"); if(!el) return; const j = state.journey; if(!(j && j.derived && byId[j.derived.pos])){ document.body.classList.remove("hasdot"); return; } const a = j.answers, n = byId[j.derived.pos]; const who = { player:"Player", parent:"Parent", coach:"Coach", club:"Club" }[a.who] || "You"; el.innerHTML = `Asking as <b>${who}</b> · age <b>${a.age}</b> · at <b>${n.t}</b>. Answers use that.`; document.body.classList.add("hasdot"); };
+  window.sjAskCtx();
   /* ----- questions that know where the dot is ----- */
   const Q = {
     hs2col:"What percentage of high school players play in college?", draft:"How many drafted players make MLS?", acadVsHs:"Academy vs high school: which road reaches pro?",
@@ -2211,10 +2289,17 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
     html += `<div class="askh">Ask the map about this spot</div><div class="chips">${chipsFor(pos).slice(0,3).map(x => `<button type="button" data-q="${x}">${x}</button>`).join("")}</div>`;
     el.innerHTML = html;
     el.querySelectorAll("[data-road]").forEach(b => b.addEventListener("click", () => { const k = b.dataset.road; setTraffic(true); const g = roadGeom[k]; if(g) flyTo((g.ax+g.bx)/2, (g.ay+g.by)/2, Math.max(state.zoom, 0.7)); if(typeof track==="function") track("from_here_road", { k, pos }); openRoad(k); }));
-    el.querySelectorAll("[data-q]").forEach(b => b.addEventListener("click", () => { const q = b.dataset.q; setTraffic(true); $("#askIn").value = q; lastQ = q; if(typeof track==="function") track("ask_chip", { q: q.slice(0,80), pos, where:"card" }); answer(q); refreshChips(); }));
+    el.querySelectorAll("[data-q]").forEach(b => b.addEventListener("click", () => { const q = b.dataset.q; $("#askIn").value = q; lastQ = q; if(typeof track==="function") track("ask_chip", { q: q.slice(0,80), pos, where:"card" }); answer(q); refreshChips(); }));
     if(typeof track==="function") track("from_here", { pos, measured: measured.length, dark });
   }
   window.sjEvidence = { fillFromHere, chipsFor, refreshChips, setTraffic, openRoad, answer };
+  window.sjKnowledge = () => ({
+    nodes: NODES.map(n => ({ id:n.id, t:n.t, sub:n.sub||"", kind:n.kind||"", region:n.r, type:n.k, s:n.s||"", m:n.m||"" })),
+    regions: Object.fromEntries(Object.entries(REGIONS).map(([k,v]) => [k, { name:v.name, sub:v.sub||"" }])),
+    roads: ROADS.map(([a,b,f]) => ({ k: rkey(a,b), from:a, to:b, rare: f==="rare", gold: !!f && f!=="rare" })),
+    evidence: Object.values(EVK).map(e => ({ k:e.k, from:e.from, to:e.to, lvl:e.lvl, pop:e.pop||"", period:e.period||"", rate:e.rate??null, men:e.men??null, women:e.women??null, range:e.range||null, trend:e.trend||"", line:e.line||"", note:e.note||"", alt:e.alt||null })),
+    facts: FACTS.map((f,i) => ({ id:"f"+i, h:f.h, body:f.body, lvl:f.lvl }))
+  });
   { const jf = document.getElementById("jfrom"); if(jf && state.journey && state.journey.derived) fillFromHere(jf, state.journey.derived.pos); }
   window.sjAsk = answer;
   Object.keys(EVK).forEach(k => { if(paths[k]) paths[k].classList.add("ev"); });
