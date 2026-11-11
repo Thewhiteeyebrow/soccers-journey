@@ -1237,6 +1237,8 @@ const $ = s => document.querySelector(s);
 const byId = Object.fromEntries(NODES.map(n => [n.id, n]));
 const ATTR = Object.fromEntries(ATTRS.map(a => [a.id, a]));
 const isMobile = () => matchMedia("(max-width:760px)").matches;
+/* touch device (iPhone, Android, iPad incl. iPadOS desktop-mode UA): canvas renderer + tighter zoom, any screen width */
+const PHONE = /iPhone|iPad|Android|Mobile/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
 const roadGeom = {}, adj = {};
 const rkey = (a,b) => a < b ? a+"|"+b : b+"|"+a;
 
@@ -1287,8 +1289,8 @@ function applyCamNow(){
   document.body.classList.toggle("far", state.zoom < (isMobile() ? 0.33 : 0.5));
 }
 // the board is one big layer; on a phone its texture is 3300 x zoom x devicePixelRatio wide, so the zoom ceiling follows pixel density
-const ZMAX = () => !isMobile() ? 1.1 : (devicePixelRatio >= 3 ? 0.55 : devicePixelRatio >= 2 ? 0.7 : 0.95);
-const ZMIN = () => isMobile() ? 0.14 : 0.28;
+const ZMAX = () => !(isMobile() || PHONE) ? 1.1 : (devicePixelRatio >= 3 ? 0.55 : devicePixelRatio >= 2 ? 0.7 : 0.95);
+const ZMIN = () => (isMobile() || PHONE) ? 0.14 : 0.28;
 function clampCam(){
   state.zoom = Math.min(ZMAX(), Math.max(ZMIN(), state.zoom));
   const lim = 1600; state.px = Math.max(-lim, Math.min(lim, state.px)); state.py = Math.max(-lim*0.75, Math.min(lim*0.75, state.py));
@@ -1648,7 +1650,6 @@ let lastTap = 0; document.addEventListener("touchend", e => { const now = Date.n
 
 /* ---------- go ---------- */
 const LITE = isMobile() || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) || /iPhone|iPad|Android/i.test(navigator.userAgent);
-const PHONE = isMobile() && (/iPhone|iPad|Android|Mobile/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent)));
 if(PHONE){ document.body.classList.add("phone"); const im = document.getElementById("boardImg"); if(im && !im.src) im.src = "img/board.webp"; }
 if(LITE) document.body.classList.add("lite");
 build(); restore(); applyCam();
