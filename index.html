@@ -365,8 +365,20 @@ body.cardopen #regions{right:432px;}
 
 /* ---------- lite mode (phones): fewer and smaller GPU layers ---------- */
 body.lite #board{display:none}
-body.phone #world{will-change:auto;transform-style:flat}
-body.phone.isflat #scene{perspective:none}
+#boardImg{display:none;position:absolute;left:0;top:0;width:3300px;height:2380px;pointer-events:none;user-select:none;-webkit-user-select:none}
+body.phone #boardImg{display:block}
+body.phone #world{will-change:auto;transform-style:flat;transform:scale(var(--zoom)) translate(var(--px),var(--py))}
+body.phone #scene{perspective:none}
+body.phone #plates,body.phone #signs,body.phone #board,body.phone .node .label,body.phone #tiltBtn{display:none !important}
+body.phone #plates,body.phone #nodes,body.phone #signs,body.phone #avatar,body.phone .node{transform-style:flat}
+body.phone #roads{transform:none}
+body.phone #roads .fieldDisc,body.phone #roads .fieldRing{display:none}
+body.phone:not(.traffic) #roads path.road:not(.show):not(.trail):not(.lit):not(.season){display:none}
+body.phone.traffic #roads path.road:not(.tr):not(.show):not(.trail):not(.lit):not(.season){display:none}
+body.phone .node .puck{box-shadow:none;transition:none}
+body.phone .node.visited .puck{box-shadow:0 0 0 2px color-mix(in srgb, var(--c) 70%, transparent)}
+body.phone #avatar .ball{transform:none}
+body.phone #avatar .shadow{display:none}
 body.gesturing #roads path.road, body.gesturing .node .puck, body.gesturing .node .label, body.gesturing .plate{transition:none !important}
 body.gesturing .node .puck, body.gesturing .plate{box-shadow:none !important}
 body.phone #roads path.road.season, body.phone #roads path.road.trail, body.phone #roads path.road.lit{filter:none !important}
@@ -636,7 +648,7 @@ body.lite #roads path.road.season{filter:none}
       <g id="plates-svg"></g>
       <g id="roads-g"></g>
     </svg>
-    <div id="plates"></div>
+    <img id="boardImg" alt="" decoding="async" fetchpriority="high"><div id="plates"></div>
     <div id="nodes"><div id="avatar"><div class="ring"></div><div class="shadow"></div><div class="ball"></div></div></div>
     <div id="signs"></div>
   </div>
@@ -1618,8 +1630,8 @@ let lastTap = 0; document.addEventListener("touchend", e => { const now = Date.n
 
 /* ---------- go ---------- */
 const LITE = isMobile() || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) || /iPhone|iPad|Android/i.test(navigator.userAgent);
-const PHONE = isMobile() && /iPhone|Android|Mobile/i.test(navigator.userAgent);
-if(PHONE) document.body.classList.add("phone");
+const PHONE = isMobile() && (/iPhone|iPad|Android|Mobile/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent)));
+if(PHONE){ document.body.classList.add("phone"); const im = document.getElementById("boardImg"); if(im && !im.src) im.src = "img/board.webp"; }
 if(LITE) document.body.classList.add("lite");
 build(); restore(); applyCam();
 addEventListener("resize", ()=>{ clampCam(); applyCam(); });
