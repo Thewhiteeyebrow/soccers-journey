@@ -484,7 +484,7 @@ body.hasdot #askCtx{display:inline-block}
 #ask .chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 #ask .chips button{border:1px solid rgba(255,255,255,.12);background:rgba(10,14,32,.7);color:#c7cde6;border-radius:999px;padding:5px 11px;font:500 12px/1.2 Inter,system-ui,sans-serif;cursor:pointer;backdrop-filter:blur(8px)}
 #ask .chips button:hover{border-color:rgba(150,205,255,.5);color:#fff}
-body.cardopen #ask{width:min(640px, calc(100vw - var(--card-w) - 56px))}
+body.cardopen #ask{width:min(640px, calc(100vw - var(--card-w) - 56px));left:calc((100vw - var(--card-w) - 28px) / 2)}
 @media (max-width:760px){#ask{top:calc(var(--hud) + 92px)}body.cardopen #ask{width:calc(100vw - 28px)}body.cardopen #ask .chips,body.cardopen #askCtx{display:none}}
 /* answer cards */
 .ans{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:10px 0;background:rgba(255,255,255,.03)}
