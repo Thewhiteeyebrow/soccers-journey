@@ -259,15 +259,16 @@ async function shareImage(){
   c.strokeStyle = "rgba(226,185,79,.5)"; c.lineWidth = 3; c.strokeRect(40, 40, 1000, 1270); c.strokeStyle = "rgba(226,185,79,.25)"; c.lineWidth = 1; c.strokeRect(56, 56, 968, 1238);
   c.fillStyle = "#e2b94f"; c.font = "600 22px \"IBM Plex Sans\", system-ui, sans-serif"; c.fillText("SOCCER'S JOURNEY", 90, 130);
   c.fillStyle = "#fff"; c.font = "600 84px Fraunces, Georgia, serif"; c.fillText("Passport", 90, 220);
-  c.font = "600 34px \"IBM Plex Sans\", system-ui, sans-serif"; c.fillStyle = "#fff"; c.fillText(P.number, 90, 280);
-  c.fillStyle = "#9aa3c4"; c.font = "500 24px \"IBM Plex Sans\", system-ui, sans-serif"; c.fillText(`${P.state ? P.state + " · " : ""}${P.stamps.length} stamps · held by the family`, 90, 322);
+  /* the number is the key that opens the passport, so it never goes on an image; only what the holder marked shareable does */
+  const vis = P.stamps.filter(s => s.visibility !== "private");
+  c.fillStyle = "#9aa3c4"; c.font = "500 26px \"IBM Plex Sans\", system-ui, sans-serif"; c.fillText(`${P.state ? P.state + " · " : ""}${vis.length} stamp${vis.length === 1 ? "" : "s"} · held by the family`, 90, 290);
   // crest
   const svg = new Blob([`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="220" height="220">${CRESTS[P.crest] || CRESTS.ball}</svg>`], { type: "image/svg+xml" }); const url = URL.createObjectURL(svg);
   await new Promise(res => { const im = new Image(); im.onload = () => { c.drawImage(im, 780, 110, 220, 220); URL.revokeObjectURL(url); res(); }; im.onerror = res; im.src = url; });
   // trail
-  const t = document.createElement("canvas"); t.width = 1100; t.height = 793; await drawTrail(t, P.stamps, P.journey && P.journey.pos); c.drawImage(t, 90, 370, 900, 649);
+  const t = document.createElement("canvas"); t.width = 1100; t.height = 793; await drawTrail(t, vis, P.journey && P.journey.pos); c.drawImage(t, 90, 370, 900, 649);
   // stamps line
-  const last = P.stamps.slice(-3).reverse(); c.fillStyle = "#dfe5ff"; c.font = "500 26px \"IBM Plex Sans\", system-ui, sans-serif";
+  const last = vis.slice(-3).reverse(); c.fillStyle = "#dfe5ff"; c.font = "500 26px \"IBM Plex Sans\", system-ui, sans-serif";
   last.forEach((s, i) => c.fillText(`${s.season} · ${KIND[s.kind] || s.kind}${s.ref ? " · " + placeName(s.ref) : ""}`, 90, 1080 + i * 40));
   c.fillStyle = "#aab2d0"; c.font = "600 22px \"IBM Plex Sans\", system-ui, sans-serif"; c.fillText("WHERE IS YOUR DOT?", 90, 1230);
   c.fillStyle = "#fff"; c.font = "600 36px Fraunces, Georgia, serif"; c.fillText("Map yours at soccersjourney.com", 90, 1272);
