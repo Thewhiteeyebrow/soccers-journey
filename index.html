@@ -1552,10 +1552,11 @@ function travel(targetId, done){
       let x, y; if(g){ [x,y] = bez(g, e, rev); } else { x = A.x+(B.x-A.x)*e; y = A.y+(B.y-A.y)*e; }
       const hop = Math.sin(e*Math.PI) * (g ? 22 : 90);
       setAvatar(x, y, hop);
+      window.sjSeg = g ? { g, rev, e } : null;
       const gt = Math.min(1, (now - tStart)/total); state.zoom = z0 + (z1-z0)*gt;
       const { ox, oy } = camOffsets(); state.px = (W/2 - x) - ox; state.py = (H/2 - y) - oy; clampCam(); applyCam();
       if(t < 1) requestAnimationFrame(frame);
-      else { if(g){ pushTrail(rkey(sg.from, sg.to)); lightRoads(); } i++; runSeg(); }
+      else { window.sjSeg = null; if(g){ pushTrail(rkey(sg.from, sg.to)); lightRoads(); } i++; runSeg(); }
     };
     requestAnimationFrame(frame);
   };
@@ -2061,10 +2062,23 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
   let breathList = []; function buildBreath(){ breathList = []; const seen = new Set(); let ph = 0; Object.values(T).forEach(t => { if(t.w==null) return; [t.a,t.b].forEach(id => { if(seen.has(id) || !nodePos[id]) return; seen.add(id); breathList.push([nodePos[id][0], nodePos[id][1], ph]); ph += 0.9; }); }); }
 
   let raf = 0, last = 0, on = false;
+  const PHONEMODE = document.body.classList.contains("phone");
+  window.sjTraffic = { P, halos, get breath(){ return breathList; }, isOn: () => on };
   function frame(ts){
     if(!on) return; raf = requestAnimationFrame(frame);
     if(FRAME_MS && last && ts - last < FRAME_MS) return;
     const dt = Math.min(80, ts - (last||ts)); last = ts;
+    if(PHONEMODE){ /* the phone canvas draws these; here we only move them */
+      for(const p of P){
+        p.d += p.dir * SPEED * dt; let arrived = null;
+        if(p.d > p.s.len){ p.d -= p.s.len; arrived = p.dir>0 ? roadGeom[p.k].b : roadGeom[p.k].a; p.tail.length = 0; }
+        if(p.d < 0){ p.d += p.s.len; arrived = p.dir>0 ? roadGeom[p.k].a : roadGeom[p.k].b; p.tail.length = 0; }
+        if(arrived) halos.push({ id: arrived, t0: ts });
+        const [x,y] = at(p.s, p.d); p.x = x; p.y = y; p.tail.unshift([x,y]); if(p.tail.length > 7) p.tail.pop();
+      }
+      for(let i=halos.length-1;i>=0;i--) if(ts - halos[i].t0 > 700) halos.splice(i,1);
+      return;
+    }
     c.setTransform(SCALE,0,0,SCALE,0,0); c.clearRect(0,0,W,H);
     c.globalCompositeOperation = "lighter";
     // soft breathing on eligible nodes
@@ -2666,12 +2680,18 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
     NODES.forEach(n => { const d = Math.hypot(n.x - wx, n.y - wy); const r = radius(n) + 14/z; if(d < r && d < bd){ bd = d; best = n.id; } });
     return best;
   };
-  let lastSig = "";
+  let lastSig = "", lastT = 0;
+  function bezPts(g, rev, e, n){ const pts = []; for(let i=0;i<=n;i++){ pts.push(bez(g, e*i/n, rev)); } return pts; }
   function draw(){
+    if(document.hidden) return;
     const { z, ox, oy } = cam();
     const av = avatarEl; const ax = parseFloat(av.style.left)||1300, ay = parseFloat(av.style.top)||850, hop = parseFloat(av.style.getPropertyValue("--hop"))||0, ac = av.style.getPropertyValue("--c") || "#fff";
+    const now = performance.now();
+    const tr = window.sjTraffic && window.sjTraffic.isOn();
+    const live = tr || !!window.sjSeg || (state.at && byId[state.at]);   /* something is breathing, walking or flowing */
     const sig = [z.toFixed(4), ox.toFixed(1), oy.toFixed(1), ax, ay, hop, ac, ver, img.complete].join("|");
-    if(sig === lastSig && !dirty) return; lastSig = sig; dirty = false;
+    if(sig === lastSig && !dirty && !(live && now - lastT >= 33)) return;   /* idle motion at 30fps, gestures at full rate */
+    lastSig = sig; dirty = false; lastT = now;
     ctx.setTransform(1,0,0,1,0,0); ctx.fillStyle = "#070b18"; ctx.fillRect(0,0,cv.width,cv.height);
     ctx.setTransform(DPR*z, 0, 0, DPR*z, DPR*ox, DPR*oy);
     if(img.complete && img.naturalWidth) ctx.drawImage(img, 0, 0, 3300, 2380);
@@ -2688,6 +2708,17 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
       ctx.strokeStyle = stroke; ctx.lineWidth = width/Math.max(z, 0.25)*0.6; ctx.setLineDash(dash || []); ctx.stroke(path2d(el));
     });
     ctx.setLineDash([]);
+    // the trail drawing itself in behind the dot
+    if(window.sjSeg){ const sg = window.sjSeg; const pts = bezPts(sg.g, sg.rev, sg.e, 24); ctx.strokeStyle = "#e2b94f"; ctx.lineWidth = 5/Math.max(z,0.25)*0.6; ctx.beginPath(); pts.forEach((p,i) => i ? ctx.lineTo(p[0],p[1]) : ctx.moveTo(p[0],p[1])); ctx.stroke(); }
+    // traffic: travelling light and arrival rings, moved by the traffic module, drawn here
+    if(tr){ const T = window.sjTraffic; ctx.globalCompositeOperation = "lighter";
+      for(const p of T.P){ if(p.x == null) continue;
+        for(let i=1;i<p.tail.length;i++){ const f = 1 - i/p.tail.length; ctx.globalAlpha = f*0.35*(0.4 + p.w*0.6); ctx.fillStyle = "#dceeff"; ctx.beginPath(); ctx.arc(p.tail[i][0], p.tail[i][1], (p.r*1.6*f + 1)/Math.max(z,.3)*.7, 0, Math.PI*2); ctx.fill(); }
+        ctx.globalAlpha = 0.9; ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(p.x, p.y, (p.r + 1)/Math.max(z,.3)*.7, 0, Math.PI*2); ctx.fill(); }
+      for(const h of T.halos){ const n = byId[h.id]; if(!n) continue; const f = (now - h.t0)/700; if(f < 0 || f > 1) continue; ctx.globalAlpha = (1-f)*0.55; ctx.strokeStyle = "#dceeff"; ctx.lineWidth = (2.5*(1-f)+0.5)/z*0.6; ctx.beginPath(); ctx.arc(n.x, n.y, radius(n) + 6 + f*22, 0, Math.PI*2); ctx.stroke(); }
+      ctx.globalAlpha = 1; ctx.globalCompositeOperation = "source-over"; }
+    // a breath on the place you are standing on
+    if(state.at && byId[state.at] && !window.sjSeg){ const n = byId[state.at]; const b = 0.5 + 0.5*Math.sin(now/1100); ctx.strokeStyle = n.c || "#fff"; ctx.globalAlpha = 0.18 + 0.22*b; ctx.lineWidth = 2/z*0.6; ctx.beginPath(); ctx.arc(n.x, n.y, radius(n) + 10 + 6*b, 0, Math.PI*2); ctx.stroke(); ctx.globalAlpha = 1; }
     // piece states: visited, hilite (next to the dot), current
     NODES.forEach(n => {
       const el = nodeEls[n.id]; if(!el) return; const c = el.classList; const r = radius(n);
