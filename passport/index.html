@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Your passport · Soccer's Journey</title>
+<meta name="robots" content="noindex">
+<meta name="copyright" content="© 2026 White Sports Ventures. The Five Functions framework and the Soccer's Journey map are the work of Jeremiah White III.">
+<link rel="icon" href="../icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,500,50,0;9..144,600,50,0;9..144,700,50,0&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d1120;--ink:#f3f5fb;--muted:#9aa3c4;--line:rgba(255,255,255,.12);--gold:#e2b94f;--font:"IBM Plex Sans","SF Pro Text","Segoe UI",system-ui,sans-serif;--head:"Fraunces","Iowan Old Style",Georgia,serif;--panel:rgba(9,12,26,.94)}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased}
+body{min-height:100vh;background:radial-gradient(900px 500px at 50% 110%, rgba(226,185,79,.05), transparent 60%), var(--bg)}
+#grain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.055;mix-blend-mode:screen;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");background-size:240px 240px}
+main{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:22px 16px 80px}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.brand{font-family:var(--head);font-weight:600;font-size:17px;color:#fff;text-decoration:none}
+.brand small{display:block;font-family:var(--font);font-weight:500;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+a{color:#dfe5ff}
+h1,h2,h3{font-family:var(--head);font-weight:600;font-variation-settings:"SOFT" 50,"WONK" 0;letter-spacing:-.005em;margin:0}
+h1{font-size:30px;line-height:1.1}h2{font-size:20px;margin:0 0 10px}h3{font-size:16px}
+p{line-height:1.5;margin:8px 0}
+.muted{color:var(--muted)}.fine{font-size:12.5px;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.16);background:var(--panel);color:#dfe5ff;border-radius:6px;padding:9px 13px;font:600 12.5px/1 var(--font);letter-spacing:.05em;text-transform:uppercase;cursor:pointer;text-decoration:none}
+.btn.primary{background:#fff;color:#0b1020;border-color:#fff}.btn.danger{border-color:rgba(201,96,108,.6);color:#f0b6bd}.btn:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.box{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:16px;margin:14px 0}
+input[type=text]{font:500 15px var(--font);color:#fff;background:#0b0f1e;border:1px solid rgba(255,255,255,.22);border-radius:6px;padding:10px 12px;letter-spacing:.08em;text-transform:uppercase;width:100%;max-width:280px}
+select{font:500 14px var(--font);color:#fff;background:#0b0f1e;border:1px solid rgba(255,255,255,.22);border-radius:6px;padding:8px 10px}
+/* cover */
+.cover{position:relative;border:1px solid rgba(226,185,79,.45);border-radius:10px;padding:22px 20px 18px;background:linear-gradient(160deg,#141b38,#0b0f22);overflow:hidden}
+.cover::after{content:"";position:absolute;inset:8px;border:1px solid rgba(226,185,79,.25);border-radius:7px;pointer-events:none}
+.cover .eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:600}
+.cover .title{font-family:var(--head);font-size:34px;font-weight:600;margin:4px 0 14px;color:#fff}
+.cover .crest{width:92px;height:92px;float:right;margin:-6px 0 0 12px}
+.cover .num{font:600 18px/1 var(--font);letter-spacing:.14em;color:#fff;margin-top:10px}
+.cover .meta{font-size:12.5px;color:var(--muted);margin-top:8px}
+.crests{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.crests button{width:46px;height:46px;border-radius:8px;border:1px solid var(--line);background:#0b0f1e;padding:6px;cursor:pointer}
+.crests button.on{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+.crests svg{width:100%;height:100%}
+/* stamps */
+.season{margin:18px 0 6px;font-family:var(--head);font-size:15px;color:var(--gold)}
+.stamps{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.stamp{position:relative;border:1.5px solid var(--sc,#9aa3c4);border-radius:50%;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px;background:rgba(9,12,26,.6);transform:rotate(var(--rot,0deg))}
+.stamp::before{content:"";position:absolute;inset:5px;border:1px dashed color-mix(in srgb,var(--sc,#9aa3c4) 60%,transparent);border-radius:50%}
+.stamp b{font-family:var(--head);font-size:14px;line-height:1.15;color:#fff}
+.stamp i{font-style:normal;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--sc,#9aa3c4);margin-bottom:5px}
+.stamp small{font-size:10.5px;color:var(--muted);margin-top:5px}
+.stamp .vis{position:absolute;right:10px;bottom:10px;font-size:10px;color:var(--muted);cursor:pointer;border:0;background:transparent}
+.stamp .vis:hover{color:#fff}
+/* trail */
+#trail{width:100%;border:1px solid var(--line);border-radius:8px;background:#0b0f1e;display:block}
+/* record */
+.rec{font-size:13.5px}.rec table{width:100%;border-collapse:collapse}.rec td{padding:6px 4px;border-bottom:1px solid rgba(255,255,255,.07);vertical-align:top}.rec td:first-child{color:var(--muted);white-space:nowrap;width:120px}
+code{font:12px ui-monospace,Menlo,monospace;color:#c9cde0;word-break:break-all}
+.share{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:13px}
+.hide{display:none !important}
+footer{position:relative;z-index:1;text-align:center;font-size:11.5px;color:var(--muted);padding:20px 16px 30px}
+footer .ed{font-family:var(--head);font-style:italic;color:#c9cde0}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#fff;color:#0b1020;padding:10px 14px;border-radius:6px;font-weight:600;font-size:13px;z-index:5;opacity:0;transition:opacity .2s}
+.toast.on{opacity:1}
+@media (max-width:480px){.cover .title{font-size:28px}.cover .crest{width:72px;height:72px}}
+</style>
+</head>
+<body>
+<div id="grain" aria-hidden="true"></div>
+<main>
+  <header class="top">
+    <a class="brand" href="../">Soccer's Journey<small>The passport</small></a>
+    <a class="btn" href="../">Back to the map</a>
+  </header>
+
+  <section id="enter" class="box">
+    <h2>Open a passport</h2>
+    <p class="muted">Type the passport number from the map or the share card. No login, nothing to remember but the number.</p>
+    <form id="openForm" class="row"><input type="text" id="numIn" placeholder="SJ-XXXX-XXXX" maxlength="12" autocomplete="off"><button class="btn primary" type="submit">Open</button></form>
+    <p class="fine" id="enterMsg"></p>
+    <p class="fine">No passport yet? <a href="../">Place your dot on the map</a> and press "Get my passport" on your journey card.</p>
+  </section>
+
+  <section id="pp" class="hide">
+    <div class="cover">
+      <div class="crest" id="crest"></div>
+      <div class="eyebrow">Soccer's Journey</div>
+      <div class="title">Passport</div>
+      <div class="num" id="num"></div>
+      <div class="meta" id="meta"></div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn" id="shareImgBtn">Share image</button>
+      <button class="btn" id="shareLinkBtn">Share link</button>
+      <button class="btn" id="crestBtn">Change crest</button>
+      <a class="btn" href="../" id="stampMore">Stamp on the map</a>
+      <button class="btn" id="closeBtn">Close</button>
+    </div>
+    <div id="crestPick" class="box hide">
+      <h3>Pick a crest</h3>
+      <p class="fine">The crest is the only thing on the cover you choose. No name, no photo.</p>
+      <div class="crests" id="crests"></div>
+      <div class="row" style="margin-top:10px"><label class="fine">State <select id="stateSel"></select></label></div>
+    </div>
+
+    <div class="box">
+      <h2>The trail</h2>
+      <canvas id="trail" width="1100" height="793"></canvas>
+      <p class="fine" id="trailNote"></p>
+    </div>
+
+    <div class="box">
+      <h2>Stamps</h2>
+      <p class="fine">Every stamp was pressed by the holder, dated by season. Tap the small word on a stamp to change who can see it.</p>
+      <div id="stampsBox"></div>
+    </div>
+
+    <div class="box" id="sharesBox">
+      <h2>Share links</h2>
+      <p class="fine">A link shows the trail and the stamps marked "link" or "public". Check-ins and crossroads stay private on a link unless you change them. Revoke a link and it dies at once.</p>
+      <div id="shares"></div>
+    </div>
+
+    <div class="box">
+      <h2>The ledger</h2>
+      <p class="fine">Each stamp is hashed into a chain. Every night the day's stamps are folded into one root that is published. Anyone can check that a stamp existed on a date; nobody can read it from the root.</p>
+      <div id="ledger" class="rec"></div>
+    </div>
+
+    <div class="box">
+      <h2>Your record</h2>
+      <p class="fine">Everything the map keeps under this passport, in plain words. It is yours: take it or burn it.</p>
+      <div id="record" class="rec"></div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn" id="exportBtn">Export JSON</button>
+        <button class="btn danger" id="deleteBtn">Delete everything</button>
+      </div>
+      <p class="fine" style="margin-top:10px"><a href="../privacy.html">How the map handles your data</a></p>
+    </div>
+  </section>
+
+  <section id="shared" class="hide">
+    <div class="cover">
+      <div class="crest" id="sCrest"></div>
+      <div class="eyebrow">Soccer's Journey</div>
+      <div class="title">Passport</div>
+      <div class="num">shared view</div>
+      <div class="meta" id="sMeta"></div>
+    </div>
+    <div class="box"><h2>The trail</h2><canvas id="sTrail" width="1100" height="793" style="width:100%;border:1px solid var(--line);border-radius:8px;background:#0b0f1e;display:block"></canvas></div>
+    <div class="box"><h2>Stamps</h2><div id="sStamps"></div></div>
+    <p class="fine">This is a view the holder chose to share. It carries no name and nothing the holder kept private. <a href="../">See the map</a>.</p>
+  </section>
+</main>
+<footer><span class="ed">First edition · November 2026 · drawn by Jeremiah White III</span> · © 2026 White Sports Ventures · <a href="../privacy.html">Privacy</a></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const GATE = "https://jacakuicfwclkvjzxdgh.supabase.co/functions/v1/sj-gate";
+const $ = s => document.querySelector(s);
+async function call(fn, body){ const r = await fetch(GATE, { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ fn, body: body||{} }) }); if(!r.ok){ const e = await r.json().catch(()=>({})); throw new Error(e.error || ("gate " + r.status)); } return r.json(); }
+function toast(t){ const el = $("#toast"); el.textContent = t; el.classList.add("on"); clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove("on"), 1800); }
+
+/* crests: eight simple marks, drawn here, no brands */
+const CRESTS = {
+  ball: '<circle cx="50" cy="50" r="38" fill="none" stroke="#e2b94f" stroke-width="3"/><path d="M50 22l12 9-5 14H43l-5-14z M50 22v-9 M62 31l14-3 M57 45l9 12 M43 45l-9 12 M38 31l-14-3" fill="none" stroke="#e2b94f" stroke-width="3" stroke-linejoin="round"/>',
+  star: '<path d="M50 14l10 24 26 2-20 17 7 25-23-14-23 14 7-25-20-17 26-2z" fill="none" stroke="#e2b94f" stroke-width="3" stroke-linejoin="round"/>',
+  compass: '<circle cx="50" cy="50" r="36" fill="none" stroke="#e2b94f" stroke-width="3"/><path d="M50 18l8 32-8 32-8-32z" fill="#e2b94f"/><path d="M18 50l32-8 32 8-32 8z" fill="none" stroke="#e2b94f" stroke-width="2"/>',
+  shield: '<path d="M50 14l30 10v24c0 20-13 32-30 40-17-8-30-20-30-40V24z" fill="none" stroke="#e2b94f" stroke-width="3" stroke-linejoin="round"/><path d="M50 30v40 M34 48h32" stroke="#e2b94f" stroke-width="3"/>',
+  mountain: '<path d="M12 78l24-40 12 18 10-14 30 36z" fill="none" stroke="#e2b94f" stroke-width="3" stroke-linejoin="round"/><circle cx="74" cy="28" r="7" fill="none" stroke="#e2b94f" stroke-width="3"/>',
+  wave: '<path d="M12 44c10-12 20-12 30 0s20 12 30 0 16-8 16 0 M12 64c10-12 20-12 30 0s20 12 30 0 16-8 16 0" fill="none" stroke="#e2b94f" stroke-width="3" stroke-linecap="round"/>',
+  flag: '<path d="M26 14v72 M26 18h44l-10 12 10 12H26" fill="none" stroke="#e2b94f" stroke-width="3" stroke-linejoin="round"/>',
+  boot: '<path d="M22 60l20-30 12 6-2 12 24 6 8 16H22z M22 60c0 10 8 12 16 12h50" fill="none" stroke="#e2b94f" stroke-width="3" stroke-linejoin="round"/>'
+};
+const crestSvg = k => `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">${CRESTS[k] || CRESTS.ball}</svg>`;
+const STATES = "AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY".split(" ");
+const KIND = { arrival:"Arrived", handoff:"Handoff", checkin:"Season check-in", crossroads:"Crossroads", milestone:"Milestone", attest:"Attested" };
+const HQ = { g1:"Does the kid want more?", g2:"What can the player do in May that they could not in September?", g3:"Who is grading, and what are they selling?", bridge:"What was measured, and where did the player fall short?" };
+const ANS = { yes:"Yes", no:"No", notsure:"Not sure" };
+const CHG = { same:"Same place", picked:"Picked", notpicked:"Not picked", released:"Released", injured:"Injured", stopped:"Stopped", adult:"Adult game", role:"New role" };
+
+let NODES = {}, REG = {}, P = null, board = null;
+async function loadNodes(){ const r = await fetch("nodes.json"); const j = await r.json(); j.nodes.forEach(n => NODES[n.id] = n); REG = j.regions; }
+function placeName(id){ const n = NODES[id]; return n ? n.t + (n.sub && n.k !== "fn" ? "" : "") : (id || "the map"); }
+function color(id){ const n = NODES[id]; return n ? n.c : "#9aa3c4"; }
+
+/* ---------- open ---------- */
+function number(){ const u = new URL(location.href); return (u.searchParams.get("n") || localStorage.getItem("sj.passport") || "").toUpperCase(); }
+async function open(num){
+  $("#enterMsg").textContent = "";
+  let p; try{ p = await call("sj_passport_get", { number: num }); }catch(e){ $("#enterMsg").textContent = e.message === "slow down" ? "Too many tries. Give it a few minutes." : "That number did not open anything."; return; }
+  if(!p){ $("#enterMsg").textContent = "That number did not open anything. Check the letters: the number never uses 0, 1, I or O."; return; }
+  P = p; localStorage.setItem("sj.passport", p.number); history.replaceState(null, "", "?n=" + p.number);
+  $("#enter").classList.add("hide"); $("#pp").classList.remove("hide"); render();
+}
+function render(){
+  $("#crest").innerHTML = crestSvg(P.crest); $("#num").textContent = P.number;
+  const since = P.stamps.length ? P.stamps[0].season : P.season;
+  $("#meta").textContent = `${P.state ? P.state + " · " : ""}since ${since} · ${P.stamps.length} stamp${P.stamps.length === 1 ? "" : "s"} · held by the family`;
+  renderStamps(); renderShares(); renderLedger(); renderRecord(); drawTrail($("#trail"), P.stamps, P.journey && P.journey.pos);
+  // crests
+  $("#crests").innerHTML = Object.keys(CRESTS).map(k => `<button data-crest="${k}" class="${k === P.crest ? "on" : ""}" title="${k}">${crestSvg(k)}</button>`).join("");
+  $("#stateSel").innerHTML = `<option value="">no state</option>` + STATES.map(s => `<option ${s === P.state ? "selected" : ""}>${s}</option>`).join("");
+}
+function stampCard(s, editable){
+  const ref = s.ref; const pl = s.payload || {};
+  let title = placeName(ref), line = "";
+  if(s.kind === "handoff"){ title = placeName(ref); line = (HQ[ref] ? HQ[ref] + " " : "") + (ANS[pl.answer] || ""); }
+  if(s.kind === "checkin"){ title = CHG[pl.change] || "Checked in"; line = [pl.reason, pl.intend && ("next: " + ANS[pl.intend])].filter(Boolean).join(" · "); }
+  if(s.kind === "crossroads"){ title = placeName(ref); line = "the dot went " + (pl.next ? placeName(pl.next) : "on"); }
+  const rot = ((parseInt(String(s.id).slice(-2), 10) || 0) % 7) - 3;
+  return `<div class="stamp" style="--sc:${color(ref) || "#9aa3c4"};--rot:${rot}deg" data-id="${s.id}"><i>${KIND[s.kind] || s.kind}</i><b>${title}</b><small>${s.season}${line ? " · " + line : ""}</small>${editable ? `<button class="vis" data-vis="${s.id}" title="who can see this stamp">${s.visibility}</button>` : ""}</div>`;
+}
+function renderStamps(){
+  const by = {}; P.stamps.forEach(s => (by[s.season] = by[s.season] || []).push(s));
+  const seasons = Object.keys(by).sort().reverse();
+  $("#stampsBox").innerHTML = seasons.length ? seasons.map(se => `<div class="season">${se}</div><div class="stamps">${by[se].map(s => stampCard(s, true)).join("")}</div>`).join("") : `<p class="muted">No stamps yet. Open the map, stand on a place, and press Stamp.</p>`;
+}
+function renderShares(){
+  $("#shares").innerHTML = (P.shares || []).length ? P.shares.map(x => `<div class="share"><span><code>${location.origin}${location.pathname}?s=${x.token}</code><br><span class="fine">${x.expires_at ? "until " + new Date(x.expires_at).toLocaleDateString() : "no expiry"}</span></span><span class="row"><button class="btn" data-copy="${x.token}">Copy</button><button class="btn danger" data-revoke="${x.token}">Revoke</button></span></div>`).join("") : `<p class="fine">No links out. Nothing but the number opens this passport.</p>`;
+}
+async function renderLedger(){
+  const el = $("#ledger"); el.innerHTML = `<p class="fine">Loading the published roots…</p>`;
+  try{ const roots = await call("sj_log_roots"); const last = P.stamps[P.stamps.length - 1];
+    el.innerHTML = `<table>${(roots || []).slice(0, 5).map(r => `<tr><td>${r.day}</td><td><code>${r.root}</code><br><span class="fine">${r.n} stamp${r.n === 1 ? "" : "s"} that day, published ${new Date(r.published_at).toLocaleString()}</span></td></tr>`).join("") || `<tr><td colspan="2" class="fine">No roots published yet. The first one lands tonight.</td></tr>`}</table>` +
+      (last ? `<p style="margin-top:10px"><button class="btn" id="proofBtn">Verify my latest stamp</button> <span class="fine" id="proofOut"></span></p>` : "");
+    const pb = $("#proofBtn"); if(pb) pb.onclick = async () => { const o = $("#proofOut"); o.textContent = "checking…"; try{ const pr = await call("sj_stamp_proof", { number: P.number, id: last.id }); if(pr.pending){ o.textContent = `Pressed on ${pr.day}; its root publishes tonight.`; return; } o.textContent = `In the ${pr.day} root (${pr.n} stamps): path of ${pr.path.length} hash${pr.path.length === 1 ? "" : "es"} from your stamp to the published root.`; }catch(e){ o.textContent = "could not verify right now"; } };
+  }catch(e){ el.innerHTML = `<p class="fine">The ledger is not reachable right now.</p>`; }
+}
+function renderRecord(){
+  const j = P.journey || {};
+  const rows = [["Passport number", P.number], ["Crest", P.crest], ["State", P.state || "not given"], ["Created", new Date(P.created_at).toLocaleString()], ["Email on file", P.has_email ? "yes (adult holder)" : "none"],
+    ["The dot", `${j.who || ""} · age ${j.age || ""} · ${placeName(j.fn)} · ${j.recent || ""} · pays: ${j.pay || ""} · distance: ${j.dist || ""}`],
+    ["Stamps", P.stamps.length ? P.stamps.map(s => `${s.season} ${KIND[s.kind] || s.kind}${s.ref ? " at " + placeName(s.ref) : ""}${s.payload && Object.keys(s.payload).length ? " (" + Object.entries(s.payload).map(([k, v]) => k + ": " + v).join(", ") + ")" : ""} · ${s.visibility}`).join("<br>") : "none"],
+    ["Share links", (P.shares || []).length + " active"],
+    ["Not stored", "name, birthdate, school, photo, club as free text, any free text at all"]];
+  $("#record").innerHTML = `<table>${rows.map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join("")}</table>`;
+}
+
+/* ---------- the trail: the board with the stamped places joined in order ---------- */
+function loadBoard(){ return new Promise(res => { if(board){ res(board); return; } const im = new Image(); im.onload = () => { board = im; res(im); }; im.onerror = () => res(null); im.src = "../img/board.webp"; }); }
+async function drawTrail(cv, stamps, pos){
+  const ctx = cv.getContext("2d"); const im = await loadBoard(); const W = cv.width, H = cv.height, sx = W / 3300, sy = H / 2380;
+  ctx.fillStyle = "#0b0f1e"; ctx.fillRect(0, 0, W, H); if(im) ctx.drawImage(im, 0, 0, W, H);
+  ctx.fillStyle = "rgba(11,15,30,.35)"; ctx.fillRect(0, 0, W, H);
+  const pts = stamps.filter(s => s.ref && NODES[s.ref] && s.kind !== "checkin").map(s => ({ x: NODES[s.ref].x * sx, y: NODES[s.ref].y * sy, c: color(s.ref), k: s.kind }));
+  if(pos && NODES[pos] && !pts.length) pts.push({ x: NODES[pos].x * sx, y: NODES[pos].y * sy, c: color(pos), k: "dot" });
+  ctx.lineCap = "round"; ctx.lineJoin = "round";
+  if(pts.length > 1){ ctx.strokeStyle = "#e2b94f"; ctx.lineWidth = 3; ctx.setLineDash([]); ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke(); }
+  pts.forEach((p, i) => { ctx.beginPath(); ctx.arc(p.x, p.y, i === pts.length - 1 ? 11 : 7, 0, Math.PI * 2); ctx.fillStyle = p.c; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = "#0b0f1e"; ctx.stroke(); });
+  if(pts.length){ const l = pts[pts.length - 1]; ctx.beginPath(); ctx.arc(l.x, l.y, 18, 0, Math.PI * 2); ctx.strokeStyle = "rgba(255,255,255,.7)"; ctx.lineWidth = 2; ctx.stroke(); }
+  const n = $("#trailNote"); if(n) n.textContent = pts.length > 1 ? `${pts.length} places, in the order they were stamped.` : pts.length ? "One place so far. The line draws itself as you stamp." : "No places stamped yet.";
+}
+
+/* ---------- share image ---------- */
+async function shareImage(){
+  const cv = document.createElement("canvas"); cv.width = 1080; cv.height = 1350; const c = cv.getContext("2d");
+  c.fillStyle = "#0d1120"; c.fillRect(0, 0, 1080, 1350);
+  c.strokeStyle = "rgba(226,185,79,.5)"; c.lineWidth = 3; c.strokeRect(40, 40, 1000, 1270); c.strokeStyle = "rgba(226,185,79,.25)"; c.lineWidth = 1; c.strokeRect(56, 56, 968, 1238);
+  c.fillStyle = "#e2b94f"; c.font = "600 22px \"IBM Plex Sans\", system-ui, sans-serif"; c.fillText("SOCCER'S JOURNEY", 90, 130);
+  c.fillStyle = "#fff"; c.font = "600 84px Fraunces, Georgia, serif"; c.fillText("Passport", 90, 220);
+  c.font = "600 34px \"IBM Plex Sans\", system-ui, sans-serif"; c.fillStyle = "#fff"; c.fillText(P.number, 90, 280);
+  c.fillStyle = "#9aa3c4"; c.font = "500 24px \"IBM Plex Sans\", system-ui, sans-serif"; c.fillText(`${P.state ? P.state + " · " : ""}${P.stamps.length} stamps · held by the family`, 90, 322);
+  // crest
+  const svg = new Blob([`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="220" height="220">${CRESTS[P.crest] || CRESTS.ball}</svg>`], { type: "image/svg+xml" }); const url = URL.createObjectURL(svg);
+  await new Promise(res => { const im = new Image(); im.onload = () => { c.drawImage(im, 780, 110, 220, 220); URL.revokeObjectURL(url); res(); }; im.onerror = res; im.src = url; });
+  // trail
+  const t = document.createElement("canvas"); t.width = 1100; t.height = 793; await drawTrail(t, P.stamps, P.journey && P.journey.pos); c.drawImage(t, 90, 370, 900, 649);
+  // stamps line
+  const last = P.stamps.slice(-3).reverse(); c.fillStyle = "#dfe5ff"; c.font = "500 26px \"IBM Plex Sans\", system-ui, sans-serif";
+  last.forEach((s, i) => c.fillText(`${s.season} · ${KIND[s.kind] || s.kind}${s.ref ? " · " + placeName(s.ref) : ""}`, 90, 1080 + i * 40));
+  c.fillStyle = "#aab2d0"; c.font = "600 22px \"IBM Plex Sans\", system-ui, sans-serif"; c.fillText("WHERE IS YOUR DOT?", 90, 1230);
+  c.fillStyle = "#fff"; c.font = "600 36px Fraunces, Georgia, serif"; c.fillText("Map yours at soccersjourney.com", 90, 1272);
+  c.fillStyle = "#aab2d0"; c.font = "500 20px \"IBM Plex Sans\", system-ui, sans-serif"; c.fillText("The Five Functions · @JeremiahWhiteIII · © 2026 White Sports Ventures", 90, 1300);
+  const a = document.createElement("a"); a.download = `passport-${P.number}.png`; a.href = cv.toDataURL("image/png"); a.click(); toast("Image saved");
+}
+
+/* ---------- shared view ---------- */
+async function openShared(token){
+  let v; try{ v = await call("sj_share_get", { token }); }catch(e){ v = null; }
+  $("#enter").classList.add("hide"); $("#shared").classList.remove("hide");
+  if(!v){ $("#sMeta").textContent = "This link has expired or was revoked."; $("#sStamps").innerHTML = ""; return; }
+  $("#sCrest").innerHTML = crestSvg(v.crest); $("#sMeta").textContent = `${v.state ? v.state + " · " : ""}${v.stamps.length} stamp${v.stamps.length === 1 ? "" : "s"} shown`;
+  const by = {}; v.stamps.forEach(s => (by[s.season] = by[s.season] || []).push(s)); const seasons = Object.keys(by).sort().reverse();
+  $("#sStamps").innerHTML = seasons.length ? seasons.map(se => `<div class="season">${se}</div><div class="stamps">${by[se].map(s => stampCard(s, false)).join("")}</div>`).join("") : `<p class="muted">Nothing shared yet.</p>`;
+  drawTrail($("#sTrail"), v.stamps, null);
+}
+
+/* ---------- wiring ---------- */
+(async () => {
+  await loadNodes();
+  const u = new URL(location.href);
+  if(u.searchParams.get("s")) return openShared(u.searchParams.get("s"));
+  const n = number(); if(n) { $("#numIn").value = n; open(n); }
+  $("#openForm").addEventListener("submit", e => { e.preventDefault(); const v = $("#numIn").value.trim().toUpperCase().replace(/[^A-Z0-9]/g, ""); if(v.length < 10) { $("#enterMsg").textContent = "A passport number looks like SJ-XXXX-XXXX."; return; } open("SJ-" + v.slice(2, 6) + "-" + v.slice(6, 10)); });
+  $("#closeBtn").onclick = () => { localStorage.removeItem("sj.passport"); history.replaceState(null, "", location.pathname); $("#pp").classList.add("hide"); $("#enter").classList.remove("hide"); $("#numIn").value = ""; };
+  $("#crestBtn").onclick = () => $("#crestPick").classList.toggle("hide");
+  $("#crests").addEventListener("click", async e => { const b = e.target.closest("[data-crest]"); if(!b) return; try{ await call("sj_passport_update", { number: P.number, crest: b.dataset.crest }); P.crest = b.dataset.crest; render(); toast("Crest changed"); }catch(err){ toast("Could not change the crest"); } });
+  $("#stateSel").addEventListener("change", async e => { try{ await call("sj_passport_update", { number: P.number, state: e.target.value }); P.state = e.target.value || null; render(); toast("State saved"); }catch(err){ toast("Could not save"); } });
+  $("#stampsBox").addEventListener("click", async e => { const b = e.target.closest("[data-vis]"); if(!b) return; const id = +b.dataset.vis; const s = P.stamps.find(x => x.id === id); const next = { private: "link", link: "public", public: "private" }[s.visibility]; try{ await call("sj_passport_update", { number: P.number, stamp_visibility: { id, visibility: next } }); s.visibility = next; renderStamps(); renderRecord(); toast(`Now ${next}`); }catch(err){ toast("Could not change"); } });
+  $("#shareImgBtn").onclick = shareImage;
+  $("#shareLinkBtn").onclick = async () => { try{ const x = await call("sj_share_create", { number: P.number, days: 30 }); P.shares.push({ token: x.token, scope: "link", expires_at: x.expires_at }); renderShares(); renderRecord(); toast("Link made, 30 days"); }catch(err){ toast(err.message === "slow down" ? "Too many links for now" : "Could not make a link"); } };
+  $("#shares").addEventListener("click", async e => { const c = e.target.closest("[data-copy]"), r = e.target.closest("[data-revoke]"); if(c){ try{ await navigator.clipboard.writeText(`${location.origin}${location.pathname}?s=${c.dataset.copy}`); toast("Copied"); }catch(err){ toast("Copy by hand"); } } if(r){ try{ await call("sj_share_revoke", { number: P.number, token: r.dataset.revoke }); P.shares = P.shares.filter(x => x.token !== r.dataset.revoke); renderShares(); renderRecord(); toast("Revoked"); }catch(err){ toast("Could not revoke"); } } });
+  $("#exportBtn").onclick = () => { const a = document.createElement("a"); a.download = `passport-${P.number}.json`; a.href = "data:application/json;charset=utf-8," + encodeURIComponent(JSON.stringify(P, null, 2)); a.click(); };
+  $("#deleteBtn").onclick = async () => { if(!confirm("Delete everything under this passport? The stamps, the links, the state. This cannot be undone. The number will stop opening anything.")) return; try{ const r = await call("sj_passport_delete", { number: P.number }); localStorage.removeItem("sj.passport"); alert(`Deleted. ${r.removed} stamp${r.removed === 1 ? "" : "s"} removed. The ledger keeps only the hashes, which say nothing.`); location.href = location.pathname; }catch(err){ toast("Could not delete"); } };
+})();
+</script>
+</body>
+</html>

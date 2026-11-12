@@ -689,6 +689,19 @@ path.road.gold.show{stroke:rgba(226,185,79,.75)}
 @media (max-width:760px){#credits .cr{display:block;margin-top:2px}}
 body.phone #roads-g{filter:none}
 
+
+/* ---------- passport on the card ---------- */
+#card .pass{border:1px solid rgba(226,185,79,.4);border-radius:8px;padding:12px 14px;background:rgba(226,185,79,.05)}
+#card .pass .pt{font-family:var(--head);font-size:15px;color:#fff;margin-bottom:4px}
+#card .pass .pn{font:600 13px/1 var(--font);letter-spacing:.12em;color:#fff}
+#card .pass .pm{font-size:12.5px;color:var(--muted);margin:4px 0 8px}
+#card .pass .pq{font-family:var(--head);font-style:italic;font-size:14.5px;color:#f1f3ff;margin:6px 0 8px}
+#card .pass .pbtns{display:flex;gap:6px;flex-wrap:wrap}
+#card .pass .pbtns button,#card .pass a.pb{border:1px solid rgba(255,255,255,.18);background:rgba(9,12,26,.9);color:#dfe5ff;border-radius:6px;padding:8px 11px;font:600 11.5px/1 var(--font);letter-spacing:.05em;text-transform:uppercase;cursor:pointer;text-decoration:none}
+#card .pass .pbtns button.on,#card .pass .pbtns button.primary{background:#fff;color:#0b1020;border-color:#fff}
+#card .pass .pbtns button:disabled{opacity:.5;cursor:default}
+#card .pass .stamped{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:#e2b94f}
+
 </style>
 </head>
 <body class="no-select">
@@ -2735,6 +2748,58 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
   }
   function loop(){ try{ draw(); }catch(e){} requestAnimationFrame(loop); }
   requestAnimationFrame(loop);
+})();
+</script>
+
+<script>
+/* ---------- the passport: get one from the journey card, stamp from any place card ---------- */
+(function(){
+  const PP = { get num(){ return localStorage.getItem("sj.passport") || ""; }, set num(v){ v ? localStorage.setItem("sj.passport", v) : localStorage.removeItem("sj.passport"); } };
+  const HQ = { g1:"Does the kid want more?", g2:"What can the player do in May that they could not in September?", g3:"Who is grading, and what are they selling?", bridge:"What was measured, and where did the player fall short?" };
+  const stampedKey = (id) => "sj.stamped." + id;
+  function kindFor(n){ if(HQ[n.id]) return "handoff"; if(n.r === "cross" || n.k === "break") return "crossroads"; if(["backed","college","work","adult"].includes(n.r)) return "milestone"; return "arrival"; }
+  const PAGE = "passport/";
+  function section(html){ const d = document.createElement("div"); d.className = "sec"; d.innerHTML = html; return d; }
+
+  async function getPassport(){
+    const j = state.journey; if(!j || !j.key) throw new Error("no key");
+    const r = await sjCall("sj_passport_create", { key: j.key });
+    PP.num = r.number; return r;
+  }
+
+  const PREVIEW = /[?&]passport=1/.test(location.search) || localStorage.getItem("sj.pp_preview") === "1"; if(/[?&]passport=1/.test(location.search)) localStorage.setItem("sj.pp_preview", "1");
+  function journeySection(){
+    const j = state.journey; if(!j) return null;
+    if(!PP.num && !PREVIEW) return null;   /* preview until it ships: open the map with ?passport=1 */
+    if(PP.num) return section(`<div class="pass"><div class="pt">Your passport</div><div class="pn">${PP.num}</div><div class="pm">Stamps are pressed by you, on the places you stand on. The passport keeps the trail.</div><div class="pbtns"><a class="pb" href="${PAGE}?n=${PP.num}">Open passport</a></div></div>`);
+    const d = section(`<div class="pass"><div class="pt">Get a passport for this dot</div><div class="pm">A number, a crest, and a page that keeps every place you stamp, season by season. No name, no email, nothing to remember but the number. Held by the family.</div><div class="pbtns"><button class="primary" id="ppGet">Get my passport</button></div></div>`);
+    d.querySelector("#ppGet").onclick = async (e) => { const b = e.currentTarget; b.disabled = true; b.textContent = "Minting…"; try{ const r = await getPassport(); if(typeof track === "function") track("passport_create"); renderJourneyCard(); Snd.click && Snd.click(); }catch(err){ b.disabled = false; b.textContent = j.key ? "Try again" : "Place the dot first"; } };
+    return d;
+  }
+
+  function placeSection(n){
+    if(!PP.num || !n || n.k === "attr" || n.k === "center") return null;
+    const kind = kindFor(n); const done = store.get(stampedKey(n.id), null);
+    const label = { arrival:"Stamp: I was here", handoff:"Stamp the handoff", crossroads:"Stamp the crossroads", milestone:"Stamp the milestone" }[kind];
+    if(done) return section(`<div class="pass"><div class="pt">Stamped</div><div class="stamped">✓ ${label.replace("Stamp: ","").replace("Stamp the ","")} · ${done}</div><div class="pbtns" style="margin-top:8px"><a class="pb" href="${PAGE}?n=${PP.num}">Open passport</a></div></div>`);
+    let html = `<div class="pass"><div class="pt">${label}</div>`;
+    if(kind === "handoff") html += `<div class="pq">${HQ[n.id]}</div><div class="pbtns"><button data-ans="yes">Yes</button><button data-ans="no">No</button><button data-ans="notsure">Not sure</button></div>`;
+    else html += `<div class="pm">${kind === "crossroads" ? "This is one of the hard places. The stamp records that the dot was here this season; it stays private on any link unless you change it." : kind === "milestone" ? "A rare road. The stamp records the season the dot reached it." : "The stamp records the place and the season. Nothing else."}</div><div class="pbtns"><button data-ans="">${label}</button></div>`;
+    html += `</div>`;
+    const d = section(html);
+    d.querySelectorAll("[data-ans]").forEach(b => b.onclick = async () => {
+      d.querySelectorAll("button").forEach(x => x.disabled = true);
+      const payload = kind === "handoff" ? { answer: b.dataset.ans } : {};
+      try{ const r = await sjCall("sj_stamp", { number: PP.num, kind, ref: n.id, payload }); store.set(stampedKey(n.id), r.season); if(typeof track === "function") track("stamp", { kind, ref: n.id }); Snd.click && Snd.click(); renderNodeCard(n, false); }
+      catch(err){ d.querySelector(".pt").textContent = err.message === "slow down" ? "Too many stamps for now. Try later." : "Could not stamp. Is the passport still open?"; d.querySelectorAll("button").forEach(x => x.disabled = false); }
+    });
+    return d;
+  }
+
+  const _node = window.renderNodeCard; window.renderNodeCard = function(n, earnedNow){ _node.apply(this, arguments); const sec = placeSection(n); if(sec) cardBody.appendChild(sec); };
+  const _jc = window.renderJourneyCard; window.renderJourneyCard = function(){ _jc.apply(this, arguments); const sec = journeySection(); if(sec) cardBody.appendChild(sec); };
+  // the season check-in is itself a press: it becomes a stamp
+  const _call = window.sjCall; window.sjCall = async function(fn, body){ const r = await _call(fn, body); if(fn === "sj_checkin" && PP.num && body && body.a){ try{ await _call("sj_stamp", { number: PP.num, kind: "checkin", ref: body.a.pos, payload: { change: body.a.change, reason: body.a.reason || undefined, intend: body.a.intend || undefined } }); }catch(e){} } return r; };
 })();
 </script>
 </body>

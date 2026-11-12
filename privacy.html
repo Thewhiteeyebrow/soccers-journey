@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How the map handles your data · Soccer's Journey</title>
+<link rel="icon" href="icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,500,50,0;9..144,600,50,0&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d1120;--ink:#f3f5fb;--muted:#9aa3c4;--gold:#e2b94f;--font:"IBM Plex Sans",system-ui,sans-serif;--head:"Fraunces",Georgia,serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased}
+main{max-width:680px;margin:0 auto;padding:28px 18px 60px}
+h1,h2{font-family:var(--head);font-weight:600;font-variation-settings:"SOFT" 50,"WONK" 0;margin:0}
+h1{font-size:32px;line-height:1.1;margin-bottom:6px}h2{font-size:19px;margin:28px 0 8px}
+p,li{line-height:1.55;font-size:15.5px}ul{padding-left:20px}a{color:#dfe5ff}
+.ed{font-family:var(--head);font-style:italic;color:#c9cde0;font-size:13px}
+.big{font-family:var(--head);font-size:21px;line-height:1.35;color:#fff;border-left:3px solid var(--gold);padding-left:14px;margin:18px 0}
+footer{text-align:center;font-size:11.5px;color:var(--muted);padding:20px}
+</style>
+</head>
+<body>
+<main>
+  <a href="./" style="font-size:13px">← Back to the map</a>
+  <h1 style="margin-top:14px">How the map handles your data</h1>
+  <p class="ed">First edition · November 2026 · written by Jeremiah White III</p>
+
+  <p class="big">The map keeps your passport for you, and you can take it or burn it whenever you like. It never takes personal information from or about a child.</p>
+
+  <h2>What the map records</h2>
+  <ul>
+    <li><b>When you place a dot:</b> who is answering (player, parent, coach, club), an age band, the function the player is in, the most recent thing that happened (picked, cut, injured, moved), who pays, and the distance to training. Nothing else.</li>
+    <li><b>When you take a passport:</b> a passport number, a crest you pick, and, if you give it, a state. Every stamp you press: the place, the season, and the answer you chose from a list. Stamps are pressed by you, never by the map.</li>
+    <li><b>When you check in each season:</b> what changed, why (from a list), and what you intend next.</li>
+    <li><b>If an adult asks for the season note:</b> that adult's email, with an unsubscribe link in every note.</li>
+    <li><b>When you ask the map a question:</b> the question and the answer, with a hashed network address so one visitor cannot flood it. Questions are never published as written.</li>
+  </ul>
+
+  <h2>What the map never asks for</h2>
+  <p>A name. A birthdate. A school. A photo. A club as free text. An email from anyone under 18. Any free text at all, because free text is where names leak. A parent answers for a player; a player under 18 never gives the map a way to be contacted.</p>
+
+  <h2>Who can see what</h2>
+  <ul>
+    <li><b>Your passport</b> opens only with its number. Keep the number private and the passport is private.</li>
+    <li><b>Share links</b> are made by you, expire when you say, and die the moment you revoke them. A link shows the stamps you marked "link" or "public". Check-ins and crossroads stamps are private on a link unless you change them.</li>
+    <li><b>Clubs</b> see a passport only when a family shows it to them. Clubs cannot search for players, browse passports, or message a passport holder. That direction never changes.</li>
+    <li><b>The public record</b> publishes counts, never rows. Any count with fewer than 20 people behind it is withheld. Nobody can find a child in a count of twenty.</li>
+  </ul>
+
+  <h2>The ledger</h2>
+  <p>Every stamp is hashed into a chain inside your passport, and every night the day's stamp hashes are folded into one root that the map publishes. That lets anyone check that a stamp existed on a date, and lets nobody, including us, quietly rewrite one. The root reveals nothing about what the stamp says. If you delete your passport, the words go and the hashes stay, which proves something existed and was removed, and nothing more.</p>
+
+  <h2>Your control</h2>
+  <ul>
+    <li><b>See everything</b> under your passport, in plain words, on the Your record panel.</li>
+    <li><b>Set who sees each stamp:</b> private, link, or public.</li>
+    <li><b>Revoke any link</b> with one tap.</li>
+    <li><b>Export</b> the whole passport as a file. It is yours.</li>
+    <li><b>Delete everything</b> at once. The number stops opening anything. Counts already published are not recomputed, because they are counts of twenty or more and contain no row to remove.</li>
+    <li><b>At 18,</b> the parent attaches the adult player's email and the passport becomes the player's.</li>
+  </ul>
+
+  <h2>Where it lives, and who runs it</h2>
+  <p>Soccer's Journey is made by White Sports Ventures. The data is held in a database used by nothing else, in the United States, reached only through a gate that limits how often anyone can ask it anything. Keys for the services the map uses are held by Jeremiah White III and never pass through anyone else. Questions: <a href="https://www.whitesportventures.com">whitesportventures.com</a>.</p>
+
+  <p style="margin-top:26px;color:var(--muted);font-size:13px">This page is written in plain words on purpose. If a lawyer tells us a line needs changing, it changes here first, dated.</p>
+</main>
+<footer>© 2026 White Sports Ventures · The Five Functions framework and the Soccer's Journey map are the work of Jeremiah White III.</footer>
+</body>
+</html>
