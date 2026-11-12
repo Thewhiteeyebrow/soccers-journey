@@ -290,6 +290,7 @@ body.far .node .label{transition:opacity .3s}
 .art .coins i{width:32px;height:32px;border-radius:50%;background:var(--beyond);box-shadow:0 0 18px rgba(255,179,71,.6)}
 .art .coins i:nth-child(odd){background:#2a3156;box-shadow:none;border:1.5px solid #3a4270}
 
+
 /* ---------- mobile ---------- */
 @media (max-width:760px){.brand b{font-size:15.5px;white-space:nowrap}}
 @media (max-width:760px){
@@ -631,6 +632,38 @@ body.lite #roads path.road.season{filter:none}
 #journey .jlast b{color:#ffd34d;font-weight:600}
 #toast{position:fixed;left:50%;bottom:120px;transform:translateX(-50%) translateY(20px);z-index:40;padding:12px 18px;border-radius:14px;background:rgba(10,14,32,.92);border:1px solid rgba(255,211,77,.5);color:#fff;font-size:14px;max-width:min(520px,calc(100vw - 28px));opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;backdrop-filter:blur(10px)}
 #toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+/* ---------- edge furniture: set, not floated. Words over icons, hairlines over glow ---------- */
+.btn,.chip,#lens,#carry,#legend,#hint,#ask form,#askCtx,#ask .chip{border-radius:6px;backdrop-filter:none;box-shadow:none;background:rgba(9,12,26,.94);border:1px solid rgba(255,255,255,.16)}
+#lens .seg{background:transparent;border:0;padding:0;border-radius:0}
+#lens .seg button{border:0;background:transparent;border-radius:4px;box-shadow:none}
+#lens .seg button.on{background:#fff;color:#0b1020;box-shadow:none}
+#lens.attn{box-shadow:0 0 0 3px rgba(255,255,255,.18)}
+#ask form{border-color:rgba(255,255,255,.22)}
+.tools .btn.icon{width:auto;height:32px;padding:0 11px;font:600 12px/1 var(--font);letter-spacing:.06em;text-transform:uppercase;color:#dfe5ff}
+#viewtools{gap:0;border:1px solid rgba(255,255,255,.16);background:rgba(9,12,26,.94);border-radius:6px;padding:0 0 2px}
+#viewtools::before{content:"View";display:block;font:600 10.5px/1 var(--font);letter-spacing:.16em;text-transform:uppercase;color:#8d97c2;padding:9px 12px 7px;border-bottom:1px solid rgba(255,255,255,.1)}
+#viewtools .btn.icon{width:auto;height:auto;min-width:138px;justify-content:flex-start;gap:10px;padding:8px 12px;border:0;border-bottom:1px solid rgba(255,255,255,.07);border-radius:0;background:transparent;font-size:13px}
+#viewtools .btn.icon:last-child{border-bottom:0}
+#viewtools .btn.icon::after{content:attr(data-w);font:500 12.5px/1 var(--font);color:#dfe5ff}
+#viewtools .btn.icon.on{background:transparent;box-shadow:none}
+#viewtools .btn.icon.on::after{color:#ffd36b}
+#trafficBtn.on{background:transparent;box-shadow:none}
+.tlight{box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+@media (max-width:760px){#viewtools .btn.icon{min-width:118px;padding:7px 10px}
+  /* phone: the View legend folds to its title and opens upward on tap, so the bottom bars stay clear */
+  #viewtools::before{content:"View \25B4";cursor:pointer;border-bottom:0;padding:9px 12px}
+  #viewtools.open::before{content:"View \25BE";border-bottom:1px solid rgba(255,255,255,.1)}
+  #viewtools:not(.open) .btn.icon{display:none}
+  #carry{max-width:calc(100vw - 100px);padding:7px 10px;gap:8px} #carry .coin{width:14px;height:14px} #carry .coins{gap:3px} #carry .txt{font-size:12px}
+  @media (max-width:375px){#carry .cw{display:none} #carry .coin{width:13px;height:13px}}
+  /* phone top row: shorter words, the sound control keeps its mark */
+  .tools{gap:4px} .tools .btn.icon{font-size:0;padding:0 7px;height:30px;letter-spacing:.03em} .tools .btn.icon::after{content:attr(data-s);font:600 10.5px/1 var(--font)} #sndBtn::after{font-size:14px;font-weight:500}
+  .brand b{font-size:14px} #mineBtn{display:none}}
+body.cardopen #hint{display:none}
+#regions.x{border-radius:6px;backdrop-filter:none;background:rgba(9,12,26,.94);border-color:rgba(255,255,255,.16)}
+@media (min-width:761px){#regions{right:184px} body.cardopen #regions{right:calc(var(--card-w) + 198px)}}
+
+
 </style>
 </head>
 <body class="no-select">
@@ -640,11 +673,11 @@ body.lite #roads path.road.season{filter:none}
   <div class="brand"><b>Soccer's Journey <span class="sub">The Five Functions</span></b><span class="attr">Based on Jeremiah White III's Five Functions system and Handoff Between Systems model.</span></div>
   <nav class="links" aria-label="Links"><a href="https://www.instagram.com/jeremiahwhiteiii/" target="_blank" rel="noopener">@jeremiahwhiteiii</a><a href="https://www.wsvlabs.com" target="_blank" rel="noopener">WSV Labs</a><a href="https://www.whitesportventures.com" target="_blank" rel="noopener">White Sports Ventures</a></nav>
   <div class="tools">
-    <button class="btn icon" id="journeyBtn" title="Build my journey">⌖</button>
-    <button class="btn icon" id="shareBtn" title="Share my journey">↗</button>
-    <button class="btn icon" id="mineBtn" title="Your map: path and attributes">◎</button>
-    <button class="btn icon" id="sndBtn" title="Sound on / off">♪</button>
-    <button class="btn icon" id="helpBtn" title="How this works">?</button>
+    <button class="btn icon" id="journeyBtn" data-s="Journey" title="Build my journey">Journey</button>
+    <button class="btn icon" id="shareBtn" data-s="Share" title="Share my journey">Share</button>
+    <button class="btn icon" id="mineBtn" data-s="Map" title="Your map: path and attributes">Your map</button>
+    <button class="btn icon" id="sndBtn" data-s="♪" title="Sound on / off">Sound</button>
+    <button class="btn icon" id="helpBtn" data-s="Help" title="How this works">Help</button>
   </div>
 </header>
 <div id="lens"><span class="lbl">Seeing this as</span><div class="seg" id="povseg" title="Point of view"></div></div>
@@ -680,17 +713,17 @@ body.lite #roads path.road.season{filter:none}
 
 <button id="carry" title="Your map">
   <div class="coins" id="coins"></div>
-  <div class="txt"><b id="carryN">0</b> of 12 carried</div>
+  <div class="txt"><b id="carryN">0</b> of 12<span class="cw"> carried</span></div>
 </button>
 
 <div id="viewtools">
-  <button class="btn icon" id="trafficBtn" title="Traffic: how people move through the map, and ask it questions"><span class="tlight"><i class="r"></i><i class="y"></i><i class="g"></i></span></button>
-  <button class="btn icon" id="trailBtn" title="Show or hide your trail">≈</button>
-  <button class="btn icon" id="tiltBtn" title="Flat view / 3D view">◩</button>
-  <button class="btn icon" id="zinBtn" title="Zoom in">+</button>
-  <button class="btn icon" id="zoutBtn" title="Zoom out">−</button>
-  <button class="btn icon" id="homeBtn" title="Back to the field">⌂</button>
-  <button class="btn icon" id="resetMapBtn" title="Reset the map: clear your dot and start over">↺</button>
+  <button class="btn icon" id="trafficBtn" data-w="Traffic" title="Traffic: how people move through the map, and ask it questions"><span class="tlight"><i class="r"></i><i class="y"></i><i class="g"></i></span></button>
+  <button class="btn icon" id="trailBtn" data-w="Trail" title="Show or hide your trail">≈</button>
+  <button class="btn icon" id="tiltBtn" data-w="Flat / 3D" title="Flat view / 3D view">◩</button>
+  <button class="btn icon" id="zinBtn" data-w="Zoom in" title="Zoom in">+</button>
+  <button class="btn icon" id="zoutBtn" data-w="Zoom out" title="Zoom out">−</button>
+  <button class="btn icon" id="homeBtn" data-w="The field" title="Back to the field">⌂</button>
+  <button class="btn icon" id="resetMapBtn" data-w="Reset" title="Reset the map: clear your dot and start over">↺</button>
 </div>
 
 <aside id="card" aria-live="polite">
@@ -1622,8 +1655,14 @@ function toggleMine(){ const m = $("#mine"); const open = !m.classList.contains(
 $("#mineBtn").addEventListener("click", toggleMine); $("#carry").addEventListener("click", toggleMine); $("#closeMine").addEventListener("click", ()=>{ $("#mine").classList.remove("open"); Snd.click(); });
 
 /* ---------- sound toggle ---------- */
-function renderSnd(){ $("#sndBtn").textContent = state.sound ? "♪" : "∅"; $("#sndBtn").style.opacity = state.sound ? 1 : .6; }
+function renderSnd(){ $("#sndBtn").textContent = state.sound ? "Sound" : "Sound off"; $("#sndBtn").setAttribute("data-s", state.sound ? "♪" : "∅"); $("#sndBtn").style.opacity = state.sound ? 1 : .6; }
 $("#sndBtn").addEventListener("click", ()=>{ state.sound = !state.sound; renderSnd(); if(state.sound) Snd.click(); persist(); });
+/* phone View legend: tap the title to open, tap anywhere else to fold */
+(function(){ const vt = $("#viewtools"); if(!vt) return;
+  vt.addEventListener("click", (e) => { if(e.target === vt){ vt.classList.toggle("open"); } });
+  document.addEventListener("pointerdown", (e) => { if(vt.classList.contains("open") && !vt.contains(e.target)) vt.classList.remove("open"); }, { capture: true, passive: true });
+  vt.addEventListener("click", (e) => { if(e.target !== vt && matchMedia("(max-width:760px)").matches) setTimeout(() => vt.classList.remove("open"), 150); });
+})();
 
 /* ---------- intro ---------- */
 let slideI = 0; const slides = document.querySelectorAll(".slide");
