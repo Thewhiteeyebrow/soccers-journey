@@ -820,7 +820,7 @@ body.phone #roads-g{filter:none}
 /* ---------- error and crash reporting (so a failure on a phone can be read, not guessed) ---------- */
 (function(){
   const snap = () => { try{ let st = {}; try{ st = state; }catch(e){} const state_ = st || {}; return { z: +(state_.zoom||0).toFixed(3), px: Math.round(state_.px||0), py: Math.round(state_.py||0), flat: !!state_.flat, traffic: document.body.classList.contains("traffic"), card: document.body.classList.contains("cardopen"), lite: document.body.classList.contains("lite"), phone: document.body.classList.contains("phone"), dpr: devicePixelRatio, w: innerWidth, h: innerHeight, t: Date.now() }; }catch(e){ return { t: Date.now() }; } };
-  const send = (kind, msg, stack, extra) => { try{ const p = { kind, msg: String(msg||"").slice(0,500), stack: String(stack||"").slice(0,2000), ua: navigator.userAgent, state: Object.assign(snap(), extra||{}) }; const U = "https://phbbkwbquzpwaolgtdir.supabase.co"; fetch(U + "/functions/v1/sj-gate", { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ fn: "sj_log_error", body: { p } }), keepalive: true }).catch(()=>{}); }catch(e){} };
+  const send = (kind, msg, stack, extra) => { try{ const p = { kind, msg: String(msg||"").slice(0,500), stack: String(stack||"").slice(0,2000), ua: navigator.userAgent, state: Object.assign(snap(), extra||{}) }; const U = "https://jacakuicfwclkvjzxdgh.supabase.co"; fetch(U + "/functions/v1/sj-gate", { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ fn: "sj_log_error", body: { p } }), keepalive: true }).catch(()=>{}); }catch(e){} };
   window.addEventListener("error", e => send("js", e.message, e.error && e.error.stack, { at: (e.filename||"").slice(-40) + ":" + e.lineno }));
   window.addEventListener("unhandledrejection", e => send("promise", e.reason && (e.reason.message || e.reason), e.reason && e.reason.stack));
   // heartbeat: if the page comes back as a reload within seconds of a heartbeat, the browser most likely killed it (memory)
@@ -1917,7 +1917,7 @@ restoreJourney();
    COUNTER (Supabase, anonymous). Three functions exposed: sj_hit, sj_totals, sj_journey.
    If the network is blocked (preview sandbox, offline) the pill stays hidden.
    ===================================================================== */
-const SJ = { url: "https://phbbkwbquzpwaolgtdir.supabase.co" };
+const SJ = { url: "https://jacakuicfwclkvjzxdgh.supabase.co" };
 let totals = null;
 /* every read or write of the map's own tables goes through one gated function: allowlisted ops, per-visitor limits */
 async function sjCall(fn, body){
