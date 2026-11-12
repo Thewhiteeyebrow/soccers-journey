@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Soccer's Journey: The Five Functions</title>
+<meta name="copyright" content="© 2026 White Sports Ventures. The Five Functions framework and the Soccer's Journey map are the work of Jeremiah White III.">
 <meta name="description" content="Soccer's Journey: an explorable map of Jeremiah White III's Five Functions system and the handoffs between them, and every road that leads off the field.">
 <link rel="canonical" href="https://soccersjourney.com/">
 <meta property="og:type" content="website">
@@ -682,6 +683,10 @@ path.road.gold.show{stroke:rgba(226,185,79,.75)}
 #grain{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.055;mix-blend-mode:screen;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");background-size:240px 240px}
 #bg{background:radial-gradient(900px 500px at 50% 110%, rgba(226,185,79,.05), transparent 60%), var(--bg)}
 #credits .ed{font-family:var(--head);font-style:italic;font-weight:500;color:#c9cde0;margin-right:10px}
+#credits .cr{color:#c9cde0;white-space:nowrap;text-decoration:none;margin-right:6px}
+#credits{white-space:nowrap}
+#intro .copy{font-size:11px;color:var(--muted);margin-top:8px;text-align:center}
+@media (max-width:760px){#credits .cr{display:block;margin-top:2px}}
 body.phone #roads-g{filter:none}
 
 </style>
@@ -730,7 +735,7 @@ body.phone #roads-g{filter:none}
 <div id="tbanner"><b id="tbannerB">EVIDENCE</b> <span id="tbannerT">17 roads carry published or modeled numbers · the other 61 are unknown and drawn as such</span></div>
 <div id="tlegend"><div class="tmode"><button data-m="evidence" class="on">Evidence</button><button data-m="demo">Illustrative</button></div><div class="l3"><i style="border-top-color:rgba(255,236,180,.7)"></i> Measured road (evidence)</div><div class="l3"><i></i> Heavier traffic</div><div class="l2"><i></i> Moderate</div><div class="l1"><i></i> Lighter</div><div class="l0"><i></i> Unknown: no evidence yet</div><div class="lk">Flow is annual movement, not live tracking</div></div>
 <div id="grain" aria-hidden="true"></div>
-<footer id="credits"><span class="ed">First edition · November 2026 · drawn by Jeremiah White III</span> <span class="cnt" id="counterFoot" hidden><b data-n="journeys">0</b> journeys mapped ·</span> Soccer's Journey · The Five Functions · <a href="https://www.instagram.com/jeremiahwhiteiii/" target="_blank" rel="noopener">Jeremiah White III · @jeremiahwhiteiii</a> · <a href="https://www.wsvlabs.com" target="_blank" rel="noopener">WSV Labs</a> · <a href="https://www.whitesportventures.com" target="_blank" rel="noopener">White Sports Ventures</a></footer>
+<footer id="credits"><span class="ed">First edition · November 2026 · drawn by Jeremiah White III</span> <a class="cr" href="https://www.whitesportventures.com" target="_blank" rel="noopener" title="The Five Functions framework and the Soccer's Journey map are the work of Jeremiah White III. All rights reserved.">© 2026 White Sports Ventures</a>&nbsp;· <span class="cnt" id="counterFoot" hidden><b data-n="journeys">0</b> journeys mapped ·</span> Soccer's Journey · The Five Functions · <a href="https://www.instagram.com/jeremiahwhiteiii/" target="_blank" rel="noopener">Jeremiah White III · @jeremiahwhiteiii</a> · <a href="https://www.wsvlabs.com" target="_blank" rel="noopener">WSV Labs</a></footer>
 
 <button id="carry" title="Your map">
   <div class="coins" id="coins"></div>
@@ -801,6 +806,7 @@ body.phone #roads-g{filter:none}
       <p class="credits">Based on Jeremiah White III's Five Functions system and Handoff Between Systems model. More at <a href="https://www.wsvlabs.com" target="_blank" rel="noopener">wsvlabs.com</a> and <a href="https://www.whitesportventures.com" target="_blank" rel="noopener">whitesportventures.com</a>.</p>
     </div>
     <div class="follow">Follow <a href="https://www.instagram.com/jeremiahwhiteiii/" target="_blank" rel="noopener">@JeremiahWhiteIII</a> on Instagram · <a href="https://www.wsvlabs.com" target="_blank" rel="noopener">wsvlabs.com</a></div>
+    <div class="copy">© 2026 White Sports Ventures · The Five Functions framework and this map are the work of Jeremiah White III</div>
     <div class="foot">
       <label class="skip optout"><input type="checkbox" id="introOff"> Don't show again</label>
       <button class="skip" id="skipIntro">Skip</button>
@@ -1873,7 +1879,7 @@ function drawShareCard(fmtName){
   c.textAlign = "left"; c.textBaseline = "alphabetic";
   c.fillStyle = "#aab2d0"; c.font = "600 22px \"IBM Plex Sans\", system-ui, sans-serif"; c.fillText("WHERE IS YOUR DOT?", 72, cy2);
   c.fillStyle = "#fff"; c.font = "600 40px Fraunces, Georgia, serif"; c.fillText("Map yours at soccersjourney.com", 72, cy2 + 46);
-  c.fillStyle = "#aab2d0"; c.font = "500 24px \"IBM Plex Sans\", system-ui, sans-serif"; c.fillText((j.n ? `Journey #${fmt(j.n)} · ` : "") + "The Five Functions · @JeremiahWhiteIII", 72, cy2 + 84);
+  c.fillStyle = "#aab2d0"; c.font = "500 24px \"IBM Plex Sans\", system-ui, sans-serif"; c.fillText((j.n ? `Journey #${fmt(j.n)} · ` : "") + "The Five Functions · @JeremiahWhiteIII · © 2026 White Sports Ventures", 72, cy2 + 84);
   return cv;
 }
 let shareFmt = store.get("sj.cardfmt", matchMedia("(hover:none)").matches ? "story" : "post");
