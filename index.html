@@ -461,7 +461,7 @@ body.lite #roads path.road.lit, body.lite #roads path.road.trail{animation:none}
 .counter i{width:8px;height:8px;border-radius:50%;background:var(--path);animation:cpulse 2s ease-out infinite}
 @keyframes cpulse{0%{box-shadow:0 0 0 0 rgba(255,211,77,.6)}100%{box-shadow:0 0 0 10px rgba(255,211,77,0)}}
 .counter small{color:var(--muted)}
-#credits .cnt{color:#fff;font-weight:600;margin-right:4px}
+#credits .cnt{color:#fff;font-weight:600;margin:0 4px}
 #credits .cnt[hidden]{display:none}
 #credits .cnt b{font-variant-numeric:tabular-nums}
 
@@ -642,6 +642,7 @@ body.lite #roads path.road.season{filter:none}
 #lens .seg button.on{background:#fff;color:#0b1020;box-shadow:none}
 #lens.attn{box-shadow:0 0 0 3px rgba(255,255,255,.18)}
 #ask form{border-color:rgba(255,255,255,.22)}
+a.btn.icon{text-decoration:none}
 .tools .btn.icon{width:auto;height:32px;padding:0 11px;font:600 12px/1 var(--font);letter-spacing:.06em;text-transform:uppercase;color:#dfe5ff}
 #viewtools{gap:0;border:1px solid rgba(255,255,255,.16);background:rgba(9,12,26,.94);border-radius:6px;padding:0 0 2px}
 #viewtools::before{content:"View";display:block;font:600 10.5px/1 var(--font);letter-spacing:.16em;text-transform:uppercase;color:#8d97c2;padding:9px 12px 7px;border-bottom:1px solid rgba(255,255,255,.1)}
@@ -661,7 +662,7 @@ body.lite #roads path.road.season{filter:none}
   @media (max-width:375px){#carry .cw{display:none} #carry .coin{width:13px;height:13px}}
   /* phone top row: shorter words, the sound control keeps its mark */
   .tools{gap:4px} .tools .btn.icon{font-size:0;padding:0 7px;height:30px;letter-spacing:.03em} .tools .btn.icon::after{content:attr(data-s);font:600 10.5px/1 var(--font)} #sndBtn::after{font-size:14px;font-weight:500}
-  .brand b{font-size:14px} #mineBtn{display:none}}
+  .brand b{font-size:14px} #mineBtn,#aboutBtn{display:none}}
 body.cardopen #hint{display:none}
 #regions.x{border-radius:6px;backdrop-filter:none;background:rgba(9,12,26,.94);border-color:rgba(255,255,255,.16)}
 @media (min-width:761px){#regions{right:184px} body.cardopen #regions{right:calc(var(--card-w) + 198px)}}
@@ -686,7 +687,6 @@ path.road.gold.show{stroke:rgba(226,185,79,.75)}
 #credits .cr{color:#c9cde0;white-space:nowrap;text-decoration:none;margin-right:6px}
 #credits{white-space:nowrap}
 #intro .copy{font-size:11px;color:var(--muted);margin-top:8px;text-align:center}
-@media (max-width:760px){#credits .cr{display:block;margin-top:2px}}
 
 
 /* ---------- passport on the card ---------- */
@@ -707,14 +707,14 @@ path.road.gold.show{stroke:rgba(226,185,79,.75)}
 <div id="bg"></div>
 
 <header id="hud">
-  <div class="brand"><b>Soccer's Journey <span class="sub">The Five Functions</span></b><span class="attr">Based on Jeremiah White III's Five Functions system and Handoff Between Systems model.</span></div>
-  <nav class="links" aria-label="Links"><a href="https://www.instagram.com/jeremiahwhiteiii/" target="_blank" rel="noopener">@jeremiahwhiteiii</a><a href="https://www.wsvlabs.com" target="_blank" rel="noopener">WSV Labs</a><a href="https://www.whitesportventures.com" target="_blank" rel="noopener">White Sports Ventures</a></nav>
+  <div class="brand"><b>Soccer's Journey</b><span class="attr">A map of the roads through American soccer</span></div>
   <div class="tools">
     <button class="btn icon" id="journeyBtn" data-s="Journey" title="Build my journey">Journey</button>
     <button class="btn icon" id="shareBtn" data-s="Share" title="Share my journey">Share</button>
     <button class="btn icon" id="mineBtn" data-s="Map" title="Your map: path and attributes">Your map</button>
     <button class="btn icon" id="sndBtn" data-s="♪" title="Sound on / off">Sound</button>
     <button class="btn icon" id="helpBtn" data-s="Help" title="How this works">Help</button>
+    <a class="btn icon" id="aboutBtn" data-s="About" href="about.html" title="Who made this and where the numbers come from">About</a>
   </div>
 </header>
 <div id="lens"><span class="lbl">Seeing this as</span><div class="seg" id="povseg" title="Point of view"></div></div>
@@ -747,7 +747,7 @@ path.road.gold.show{stroke:rgba(226,185,79,.75)}
 <div id="tbanner"><b id="tbannerB">EVIDENCE</b> <span id="tbannerT">17 roads carry published or modeled numbers · the other 61 are unknown and drawn as such</span></div>
 <div id="tlegend"><div class="tmode"><button data-m="evidence" class="on">Evidence</button><button data-m="demo">Illustrative</button></div><div class="l3"><i style="border-top-color:rgba(255,236,180,.7)"></i> Measured road (evidence)</div><div class="l3"><i></i> Heavier traffic</div><div class="l2"><i></i> Moderate</div><div class="l1"><i></i> Lighter</div><div class="l0"><i></i> Unknown: no evidence yet</div><div class="lk">Flow is annual movement, not live tracking</div></div>
 <div id="grain" aria-hidden="true"></div>
-<footer id="credits"><span class="ed">First edition · November 2026 · drawn by Jeremiah White III</span> <a class="cr" href="https://www.whitesportventures.com" target="_blank" rel="noopener" title="The Five Functions framework and the Soccer's Journey map are the work of Jeremiah White III. All rights reserved.">© 2026 White Sports Ventures</a>&nbsp;· <span class="cnt" id="counterFoot" hidden><b data-n="journeys">0</b> journeys mapped ·</span> Soccer's Journey · The Five Functions · <a href="https://www.instagram.com/jeremiahwhiteiii/" target="_blank" rel="noopener">Jeremiah White III · @jeremiahwhiteiii</a> · <a href="https://www.wsvlabs.com" target="_blank" rel="noopener">WSV Labs</a></footer>
+<footer id="credits"><a class="cr" href="https://www.whitesportventures.com" target="_blank" rel="noopener" title="The Five Functions framework and the Soccer's Journey map are the work of Jeremiah White III. All rights reserved.">© 2026 White Sports Ventures</a> <span class="cnt" id="counterFoot" hidden>· <b data-n="journeys">0</b> journeys mapped</span> · <a href="about.html">About</a> · <a href="privacy.html">Privacy</a></footer>
 
 <button id="carry" title="Your map">
   <div class="coins" id="coins"></div>
@@ -817,8 +817,8 @@ path.road.gold.show{stroke:rgba(226,185,79,.75)}
       <p>Twelve attributes get picked up as you explore. They are what the game leaves in a person, and they travel into every other kind of work. Nothing here is a verdict. It's terrain.</p>
       <p class="credits">Based on Jeremiah White III's Five Functions system and Handoff Between Systems model. More at <a href="https://www.wsvlabs.com" target="_blank" rel="noopener">wsvlabs.com</a> and <a href="https://www.whitesportventures.com" target="_blank" rel="noopener">whitesportventures.com</a>.</p>
     </div>
-    <div class="follow">Follow <a href="https://www.instagram.com/jeremiahwhiteiii/" target="_blank" rel="noopener">@JeremiahWhiteIII</a> on Instagram · <a href="https://www.wsvlabs.com" target="_blank" rel="noopener">wsvlabs.com</a></div>
-    <div class="copy">© 2026 White Sports Ventures · The Five Functions framework and this map are the work of Jeremiah White III</div>
+    <div class="follow">Built on Jeremiah White III's Five Functions model · <a href="about.html">About this map</a></div>
+    <div class="copy">© 2026 White Sports Ventures</div>
     <div class="foot">
       <label class="skip optout"><input type="checkbox" id="introOff"> Don't show again</label>
       <button class="skip" id="skipIntro">Skip</button>
