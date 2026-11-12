@@ -205,9 +205,9 @@ function render(){
 function stampCard(s, editable){
   const ref = s.ref; const pl = s.payload || {};
   let title = placeName(ref), line = "";
-  if(s.kind === "handoff"){ title = placeName(ref); line = (HQ[ref] ? HQ[ref] + " " : "") + (ANS[pl.answer] || ""); }
+  if(s.kind === "handoff"){ title = placeName(ref); line = pl.answer ? "answer: " + (ANS[pl.answer] || pl.answer) : ""; }
   if(s.kind === "checkin"){ title = CHG[pl.change] || "Checked in"; line = [pl.reason, pl.intend && ("next: " + ANS[pl.intend])].filter(Boolean).join(" · "); }
-  if(s.kind === "crossroads"){ title = placeName(ref); line = "the dot went " + (pl.next ? placeName(pl.next) : "on"); }
+  if(s.kind === "crossroads"){ title = placeName(ref); line = pl.next ? "then " + placeName(pl.next) : ""; }
   const rot = ((parseInt(String(s.id).slice(-2), 10) || 0) % 7) - 3;
   return `<div class="stamp" style="--sc:${color(ref) || "#9aa3c4"};--rot:${rot}deg" data-id="${s.id}"><i>${KIND[s.kind] || s.kind}</i><b>${title}</b><small>${s.season}${line ? " · " + line : ""}</small>${editable ? `<button class="vis" data-vis="${s.id}" title="who can see this stamp">${s.visibility}</button>` : ""}</div>`;
 }
