@@ -53,8 +53,8 @@ body.paper .grade,body.paper .ppg{color:#5b6278;border-color:rgba(0,0,0,.15)}bod
   </ul>
 
   <h2>The ledger</h2>
-  <p>Every stamp is hashed into a chain inside your passport, and every night the day's stamp hashes are folded into one root that the map publishes. That lets anyone check that a stamp existed on a date, and lets nobody, including us, quietly rewrite one. The root reveals nothing about what the stamp says. If you delete your passport, the words go and the hashes stay, which proves something existed and was removed, and nothing more.</p>
-
+  <p>When your passport is issued, your phone makes a signing key and keeps it. Soccer's Journey never holds that key; it holds only the public half, so it can tell that a stamp was pressed by your device and not by anyone else. Every stamp's content is hashed on your phone, signed, and the hash is recorded. The words of a stamp (the place, the season) are not stored as free text on the server, only the place code, the season and the fingerprint. Every night the day's fingerprints are folded into one root that the map publishes. That lets anyone check that a stamp existed on a date, and lets nobody, including us, quietly rewrite one. If you delete your passport, the content goes and the fingerprints stay, which proves something existed and was removed, and nothing more.</p>
+  <p>A recovery code is shown once in your passport. With your number and that code you can bring the passport back on another device. Nobody at Soccer's Journey can do that for you, and nobody can read your passport with the number alone.</p>
   <h2>Your control</h2>
   <ul>
     <li><b>See everything</b> under your passport, in plain words, on the Your record panel.</li>
