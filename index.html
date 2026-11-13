@@ -731,6 +731,10 @@ path.road.gold.show{stroke:rgba(226,185,79,.75)}
 .ppg{font:600 9.5px/1 var(--font);letter-spacing:.08em;text-transform:uppercase;padding:4px 6px;border-radius:4px;border:1px solid var(--line);color:var(--muted)}
 .ppg.email{color:#f0d890;border-color:rgba(226,185,79,.5)}.ppg.person{color:#8fc38a;border-color:rgba(143,195,138,.6)}
 .pplist{border-top:1px solid var(--line)}
+.ppmore{margin-left:auto;color:var(--muted);font-size:18px}
+.ppcode{font-family:ui-monospace,Menlo,monospace;font-size:15px;letter-spacing:.06em;color:#e2b94f;margin-top:10px;word-break:break-all;line-height:1.6}
+#mine input{width:100%;background:#0a0e1d;border:1px solid var(--line);color:#dfe5ff;border-radius:6px;padding:9px;font:13px/1.3 ui-monospace,Menlo,monospace}
+body.paper #mine input,body.paper #ppExport{background:#fff;color:#15192b;border-color:rgba(0,0,0,.2)}body.paper .ppcode{color:#8a6a10}
 .ppitem{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer}
 .ppitem b{display:block;font-size:13.5px;font-weight:600;line-height:1.3}.ppitem span:not(.ppst){font-size:11.5px;color:var(--muted)}
 .ppitem:hover b{color:#fff}
@@ -2002,7 +2006,7 @@ let totals = null;
 /* every read or write of the map's own tables goes through one gated function: allowlisted ops, per-visitor limits */
 async function sjCall(fn, body){
   const r = await fetch(`${SJ.url}/functions/v1/sj-gate`, { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ fn, body: body||{} }) });
-  if(!r.ok) throw new Error(fn+" "+r.status);
+  if(!r.ok){ let w = ""; try{ w = (await r.json()).error || ""; }catch(e){} throw new Error((w || fn) + " " + r.status); }
   return r.json();
 }
 function fmt(n){ return Number(n||0).toLocaleString("en-US"); }
@@ -2821,7 +2825,7 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
 
 <script>
 /* ---------- the passport: get one from the journey card, stamp from any place card ---------- */
-/* ---------- Passport (phase A: the map remembers) ---------- */
+/* ---------- Passport (phase B: the map remembers, and the record is real) ---------- */
 (function(){
   const PP_ON = true; if(!PP_ON) return;
   const KEY = "sj.pp";
@@ -2829,98 +2833,191 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
   const SEASONS = [SEASON, (() => { const y = parseInt(SEASON) - 1; return y + "/" + String(y + 1).slice(2); })(), "earlier"];
   const P = { load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || null; }catch(e){ return null; } }, save(p){ try{ localStorage.setItem(KEY, JSON.stringify(p)); }catch(e){} } };
   let pp = P.load();
+  const enc = new TextEncoder();
+  const b64 = u8 => btoa(String.fromCharCode(...new Uint8Array(u8))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+  const unb64 = s => Uint8Array.from(atob(s.replace(/-/g,"+").replace(/_/g,"/") + "=".repeat((4 - s.length % 4) % 4)), c => c.charCodeAt(0));
+  const hex = u8 => [...new Uint8Array(u8)].map(b => b.toString(16).padStart(2,"0")).join("");
+  const unhex = h => Uint8Array.from(h.match(/../g).map(x => parseInt(x,16)));
+  const sha = async s => hex(await crypto.subtle.digest("SHA-256", enc.encode(s)));
+  const canon = o => JSON.stringify(o, Object.keys(o).sort());
+  const PK8 = unhex("302e020100300506032b657004220420");   /* pkcs8 prefix for an Ed25519 seed */
+
+  /* ----- keys: Ed25519 from a seed (recoverable); P-256 fallback (not recoverable) ----- */
+  let KEYS = null;
+  async function keyFromSeed(seedHex){ const pk8 = new Uint8Array(48); pk8.set(PK8); pk8.set(unhex(seedHex), 16); const priv = await crypto.subtle.importKey("pkcs8", pk8, { name:"Ed25519" }, true, ["sign"]); const jwk = await crypto.subtle.exportKey("jwk", priv); const pub = await crypto.subtle.importKey("jwk", { kty:"OKP", crv:"Ed25519", x: jwk.x }, { name:"Ed25519" }, true, ["verify"]); return { priv, pub, pubRaw: jwk.x, alg:"ed25519" }; }
+  async function newKeys(){
+    try{ const code = crypto.getRandomValues(new Uint8Array(16)); const seed = await sha("sj-passport|" + hex(code)); const k = await keyFromSeed(seed); return Object.assign(k, { seed, code: hex(code) }); }catch(e){}
+    try{ const k = await crypto.subtle.generateKey({ name:"ECDSA", namedCurve:"P-256" }, true, ["sign","verify"]); const jwk = await crypto.subtle.exportKey("jwk", k.privateKey); const pubRaw = b64(await crypto.subtle.exportKey("raw", k.publicKey)); return { priv: k.privateKey, pub: k.publicKey, pubRaw, alg:"p256", jwk }; }catch(e){}
+    return null;
+  }
+  async function loadKeys(){ if(KEYS || !pp) return KEYS; try{ if(pp.alg === "ed25519" && pp.seed) KEYS = await keyFromSeed(pp.seed); else if(pp.alg === "p256" && pp.jwk){ const priv = await crypto.subtle.importKey("jwk", pp.jwk, { name:"ECDSA", namedCurve:"P-256" }, true, ["sign"]); KEYS = { priv, alg:"p256", pubRaw: pp.pub }; } }catch(e){ KEYS = null; } return KEYS; }
+  async function sign(msg){ const k = await loadKeys(); if(!k) return null; try{ return k.alg === "ed25519" ? b64(await crypto.subtle.sign({ name:"Ed25519" }, k.priv, enc.encode(msg))) : b64(await crypto.subtle.sign({ name:"ECDSA", hash:"SHA-256" }, k.priv, enc.encode(msg))); }catch(e){ return null; } }
+  const codeText = c => c ? c.toUpperCase().match(/.{1,4}/g).join("-") : "";
+
   const CREST = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M12 7l4.5 3.3-1.7 5.4H9.2L7.5 10.3z"/><path d="M12 3v4M3.5 10.3l4 0M20.5 10.3l-4 0M6.3 19.5l2.9-3.8M17.7 19.5l-2.9-3.8"/></svg>';
   const ICON = { journey: CREST, place:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 21s6-5.2 6-10a6 6 0 10-12 0c0 4.8 6 10 6 10z"/><circle cx="12" cy="11" r="2"/></svg>', handoff:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 9h12l-3-3M20 15H8l3 3"/></svg>', crossroads:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3v18M3 12h18"/></svg>', checkin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 12l4 4L19 6"/></svg>' };
   const HQ = { g1:"Does the kid want more?", g2:"What can the player do in May that they could not in September?", g3:"Who is grading, and what are they selling?", bridge:"What was measured, and where did the player fall short?" };
   function kindFor(n){ if(HQ[n.id] || n.k === "gap" || n.k === "bridge") return "handoff"; if(n.r === "cross" || n.k === "break") return "crossroads"; return "place"; }
-  function mint(){ const r = crypto.getRandomValues(new Uint8Array(3)); return "SJ-" + (2600 + r[0] % 300) + "-" + [...r.slice(1)].map(b => b.toString(16).padStart(2,"0")).join("").toUpperCase(); }
-  function issue(){ if(pp) return pp; pp = { num: mint(), issued: new Date().toISOString().slice(0,10), stamps: [] }; P.save(pp); return pp; }
-  function toast(m){ let el = $("#toast"); if(!el){ el = document.createElement("div"); el.id = "toast"; document.body.appendChild(el); } el.textContent = m; el.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("on"), 3000); }
-  function showIssue(msg){ if(!pp || pp.seen) return; pp.seen = true; P.save(pp); const el = $("#ppissue"); $("#ppiNum").textContent = pp.num; $("#ppiMsg").textContent = msg; el.classList.add("up"); const hide = () => el.classList.remove("up"); $("#ppiOk").onclick = () => { hide(); Snd.click && Snd.click(); }; $("#ppiOpen").onclick = () => { hide(); openSheet(); }; }
-  function stamp(s){ issue(); const same = pp.stamps.find(x => x.ref === s.ref && x.kind === s.kind && x.season === s.season); if(same) return same; s.ts = new Date().toISOString(); s.grade = s.grade || "self"; pp.stamps.push(s); P.save(pp); renderStrip(); drawTrail(); if(typeof track === "function") track("stamp", { kind: s.kind, ref: s.ref }); return s; }
-  function unstamp(ref, kind){ if(!pp) return; pp.stamps = pp.stamps.filter(x => !(x.ref === ref && x.kind === kind)); P.save(pp); renderStrip(); drawTrail(); }
+  function claimFor(kind, ref){ const n = byId[ref]; const t = n ? n.t : ref; return kind === "handoff" ? `${t}: it happened` : kind === "crossroads" ? `Stood at ${t}` : kind === "checkin" ? `Season check-in at ${t}` : kind === "journey" ? `Journey drawn at ${t}` : t; }
+  function toast(m){ let el = $("#toast"); if(!el){ el = document.createElement("div"); el.id = "toast"; document.body.appendChild(el); } el.textContent = m; el.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("on"), 3400); }
   const GRADE = { self:"You said it", product:"Product confirmed", email:"Club confirmed by email", person:"Club confirmed in person" };
   const stampsFor = (id) => pp ? pp.stamps.filter(s => s.ref === id) : [];
+  const online = () => typeof sjCall === "function";
 
-  /* ----- strip (replaces the carry tray) ----- */
-  function renderStrip(){
-    const el = $("#carry"); if(!el) return;
-    if(!pp){ el.innerHTML = `<div class="pps"><span class="ppslot"></span><span class="ppslot"></span><span class="ppslot"></span></div><div class="txt"><b>No passport yet</b><span class="cw"> · put yourself on the map to get one</span></div>`; el.title = "Your passport"; return; }
-    const last = pp.stamps.slice(-5);
-    el.innerHTML = `<div class="pps">${last.map(s => `<span class="ppst ${s.grade}" title="${s.claim}">${ICON[s.kind] || ICON.place}</span>`).join("")}${pp.stamps.length < 3 ? "<span class='ppslot'></span>".repeat(3 - pp.stamps.length) : ""}</div><div class="txt"><b>${pp.stamps.length}</b> stamp${pp.stamps.length === 1 ? "" : "s"}<span class="cw"> · ${pp.num}</span></div>`;
-    el.title = "Your passport";
+  /* ----- issue: keys on the device, number from the server ----- */
+  let issuing = null;
+  async function issue(){
+    if(pp && pp.num) return pp;
+    if(issuing) return issuing;
+    issuing = (async () => {
+      if(!pp){ const k = await newKeys(); const owner = b64(crypto.getRandomValues(new Uint8Array(32))); pp = { num:"", issued: new Date().toISOString().slice(0,10), owner, alg: k ? k.alg : null, seed: k && k.seed || null, code: k && k.code || null, jwk: k && k.jwk || null, pub: k ? k.pubRaw : null, stamps: [] }; KEYS = k; P.save(pp); }
+      if(!pp.num && online()){ try{ const r = await sjCall("sj_pp_create", { pub: pp.pub || "", alg: pp.alg || "", owner: pp.owner, key: (state.journey && state.journey.key) || "" }); pp.num = r.number; pp.issued = (r.created_at || "").slice(0,10) || pp.issued; P.save(pp); }catch(e){ console.warn("passport create", e.message); } }
+      issuing = null; return pp;
+    })();
+    return issuing;
   }
 
-  /* ----- traveled trail: where you've actually been ----- */
+  /* ----- stamps: signed on the device, recorded on the server ----- */
+  async function stamp(s){
+    await issue();
+    const same = pp.stamps.find(x => x.ref === s.ref && x.kind === s.kind && x.season === s.season); if(same) return same;
+    s.ts = new Date().toISOString(); s.grade = s.grade || "self"; s.v = 1;
+    const content = { v:1, kind:s.kind, ref:s.ref, season:s.season, claim:s.claim, ts:s.ts };
+    s.chash = await sha(canon(content)); s.sig = await sign(s.chash); s.synced = false; s.visibility = (s.kind === "checkin" || s.kind === "crossroads") ? "private" : "link";
+    pp.stamps.push(s); P.save(pp); renderStrip(); drawTrail();
+    if(typeof track === "function") track("stamp", { kind: s.kind, ref: s.ref });
+    sync(); return s;
+  }
+  async function unstamp(ref, kind){ if(!pp) return; const gone = pp.stamps.filter(x => x.ref === ref && x.kind === kind); pp.stamps = pp.stamps.filter(x => !(x.ref === ref && x.kind === kind)); P.save(pp); renderStrip(); drawTrail(); for(const s of gone){ if(s.id && online()){ try{ await sjCall("sj_pp_remove", { number: pp.num, owner: pp.owner, id: s.id }); }catch(e){} } } }
+  let syncing = false;
+  async function sync(){
+    if(!pp || syncing || !online()) return; syncing = true;
+    try{
+      if(!pp.num) await issue();
+      if(pp.num) for(const s of pp.stamps){ if(s.synced) continue; try{ const r = await sjCall("sj_pp_stamp", { number: pp.num, owner: pp.owner, kind: s.kind, ref: s.ref, season: s.season, chash: s.chash, sig: s.sig || "", ts: s.ts }); s.id = r.id; s.hash = r.hash; s.recorded = r.created_at; s.synced = true; P.save(pp); }catch(e){ if(/signature|owner|db/.test(e.message)){ s.synced = "rejected"; P.save(pp); } } }
+    } finally { syncing = false; renderStrip(); if($("#mine").classList.contains("open")) renderSheet(); }
+  }
+
+  /* ----- strip ----- */
+  function renderStrip(){
+    const el = $("#carry"); if(!el) return;
+    if(!pp){ el.innerHTML = `<div class="pps"><span class="ppslot"></span><span class="ppslot"></span><span class="ppslot"></span></div><div class="txt"><b>No passport yet</b><span class="cw"> · put yourself on the map to get one</span></div>`; return; }
+    const last = pp.stamps.slice(-5); const n = pp.stamps.length;
+    el.innerHTML = `<div class="pps">${last.map(s => `<span class="ppst ${s.grade}" title="${s.claim}">${ICON[s.kind] || ICON.place}</span>`).join("")}${n < 3 ? "<span class='ppslot'></span>".repeat(3 - n) : ""}</div><div class="txt"><b>${n}</b> stamp${n === 1 ? "" : "s"}<span class="cw"> · ${pp.num || "recording…"}</span></div>`;
+  }
+
+  /* ----- traveled trail ----- */
   function trailPts(){ if(!pp) return []; const seen = new Set(); const pts = []; pp.stamps.slice().sort((a,b) => a.ts < b.ts ? -1 : 1).forEach(s => { const n = byId[s.ref]; if(!n || seen.has(s.ref)) return; seen.add(s.ref); pts.push([n.x, n.y, s.grade]); }); return pts; }
   function drawTrail(){
     const pts = trailPts(); window.sjPPTrail = pts;
     const rg = $("#roads-g"); if(!rg) return;
     let g = $("#pptrail"); if(!g){ g = document.createElementNS("http://www.w3.org/2000/svg", "g"); g.id = "pptrail"; rg.appendChild(g); }
-    g.innerHTML = "";
-    if(pts.length < 2) return;
+    g.innerHTML = ""; if(pts.length < 2) return;
     let d = ""; pts.forEach((p,i) => { if(!i){ d += `M${p[0]} ${p[1]}`; return; } const q = pts[i-1]; const mx = (q[0]+p[0])/2, my = (q[1]+p[1])/2 - Math.abs(p[0]-q[0])*0.12; d += ` Q${mx} ${my} ${p[0]} ${p[1]}`; });
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path"); path.setAttribute("d", d); path.setAttribute("class", "ppline"); g.appendChild(path);
     pts.forEach(p => { const c = document.createElementNS("http://www.w3.org/2000/svg", "circle"); c.setAttribute("cx", p[0]); c.setAttribute("cy", p[1]); c.setAttribute("r", 7); c.setAttribute("class", "ppdot " + p[2]); g.appendChild(c); });
   }
 
-  /* ----- the line at the bottom of a place card ----- */
+  /* ----- the question at the bottom of a place card ----- */
   function placeSection(n){
     if(!n || n.k === "attr" || n.k === "center") return null;
     const kind = kindFor(n); const mine = stampsFor(n.id);
     const d = document.createElement("div"); d.className = "sec ppsec";
     if(mine.length){
-      d.innerHTML = `<div class="ppq"><div class="ppt">In your passport</div>${mine.map(s => `<div class="ppdone"><span class="ppst ${s.grade}">${ICON[s.kind]}</span><div><b>${s.claim}</b><span>${s.season} · ${GRADE[s.grade]}</span></div></div>`).join("")}<div class="pprow"><button class="ppb" data-open>Open passport</button><button class="ppb ghost" data-undo>Remove</button></div></div>`;
+      d.innerHTML = `<div class="ppq"><div class="ppt">In your passport</div>${mine.map(s => `<div class="ppdone"><span class="ppst ${s.grade}">${ICON[s.kind]}</span><div><b>${s.claim}</b><span>${s.season} · ${GRADE[s.grade]}${s.synced === true ? " · on the record" : s.synced === "rejected" ? " · not recorded" : " · recording…"}</span></div></div>`).join("")}<div class="pprow"><button class="ppb" data-open>Open passport</button><button class="ppb ghost" data-undo>Remove</button></div></div>`;
       d.querySelector("[data-open]").onclick = () => openSheet();
       d.querySelector("[data-undo]").onclick = () => { unstamp(n.id, kind); renderNodeCard(n, false); };
       return d;
     }
     const q = kind === "handoff" ? "Did this happen to you?" : kind === "crossroads" ? "Did you stand here?" : "Were you here?";
-    const hint = kind === "handoff" ? HQ[n.id] || "The handoff question, answered by the people it happened to." : kind === "crossroads" ? "One of the hard places. Stamping it only says you were here, nothing more." : "Add a season. One tap puts this place in your passport.";
+    const hint = kind === "handoff" ? HQ[n.id] || "The handoff question, answered by the people it happened to." : kind === "crossroads" ? "One of the hard places. Stamping it only says you were here, nothing more. Private unless you change it." : "Add a season. One tap puts this place in your passport.";
     d.innerHTML = `<div class="ppq"><div class="ppt">${q}</div><div class="ppm">${hint}</div><div class="pprow" data-seasons>${SEASONS.map(s => `<button class="ppb" data-season="${s}">${s === "earlier" ? "Earlier" : s}</button>`).join("")}</div><div class="ppfine">Goes in as "you said it". A club can confirm it later.</div></div>`;
-    d.querySelectorAll("[data-season]").forEach(b => b.onclick = () => {
+    d.querySelectorAll("[data-season]").forEach(b => b.onclick = async () => {
       const season = b.dataset.season; const first = !pp;
-      stamp({ ref: n.id, kind, season, claim: kind === "handoff" ? `${n.t}: it happened` : kind === "crossroads" ? `Stood at ${n.t}` : `${n.t}` });
+      d.querySelectorAll("button").forEach(x => x.disabled = true);
+      await stamp({ ref: n.id, kind, season, claim: claimFor(kind, n.id) });
       Snd.click && Snd.click(); renderNodeCard(n, false);
       if(first) setTimeout(() => showIssue("This place is its first stamp. The passport keeps every place you stamp, season by season, and lives in the strip at the bottom left."), 400);
     });
     return d;
   }
 
-  /* ----- passport sheet (replaces Your map) ----- */
+  /* ----- one-time issue banner ----- */
+  function showIssue(msg){ if(!pp || pp.seen) return; pp.seen = true; P.save(pp); const el = $("#ppissue"); $("#ppiNum").textContent = pp.num || "Number on its way"; $("#ppiMsg").textContent = msg; el.classList.add("up"); const hide = () => el.classList.remove("up"); $("#ppiOk").onclick = () => { hide(); Snd.click && Snd.click(); }; $("#ppiOpen").onclick = () => { hide(); openSheet(); }; }
+
+  /* ----- the passport sheet ----- */
   function renderSheet(){
-    const body = $("#mineBody"); const total = NODES.length;
-    let html = "";
+    const body = $("#mineBody"); const total = NODES.length; let html = "";
     if(pp){
-      html += `<div class="ppcover"><div class="ppcrest">${CREST}</div><div class="pped">Soccer's Journey passport · First edition</div><div class="ppnum">${pp.num}</div><div class="ppmeta">Issued ${pp.issued} · ${pp.stamps.length} stamp${pp.stamps.length===1?"":"s"} · Only on this device until you share it</div></div>`;
-      html += `<p class="ppm" style="margin:10px 0 0">Where you've been on this map, season by season. You press the stamps. A club can confirm them later, and the passport always shows which is which.</p>`;
+      const n = pp.stamps.length; const rec = pp.stamps.filter(s => s.synced === true).length;
+      html += `<div class="ppcover"><div class="ppcrest">${CREST}</div><div class="pped">Soccer's Journey passport · First edition</div><div class="ppnum">${pp.num || "Number on its way"}</div><div class="ppmeta">Issued ${pp.issued} · ${n} stamp${n===1?"":"s"}${n ? ` · ${rec} on the record` : ""} · Private until you share it</div></div>`;
+      html += `<p class="ppm" style="margin:10px 0 0">Where you've been on this map, season by season. You press the stamps, your phone signs them, and the public record keeps their fingerprints. A club can confirm them later, and the passport always shows which is which.</p>`;
       html += `<div class="pplegend"><span class="ppg self">You said it</span><span class="ppg email">Club confirmed by email</span><span class="ppg person">Club confirmed in person</span></div>`;
-      html += pp.stamps.length ? `<div class="pplist">${pp.stamps.slice().reverse().map(s => `<div class="ppitem" data-go="${s.ref}"><span class="ppst ${s.grade}">${ICON[s.kind] || ICON.place}</span><div><b>${s.claim}</b><span>${s.season} · ${GRADE[s.grade]}</span></div></div>`).join("")}</div>` : `<p class="ppm">No stamps yet. Open any place on the map and answer the question at the bottom of its card.</p>`;
-      html += `<div class="pprow"><a class="ppb ghost" href="passport.html">What a passport is for</a></div>`;
+      html += pp.stamps.length ? `<div class="pplist">${pp.stamps.slice().reverse().map((s,i) => `<div class="ppitem" data-i="${pp.stamps.length-1-i}"><span class="ppst ${s.grade}">${ICON[s.kind] || ICON.place}</span><div><b>${s.claim}</b><span>${s.season} · ${GRADE[s.grade]}${s.visibility === "private" ? " · private" : ""}${s.synced === "rejected" ? " · not recorded" : ""}</span></div><span class="ppmore">›</span></div>`).join("")}</div>` : `<p class="ppm">No stamps yet. Open any place on the map and answer the question at the bottom of its card.</p>`;
+      html += `<div class="pprow" style="margin-top:14px"><button class="ppb" data-pp="share">Share a link</button><button class="ppb" data-pp="recovery">Recovery code</button><a class="ppb ghost" href="passport.html">What a passport is for</a></div>`;
+      html += `<div id="ppextra"></div>`;
     } else {
-      html += `<div class="ppcover empty"><div class="ppcrest">${CREST}</div><div class="pped">No passport yet</div><div class="ppm" style="margin-top:6px">Put yourself on the map and it issues one. Or open any place and answer the question at the bottom of its card. "Were you here?".</div></div>`;
+      html += `<div class="ppcover empty"><div class="ppcrest">${CREST}</div><div class="pped">No passport yet</div><div class="ppm" style="margin-top:6px">Put yourself on the map and it issues one. Or open any place and answer the question at the bottom of its card.</div><div class="pprow"><button class="ppb ghost" data-pp="restore">Restore a passport</button></div></div><div id="ppextra"></div>`;
     }
     html += `<div class="stat" style="margin-top:16px"><b>${state.visited.size}</b> of ${total} places explored · <b>${state.attrs.size}</b> of 12 attributes carried</div>`;
     html += `<div class="grid">${ATTRS.map(a => `<div class="tok ${state.attrs.has(a.id)?"on":""}" data-go="a_${a.id}"><span class="coin">${svgIcon(ATTR_ICON[a.id])}</span>${a.t}</div>`).join("")}</div>`;
     html += `<div class="row"><button class="btn primary" id="mineJourney">${state.journey ? "Update my journey" : "Put me on the map"}</button></div>`;
-    html += `<div class="row"><button class="btn" id="resetBtn">Start over</button><button class="btn" id="fieldBtn">Back to the field</button></div>`;
+    html += `<div class="row"><button class="btn" id="resetBtn">Start over</button><button class="btn" id="fieldBtn">Back to the field</button>${pp ? `<button class="btn" id="ppDelete" style="margin-left:auto;color:#e38a8a">Delete passport</button>` : ""}</div>`;
     body.innerHTML = html;
     body.querySelectorAll("[data-go]").forEach(el => el.addEventListener("click", ()=> openNode(el.dataset.go)));
+    body.querySelectorAll(".ppitem").forEach(el => el.addEventListener("click", () => stampDetail(pp.stamps[+el.dataset.i])));
     $("#mineJourney").addEventListener("click", ()=>{ Snd.click(); openJourney(); });
     $("#resetBtn").addEventListener("click", e=>{ const b=e.currentTarget; if(!b.dataset.arm){ b.dataset.arm="1"; b.textContent="Tap again to clear"; Snd.click(); setTimeout(()=>{ b.dataset.arm=""; b.textContent="Start over"; }, 2500); return; } window.resetMap(); });
     $("#fieldBtn").addEventListener("click", ()=>{ $("#mine").classList.remove("open"); Snd.whoosh(); flyTo(FIELD.x, FIELD.y, isMobile()?0.42:0.62); });
-    
+    const del = $("#ppDelete"); if(del) del.addEventListener("click", e => { const b = e.currentTarget; if(!b.dataset.arm){ b.dataset.arm = "1"; b.textContent = "Tap again: this erases it everywhere"; setTimeout(() => { b.dataset.arm = ""; b.textContent = "Delete passport"; }, 3500); return; } deletePassport(); });
+    body.querySelectorAll("[data-pp]").forEach(b => b.onclick = () => ({ share: shareUI, recovery: recoveryUI, restore: restoreUI })[b.dataset.pp]());
+    if(pp && pp.stamps.some(s => !s.synced)) sync();
   }
+  function extra(html){ const x = $("#ppextra"); x.innerHTML = `<div class="ppq" style="margin-top:12px">${html}</div>`; x.scrollIntoView({ block:"nearest" }); return x; }
+  function stampDetail(s){
+    const n = byId[s.ref]; const vis = s.visibility === "private" ? "Private: never in a shared link." : "Shown in links you share.";
+    const x = extra(`<div class="ppt">${s.claim}</div><div class="ppm">${n ? n.t : s.ref} · ${s.season} · pressed ${s.ts.slice(0,10)} · ${GRADE[s.grade]}</div><div class="ppm">${s.synced === true ? "On the public record" + (s.recorded ? " since " + s.recorded.slice(0,10) : "") + "." : s.synced === "rejected" ? "The record refused this stamp." : "Not on the record yet."} ${vis}</div><div class="pprow"><button class="ppb" data-vis>${s.visibility === "private" ? "Allow in shared links" : "Make private"}</button><button class="ppb" data-save>Save this stamp</button><button class="ppb ghost" data-del>Remove</button></div><textarea id="ppExport" style="display:none;width:100%;margin-top:10px;min-height:110px;background:#0a0e1d;border:1px solid var(--line);color:#dfe5ff;border-radius:6px;padding:8px;font:11px/1.4 ui-monospace,Menlo,monospace" readonly></textarea>`);
+    x.querySelector("[data-vis]").onclick = async () => { const v = s.visibility === "private" ? "link" : "private"; s.visibility = v; P.save(pp); if(s.id && online()){ try{ await sjCall("sj_pp_visibility", { number: pp.num, owner: pp.owner, id: s.id, visibility: v }); }catch(e){} } renderSheet(); };
+    x.querySelector("[data-del]").onclick = async () => { await unstamp(s.ref, s.kind); renderSheet(); };
+    x.querySelector("[data-save]").onclick = () => { const ta = x.querySelector("#ppExport"); ta.style.display = "block"; ta.value = JSON.stringify({ sj_stamp: 1, content: { v:1, kind:s.kind, ref:s.ref, season:s.season, claim:s.claim, ts:s.ts }, chash: s.chash, sig: s.sig, pub: pp.pub, alg: pp.alg, record: s.hash || null, check: "https://soccersjourney.com/check.html" }); ta.select(); try{ navigator.clipboard && navigator.clipboard.writeText(ta.value); toast("Stamp copied. Anyone can paste it at soccersjourney.com/check.html"); }catch(e){} };
+  }
+  async function shareUI(){
+    const x = extra(`<div class="ppt">Share a link</div><div class="ppm">A link shows your stamps marked shareable, with no passport number, for 30 days. You can turn it off any time. Club and school views come with club confirmation.</div><div class="pprow"><button class="ppb" data-make>Make a 30-day link</button></div><div id="ppShares" class="ppm"></div>`);
+    const list = async () => { if(!online() || !pp.num) return; try{ const r = await sjCall("sj_pp_get", { number: pp.num, owner: pp.owner }); const sh = r.shares || []; x.querySelector("#ppShares").innerHTML = sh.length ? sh.map(s => `<div style="margin-top:8px"><a href="https://soccersjourney.com/p.html?s=${s.token}" target="_blank" rel="noopener">soccersjourney.com/p.html?s=${s.token.slice(0,8)}…</a> · until ${s.expires_at.slice(0,10)} · <a href="#" data-rev="${s.token}">turn off</a></div>`).join("") : "No links yet."; x.querySelectorAll("[data-rev]").forEach(a => a.onclick = async e => { e.preventDefault(); await sjCall("sj_pp_share_revoke", { number: pp.num, owner: pp.owner, token: a.dataset.rev }); list(); }); }catch(e){ x.querySelector("#ppShares").textContent = "Couldn't reach the record."; } };
+    x.querySelector("[data-make]").onclick = async () => { if(!pp.num){ await issue(); } if(!pp.num){ toast("The record can't be reached right now."); return; } try{ const r = await sjCall("sj_pp_share_create", { number: pp.num, owner: pp.owner, days: 30 }); const url = "https://soccersjourney.com/p.html?s=" + r.token; try{ await navigator.clipboard.writeText(url); toast("Link copied."); }catch(e){ toast("Link made."); } list(); }catch(e){ toast("Couldn't make a link: " + e.message); } };
+    list();
+  }
+  function recoveryUI(){
+    if(pp.alg !== "ed25519" || !pp.code){ extra(`<div class="ppt">Recovery code</div><div class="ppm">This browser could not make a recoverable key, so this passport lives only on this device. Open the map in an up-to-date browser to get a passport with a recovery code.</div>`); return; }
+    const x = extra(`<div class="ppt">Recovery code</div><div class="ppm">Write this down somewhere safe. With your passport number and this code you can bring the passport back on any device. Nobody at Soccer's Journey can do it for you.</div><div class="ppcode" style="display:none">${codeText(pp.code)}</div><div class="ppm" style="display:none">Passport ${pp.num}</div><div class="pprow"><button class="ppb" data-reveal>Show the code</button></div>`);
+    x.querySelector("[data-reveal]").onclick = e => { x.querySelectorAll(".ppcode, .ppcode + .ppm").forEach(el => el.style.display = "block"); e.currentTarget.remove(); };
+  }
+  function restoreUI(){
+    const x = extra(`<div class="ppt">Restore a passport</div><div class="ppm">Enter the passport number and the recovery code you wrote down.</div><input id="rsNum" placeholder="SJ-XXXX-XXXX" style="width:100%;margin-top:8px"><input id="rsCode" placeholder="XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX" style="width:100%;margin-top:6px"><div class="pprow"><button class="ppb" data-go-restore>Restore</button></div><div class="ppm" id="rsMsg"></div>`);
+    x.querySelector("[data-go-restore]").onclick = async () => {
+      const num = x.querySelector("#rsNum").value.trim().toUpperCase(); const code = x.querySelector("#rsCode").value.replace(/[^0-9a-f]/gi, "").toLowerCase(); const m = x.querySelector("#rsMsg");
+      if(!/^SJ-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(num) || code.length !== 32){ m.textContent = "That doesn't look right. The number is SJ- plus two groups of four; the code is eight groups of four."; return; }
+      m.textContent = "Checking…";
+      try{
+        const seed = await sha("sj-passport|" + code); const k = await keyFromSeed(seed); const owner = b64(crypto.getRandomValues(new Uint8Array(32))); const ts = Date.now();
+        const sig = b64(await crypto.subtle.sign({ name:"Ed25519" }, k.priv, enc.encode(`recover|${num}|${ts}`)));
+        await sjCall("sj_pp_recover", { number: num, ts, sig, owner });
+        const r = await sjCall("sj_pp_get", { number: num, owner });
+        pp = { num, issued: (r.created_at || "").slice(0,10), owner, alg:"ed25519", seed, code, pub: k.pubRaw, seen: true, stamps: (r.stamps || []).map(s => ({ id: s.id, kind: s.kind, ref: s.ref, season: s.season, claim: claimFor(s.kind, s.ref), ts: s.ts || s.created_at, chash: s.chash, sig: s.sig, hash: s.hash, recorded: s.created_at, grade:"self", visibility: s.visibility, synced: true, v:1 })) };
+        KEYS = k; P.save(pp); renderStrip(); drawTrail(); renderSheet(); toast("Passport restored. " + pp.stamps.length + " stamp" + (pp.stamps.length === 1 ? "" : "s") + " back.");
+      }catch(e){ m.textContent = /signature|no key/.test(e.message) ? "The code doesn't match that passport." : "Couldn't restore: " + e.message; }
+    };
+  }
+  async function deletePassport(){ if(pp && pp.num && online()){ try{ await sjCall("sj_pp_delete", { number: pp.num, owner: pp.owner }); }catch(e){ toast("The record couldn't be reached. Try again."); return; } } pp = null; KEYS = null; localStorage.removeItem(KEY); renderStrip(); drawTrail(); renderSheet(); toast("Passport deleted. The record keeps only fingerprints, never content."); }
   function openSheet(){ const m = $("#mine"); renderSheet(); closeCard(); m.classList.add("open"); Snd.click && Snd.click(); }
   window.renderMine = renderSheet;
 
   /* ----- hooks ----- */
   const _node = window.renderNodeCard; window.renderNodeCard = function(n, earnedNow){ _node.apply(this, arguments); const sec = placeSection(n); if(sec) cardBody.appendChild(sec); };
-  const _finish = window.finishJourney; window.finishJourney = function(){ _finish.apply(this, arguments); const j = state.journey; if(!j) return; const first = !pp; const n = byId[j.derived.pos]; const a = j.answers; const FN = { play:"Play", test:"Test", learn:"Learn", choose:"Choose", bridge:"Pathway" }; const RC = { picked:"picked", notpicked:"not picked", released:"released", none:"no tryout yet" }; stamp({ ref: j.derived.pos, kind: "journey", season: SEASON, claim: `Journey drawn: age ${a.age}, ${FN[a.fn] || a.fn}, ${RC[a.recent] || ""}`.replace(/, $/, "") }); if(first){ setTimeout(() => showIssue("Where you are now is its first stamp. Open any place on the map and answer the question at the bottom of its card to add more. It lives in the strip at the bottom left."), 2600); $("#carry").classList.add("pulse"); setTimeout(() => $("#carry").classList.remove("pulse"), 5000); } };
-  const _call = window.sjCall; window.sjCall = async function(fn, body){ const r = await _call(fn, body); if(fn === "sj_checkin" && body && body.a && pp){ const n = byId[body.a.pos]; stamp({ ref: body.a.pos, kind: "checkin", season: SEASON, claim: `Season check-in at ${n ? n.t : body.a.pos}` }); } return r; };
-  const _reset = window.resetMap; window.resetMap = function(){ _reset.apply(this, arguments); };   /* the passport survives a map reset on purpose */
-  renderStrip(); drawTrail();
-  window.sjPassport = { get: () => pp, stamp, issue };
+  const _finish = window.finishJourney; window.finishJourney = function(){ _finish.apply(this, arguments); const j = state.journey; if(!j) return; const first = !pp; stamp({ ref: j.derived.pos, kind: "journey", season: SEASON, claim: claimFor("journey", j.derived.pos) }).then(() => { if(first){ setTimeout(() => showIssue("Where you are now is its first stamp. Open any place on the map and answer the question at the bottom of its card to add more. It lives in the strip at the bottom left."), 2600); $("#carry").classList.add("pulse"); setTimeout(() => $("#carry").classList.remove("pulse"), 5000); } }); };
+  const _call = window.sjCall; window.sjCall = async function(fn, body){ const r = await _call(fn, body); if(fn === "sj_checkin" && body && body.a && pp){ stamp({ ref: body.a.pos, kind: "checkin", season: SEASON, claim: claimFor("checkin", body.a.pos) }); } return r; };
+  renderStrip(); drawTrail(); if(pp) setTimeout(sync, 1500);
+  window.sjPassport = { get: () => pp, stamp, issue, sync };
 })();
 
 /* ---------- Paper: white reading surfaces ---------- */

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A shared passport · Soccer's Journey</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,500,50,0;9..144,600,50,0&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d1120;--ink:#f3f5fb;--muted:#9aa3c4;--gold:#e2b94f;--green:#8fc38a;--red:#e38a8a;--line:rgba(255,255,255,.12);--font:"IBM Plex Sans",system-ui,sans-serif;--head:"Fraunces",Georgia,serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased}
+main{max-width:640px;margin:0 auto;padding:28px 18px 60px}
+h1,h2{font-family:var(--head);font-weight:600;font-variation-settings:"SOFT" 50,"WONK" 0;margin:0}
+h1{font-size:30px;line-height:1.1}
+.k{font:600 10.5px/1 var(--font);letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.cover{border:1px solid rgba(226,185,79,.35);border-radius:14px;padding:20px;background:linear-gradient(160deg,#182048,#0f1430);margin-top:14px}
+.ed{font-family:var(--head);font-style:italic;color:#c9cde0;font-size:13px}
+.m{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5}
+.trail{margin-top:16px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0a0e1d}
+.trail canvas{display:block;width:100%}
+.st{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:start;padding:14px 0;border-top:1px solid var(--line)}
+.st:first-child{border-top:0}
+.ic{width:44px;height:44px;border-radius:8px;border:1px solid var(--line);display:grid;place-items:center;background:#141a33;color:#dfe5ff}
+.ic svg{width:22px;height:22px}
+.t{font-family:var(--head);font-size:17px;font-weight:600}
+.s{font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.5}
+.ok{color:var(--green)}.bad{color:var(--red)}
+.grade{font:600 10px/1 var(--font);letter-spacing:.08em;text-transform:uppercase;padding:5px 7px;border-radius:4px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.btn{display:inline-flex;align-items:center;border:1px solid rgba(255,255,255,.16);background:rgba(9,12,26,.94);color:#dfe5ff;border-radius:6px;padding:9px 13px;font:600 12px/1 var(--font);letter-spacing:.06em;text-transform:uppercase;text-decoration:none}
+footer{margin-top:40px;font-size:11.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+footer a{color:var(--muted)}
+@media (max-width:480px){.st{grid-template-columns:44px 1fr}.st .grade{grid-column:2}}
+</style>
+</head>
+<body>
+<main>
+  <div class="k">Soccer's Journey · a shared passport</div>
+  <h1 id="h">Loading the record…</h1>
+  <div id="out"></div>
+  <footer>Shared by its holder from <a href="./">soccersjourney.com</a>. Shows only the stamps the holder marked shareable, with no name, no contact and no passport number. Each stamp was signed on the holder's own device; the check marks are this page verifying those signatures against the holder's public key, and the record dates come from the public daily log. <a href="passport.html">What a passport is</a> · <a href="privacy.html">Privacy</a></footer>
+</main>
+<script>
+const GATE = "https://jacakuicfwclkvjzxdgh.supabase.co/functions/v1/sj-gate";
+const ICON = { journey:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M12 7l4.5 3.3-1.7 5.4H9.2L7.5 10.3z"/></svg>', place:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 21s6-5.2 6-10a6 6 0 10-12 0c0 4.8 6 10 6 10z"/><circle cx="12" cy="11" r="2"/></svg>', handoff:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 9h12l-3-3M20 15H8l3 3"/></svg>', crossroads:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3v18M3 12h18"/></svg>', checkin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 12l4 4L19 6"/></svg>' };
+const unb64 = s => Uint8Array.from(atob(s.replace(/-/g,"+").replace(/_/g,"/") + "=".repeat((4 - s.length % 4) % 4)), c => c.charCodeAt(0));
+async function call(fn, body){ const r = await fetch(GATE, { method:"POST", headers:{ "content-type":"application/json" }, body: JSON.stringify({ fn, body }) }); if(!r.ok) throw new Error(fn + " " + r.status); return r.json(); }
+async function verify(pub, alg, sig, msg){ try{ const raw = unb64(pub), s = unb64(sig), d = new TextEncoder().encode(msg); if(alg === "ed25519"){ const k = await crypto.subtle.importKey("raw", raw, { name:"Ed25519" }, false, ["verify"]); return crypto.subtle.verify({ name:"Ed25519" }, k, s, d); } if(alg === "p256"){ const k = await crypto.subtle.importKey("raw", raw, { name:"ECDSA", namedCurve:"P-256" }, false, ["verify"]); return crypto.subtle.verify({ name:"ECDSA", hash:"SHA-256" }, k, s, d); } }catch(e){} return false; }
+function claim(kind, ref, N){ const t = (N[ref] || {}).t || ref; return kind === "handoff" ? `${t}: it happened` : kind === "crossroads" ? `Stood at ${t}` : kind === "checkin" ? `Season check-in at ${t}` : kind === "journey" ? `Journey drawn at ${t}` : t; }
+function trail(pts){
+  const W = 1000, H = 720; const c = document.createElement("canvas"); c.width = W; c.height = H; const x = c.getContext("2d");
+  const img = new Image(); img.src = "img/board.webp";
+  img.onload = () => { x.drawImage(img, 0, 0, 3300, 2380, 0, 0, W, H); x.fillStyle = "rgba(13,17,32,.45)"; x.fillRect(0,0,W,H); const sx = W/3300, sy = H/2380;
+    if(pts.length > 1){ x.strokeStyle = "#e2b94f"; x.lineWidth = 3; x.setLineDash([2,9]); x.lineCap = "round"; x.beginPath(); pts.forEach((p,i) => { const px = p[0]*sx, py = p[1]*sy; if(!i) x.moveTo(px,py); else { const q = pts[i-1]; x.quadraticCurveTo((q[0]*sx+px)/2, (q[1]*sy+py)/2 - Math.abs(px-q[0]*sx)*0.12, px, py); } }); x.stroke(); x.setLineDash([]); }
+    pts.forEach(p => { x.fillStyle = "#0d1120"; x.strokeStyle = "#e2b94f"; x.lineWidth = 2.5; x.beginPath(); x.arc(p[0]*sx, p[1]*sy, 7, 0, Math.PI*2); x.fill(); x.stroke(); }); };
+  const w = document.createElement("div"); w.className = "trail"; w.appendChild(c); return w;
+}
+(async () => {
+  const tok = new URLSearchParams(location.search).get("s"); const h = document.getElementById("h"), out = document.getElementById("out");
+  if(!tok){ h.textContent = "No link here."; out.innerHTML = '<p class="m">A shared passport opens from a link its holder made. <a href="./">Open the map</a>.</p>'; return; }
+  let r, N = {};
+  try{ [r, N] = await Promise.all([call("sj_pp_share_get", { token: tok }), fetch("nodes.json").then(x => x.json())]); }catch(e){ h.textContent = "Couldn't load this link."; return; }
+  if(!r){ h.textContent = "This link has been turned off or has expired."; out.innerHTML = '<p class="m">Ask the holder for a new one.</p>'; return; }
+  const st = (r.stamps || []).slice().sort((a,b) => (a.ts||a.created_at) < (b.ts||b.created_at) ? -1 : 1);
+  h.textContent = st.length ? `${st.length} stamp${st.length === 1 ? "" : "s"}, season by season.` : "Nothing shared yet.";
+  let html = `<div class="cover"><div class="ed">Soccer's Journey passport · First edition</div><div class="m">Issued ${(r.created_at||"").slice(0,10)} · link valid until ${(r.expires_at||"").slice(0,10)} · ${r.pub ? "stamps signed on the holder's device" : "unsigned stamps"}</div></div>`;
+  const pts = []; const seen = new Set(); st.forEach(s => { const n = N[s.ref]; if(n && !seen.has(s.ref)){ seen.add(s.ref); pts.push([n.x, n.y]); } });
+  out.innerHTML = html; if(pts.length) out.appendChild(trail(pts));
+  const list = document.createElement("div"); list.style.marginTop = "12px"; out.appendChild(list);
+  for(const s of st.slice().reverse()){
+    const sigOk = (s.sig && r.pub) ? await verify(r.pub, r.alg, s.sig, s.chash) : null;
+    let rec = ""; try{ const p = await call("sj_pp_proof", { hash: s.hash }); rec = p && p.pending ? `recorded ${(p.created_at||"").slice(0,10)}, daily log pending` : p ? `in the public log for ${p.day}` : "not found in the record"; }catch(e){ rec = "record unavailable"; }
+    const d = document.createElement("div"); d.className = "st";
+    d.innerHTML = `<div class="ic">${ICON[s.kind] || ICON.place}</div><div><div class="t">${claim(s.kind, s.ref, N)}</div><div class="s">${(N[s.ref]||{}).r || ""} · ${s.season} · pressed ${(s.ts||s.created_at||"").slice(0,10)}<br><span class="${sigOk === false ? "bad" : sigOk ? "ok" : ""}">${sigOk === null ? "No signature" : sigOk ? "✓ Signed by the holder" : "✕ Signature does not match"}</span> · ${rec}</div></div><span class="grade">You said it</span>`;
+    list.appendChild(d);
+  }
+  const p = document.createElement("p"); p.className = "m"; p.style.marginTop = "18px"; p.innerHTML = 'Every stamp here is the holder\'s own word. Club confirmation, which upgrades a stamp\'s grade, is the next release. <a class="btn" href="./" style="margin-top:12px">Open the map</a>'; out.appendChild(p);
+})();
+</script>
+</body>
+</html>
