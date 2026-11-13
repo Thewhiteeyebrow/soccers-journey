@@ -738,8 +738,9 @@ path.road.gold.show{stroke:rgba(226,185,79,.75)}
 #pptrail .ppdot{fill:#0d1120;stroke:#e2b94f;stroke-width:2}
 #pptrail .ppdot.self{stroke:#dfe5ff;stroke-dasharray:3 2}
 body.notrail #pptrail{display:none}
-#ppissue{position:fixed;left:50%;bottom:72px;transform:translateX(-50%) translateY(140%);z-index:30;width:min(560px,calc(100vw - 28px));display:flex;gap:14px;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:12px;background:rgba(9,12,26,.96);border:1px solid rgba(226,185,79,.55);box-shadow:0 20px 60px rgba(0,0,0,.6);transition:transform .55s cubic-bezier(.2,.8,.2,1)}
-#ppissue.up{transform:translateX(-50%) translateY(0)}
+#ppissue{position:fixed;left:50%;bottom:72px;transform:translateX(-50%) translateY(calc(100% + 120px));visibility:hidden;z-index:30;width:min(560px,calc(100vw - 28px));display:flex;gap:14px;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:12px;background:rgba(9,12,26,.96);border:1px solid rgba(226,185,79,.55);box-shadow:0 20px 60px rgba(0,0,0,.6);transition:transform .55s cubic-bezier(.2,.8,.2,1),visibility 0s .55s}
+#ppissue.up{transition:transform .55s cubic-bezier(.2,.8,.2,1),visibility 0s}
+#ppissue.up{transform:translateX(-50%) translateY(0);visibility:visible}
 #ppissue .ppi-t{font-family:var(--head);font-size:17px;font-weight:600}
 #ppissue .ppi-n{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:#e2b94f;letter-spacing:.08em;margin-top:2px}
 #ppissue .ppi-m{font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.4}
