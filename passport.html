@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Passport · Soccer's Journey</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,500,50,0;9..144,600,50,0&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d1120;--panel:#10152a;--ink:#f3f5fb;--muted:#9aa3c4;--gold:#e2b94f;--green:#8fc38a;--red:#e38a8a;--line:rgba(255,255,255,.12);--font:"IBM Plex Sans",system-ui,sans-serif;--head:"Fraunces",Georgia,serif}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased}
+main{max-width:900px;margin:0 auto;padding:30px 18px 80px}
+h1,h2,h3{font-family:var(--head);font-weight:600;font-variation-settings:"SOFT" 50,"WONK" 0;margin:0}
+h1{font-size:36px;line-height:1.1}
+h2{font-size:22px;margin:0 0 4px}
+.sec{margin-top:44px}
+.k{font:600 10.5px/1 var(--font);letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.lead{font-family:var(--head);font-size:21px;line-height:1.4;color:#fff;border-left:3px solid var(--gold);padding-left:16px;margin:16px 0 0}
+.sub{color:var(--muted);font-size:14px;line-height:1.5;margin:4px 0 14px}
+.grid{display:grid;gap:10px}
+.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+.cell{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.cell h3{font-size:17px;margin-bottom:6px}
+.cell p,.cell li{font-size:13.5px;line-height:1.5;color:#dfe5ff;margin:0}
+.cell ul{margin:6px 0 0;padding-left:16px}.cell li{margin:2px 0}
+.cell .m{color:var(--muted);font-size:12.5px;margin-top:6px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;font:600 10.5px/1 var(--font);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45}
+td:first-child{font-family:var(--head);font-size:15px;color:#fff;white-space:nowrap}
+.pair{display:grid;grid-template-columns:1fr 24px 1fr;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.pair .a{color:var(--muted);font-size:13.5px;line-height:1.45}.pair .b{font-size:13.5px;line-height:1.45;color:#fff}.pair .ar{color:var(--gold);text-align:center;font-family:var(--head)}
+.grade{display:inline-block;font:600 10px/1 var(--font);letter-spacing:.08em;text-transform:uppercase;padding:5px 7px;border-radius:4px;border:1px solid var(--line);color:var(--muted)}
+.grade.plat{color:#b7c6ff;border-color:rgba(183,198,255,.5)}.grade.att{color:#f0d890;border-color:rgba(226,185,79,.5)}.grade.sig{color:var(--green);border-color:rgba(143,195,138,.6)}
+.rule{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;line-height:1.5}
+.rule b{font-family:var(--head);font-weight:600;color:#fff;flex:0 0 190px}
+.not{color:var(--muted);font-size:13.5px}.not b{color:var(--red);font-weight:600}
+footer{margin-top:50px;color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:14px}
+@media (max-width:700px){.g3,.g4,.g2{grid-template-columns:1fr}.pair{grid-template-columns:1fr}.pair .ar{display:none}.rule{flex-direction:column;gap:2px}td:first-child{white-space:normal}h1{font-size:30px}}
+
+body.paper{--bg:#fbfaf6;--ink:#15192b;--muted:#5b6278;--line:rgba(0,0,0,.12);--panel:#f1efe7;background:#fbfaf6;color:#15192b}
+body.paper h1,body.paper h2,body.paper h3,body.paper .big,body.paper .fn b,body.paper .lead,body.paper .cell h3,body.paper td:first-child,body.paper .rule b,body.paper .pair .b,body.paper .vh{color:#15192b}
+body.paper a{color:#1d3a8a}body.paper .btn{background:#fff;color:#15192b;border-color:rgba(0,0,0,.2)}body.paper .btn.primary{background:#15192b;color:#fff;border-color:#15192b}
+body.paper .cell p,body.paper .cell li{color:#2a2f45}body.paper .ed,body.paper .k{color:#8a6a10}
+body.paper .grade,body.paper .ppg{color:#5b6278;border-color:rgba(0,0,0,.15)}body.paper .grade.att{color:#8a6a10}body.paper .grade.sig{color:#2f7a35}body.paper .grade.plat{color:#1d3a8a}
+.paperToggle{cursor:pointer;text-decoration:underline}
+</style>
+</head>
+<body>
+<main>
+  <a href="./" style="font-size:13px">← Back to the map</a>
+  <div class="k" style="margin-top:14px">Soccer's Journey · The Passport</div>
+  <h1>A record of where you went and what you did, confirmed by the people who were there.</h1>
+  <p class="lead">Youth soccer has no memory. Every tryout starts from zero. The passport is the player's own record, kept by the player, confirmed by others, readable by anyone they choose.</p>
+
+  <section class="sec">
+    <div class="k">1 · The function</div>
+    <div class="grid g3">
+      <div class="cell"><h3>Where you played</h3><p>Clubs, teams, leagues, seasons, camps, tournaments. The places on the map a player actually stood.</p><p class="m">Confirmed by the club or organizer.</p></div>
+      <div class="cell"><h3>Where you went</h3><p>The moves. Tryouts, promotions, cuts, breaks, comebacks, the switch to a new club or to the adult game.</p><p class="m">Confirmed by the club on each side of the move.</p></div>
+      <div class="cell"><h3>What you did</h3><p>Accomplishments. Games, courses, exams, badges, refereeing, coaching younger kids, learning done on FootyEye or in Futbol Island.</p><p class="m">Confirmed by a person who was there, or by the product itself.</p></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="k">2 · Who confirms what</div>
+    <p class="sub">A stamp is a claim until somebody who was there says yes. Different things, different confirmers, same rule.</p>
+    <div class="cell" style="padding:4px 10px">
+    <table>
+      <tr><th>Entry</th><th>Who can confirm</th><th>How</th></tr>
+      <tr><td>Season at a club</td><td>Club admin or coach</td><td>In person (scan) or by email from the club's address</td></tr>
+      <tr><td>Tryout, cut, offer</td><td>The club that ran it</td><td>Scan at the event, or email after</td></tr>
+      <tr><td>Camp, tournament, showcase</td><td>Organizer or director</td><td>Scan at check-in, or email</td></tr>
+      <tr><td>Game played, captaincy</td><td>Coach or team manager</td><td>Scan after the game, or batch by email at season end</td></tr>
+      <tr><td>Referee or coaching course</td><td>The body that ran it</td><td>Email from the body's address</td></tr>
+      <tr><td>FootyEye test, Futbol Island level</td><td>The product</td><td>Automatic. The product signs it the moment it's earned.</td></tr>
+      <tr><td>Off the field: school, job, service</td><td>Teacher, employer, organization</td><td>Email from the organization's address</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="k">3 · Four grades, printed on every stamp</div>
+    <p class="sub">The passport never pretends one grade is another. A grade can be added to, never upgraded.</p>
+    <div class="grid g4">
+      <div class="cell"><span class="grade">You said it</span><p style="margin-top:10px">The player or family pressed it. A diary entry. Honest, unconfirmed.</p></div>
+      <div class="cell"><span class="grade plat">Product confirmed</span><p style="margin-top:10px">FootyEye, Futbol Island or another product recorded it automatically when it happened.</p></div>
+      <div class="cell"><span class="grade att">Confirmed by email</span><p style="margin-top:10px">A person at the club or organization said yes from the organization's verified address.</p></div>
+      <div class="cell"><span class="grade sig">Confirmed in person</span><p style="margin-top:10px">Someone who was there scanned it on the spot with the organization's account. The strongest grade.</p></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="k">4 · Why it matters in soccer</div>
+    <div class="cell" style="padding:4px 16px">
+      <div class="pair"><div class="a">A tryout is twenty minutes. The coach sees a kid, not a player's history.</div><div class="ar">→</div><div class="b">The passport shows three seasons, two clubs and a comeback, each confirmed by the club that saw it.</div></div>
+      <div class="pair"><div class="a">Getting cut erases you. The club keeps no record and neither does anyone else.</div><div class="ar">→</div><div class="b">The cut is a stamp. So is the return. The road back is on the record, not just in the family's memory.</div></div>
+      <div class="pair"><div class="a">Families rely on a highlight reel and their own word.</div><div class="ar">→</div><div class="b">A coach gets a confirmed record instead of a sales pitch. Less to trust, more to check.</div></div>
+      <div class="pair"><div class="a">Nobody tracks movement between clubs, levels or functions. The map's biggest blank.</div><div class="ar">→</div><div class="b">Every confirmed move is a counted road, with consent, shared back as public totals. The passport is how the map starts counting.</div></div>
+      <div class="pair"><div class="a">A player leaves the youth game at 13 and the whole record vanishes.</div><div class="ar">→</div><div class="b">The record is theirs. It leaves with them, into the adult game, college, coaching or out of soccer altogether.</div></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="k">5 · Why it matters outside soccer</div>
+    <p class="sub">About 70 of 100 kids have quit by 13. What survives the game is the person. Schools, colleges and employers ask for evidence of exactly the things a soccer journey produces, and nobody has been writing it down.</p>
+    <div class="cell" style="padding:4px 16px">
+      <div class="pair"><div class="a">"Tell us about a time you faced a setback."</div><div class="ar">→</div><div class="b">Cut at 11, confirmed by the club. Back at a different club at 12, confirmed. Three seasons since. Dated, checkable.</div></div>
+      <div class="pair"><div class="a">"Show us commitment over time."</div><div class="ar">→</div><div class="b">Six seasons of confirmed play across two clubs and a Sunday league. Not a sentence in an essay. A list of stamps.</div></div>
+      <div class="pair"><div class="a">"Have you led anything? Served anyone?"</div><div class="ar">→</div><div class="b">Captaincy confirmed by the coach. Referee badge confirmed by the association. Forty hours coaching U8s confirmed by the club.</div></div>
+      <div class="pair"><div class="a">"Can you learn on your own?"</div><div class="ar">→</div><div class="b">FootyEye tactics modules and Futbol Island levels, confirmed by the products at the moment they were earned.</div></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="k">6 · Character: shown, not claimed</div>
+    <p class="sub">Nobody gets to stamp "resilient" on themselves. The passport groups confirmed events under the trait they evidence. The reader draws the conclusion. That is the only version a recruiter will trust.</p>
+    <div class="grid g3">
+      <div class="cell"><h3>Resilience</h3><ul><li>Cut, then returned</li><li>Injury, then a full season back</li><li>Stayed after a relegation</li></ul></div>
+      <div class="cell"><h3>Commitment</h3><ul><li>Seasons in a row at one club</li><li>Games played per season</li><li>Years in the game, any level</li></ul></div>
+      <div class="cell"><h3>Leadership and service</h3><ul><li>Captaincy</li><li>Coaching or refereeing younger players</li><li>Volunteer hours at the club</li></ul></div>
+      <div class="cell"><h3>Learning</h3><ul><li>Courses and exams passed</li><li>Product-confirmed modules</li><li>Moves into a new function (Play to Learn, Test to Choose)</li></ul></div>
+      <div class="cell"><h3>Range</h3><ul><li>Positions played</li><li>Formats: 11v11, futsal, Sunday league</li><li>Roles beyond player: ref, coach, organizer</li></ul></div>
+      <div class="cell"><h3>Judgment</h3><ul><li>Chose to step down a level and stayed in the game</li><li>Took a break and came back</li><li>Left the pathway for the adult game on purpose</li></ul></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="k">7 · One record, three readers</div>
+    <p class="sub">The holder builds a view for a purpose and shares a link that works for 30 days. Each reader sees the stamps chosen for them and can check every one without an account.</p>
+    <div class="grid g3">
+      <div class="cell"><h3>For a club</h3><p>Where you played, the moves, the games. The soccer record.</p><p class="m">The reader can scan any stamp and see who confirmed it.</p></div>
+      <div class="cell"><h3>For a school or college</h3><p>Seasons, setbacks and comebacks, service, learning. The character record.</p><p class="m">Same stamps, grouped by trait, no scouting language.</p></div>
+      <div class="cell"><h3>For an employer</h3><p>Commitment over time, roles held, courses passed, people led.</p><p class="m">Works even if the reader has never watched a soccer game.</p></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="k">8 · Rules that don't bend</div>
+    <div class="cell" style="padding:4px 16px">
+      <div class="rule"><b>The player owns it</b><span>Held on their device. They choose every stamp that gets shared. They can delete the whole passport.</span></div>
+      <div class="rule"><b>No child gives an email</b><span>Confirmers are organizations. Their address is the organization's. The note that tells a club who the player is lives in the email only and is never kept.</span></div>
+      <div class="rule"><b>Grades never upgrade</b><span>Email stays email. "You said it" stays "you said it". Adding a confirmation is the only way up.</span></div>
+      <div class="rule"><b>Nothing is quietly erased</b><span>A club can say "not us". The stamp stays, marked disputed, with both sides visible.</span></div>
+      <div class="rule"><b>Checkable without us</b><span>Every stamp carries its own proof and the day it was recorded. If Soccer's Journey vanished, the stamps still check.</span></div>
+      <div class="rule"><b>Confirmers see one line</b><span>A club confirming a tryout sees the tryout. Not the rest of the passport, not the other clubs, not the cuts.</span></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="k">9 · What it is not</div>
+    <div class="grid g2">
+      <div class="cell not"><b>Not a rating.</b> No scores, no stars, no rank. A record of what happened, not an opinion of how good someone is.</div>
+      <div class="cell not"><b>Not a scouting report.</b> No coach writes an evaluation in it. A confirmation is a yes to a fact, nothing more.</div>
+      <div class="cell not"><b>Not a highlight reel.</b> No video, no stats that flatter. Games played, not goals scored.</div>
+      <div class="cell not"><b>Not a reference letter.</b> It replaces "trust me" with "check it". The reader still does the judging.</div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="k">10 · Open questions for Jeremiah</div>
+    <div class="cell" style="padding:4px 16px">
+      <div class="rule"><b>Off-field entries</b><span>Soccer-born passport that accepts school, job and service stamps, or a general credential system? I'd keep it soccer-first with one "off the field" category. Going general makes it everyone's problem and nobody's product.</span></div>
+      <div class="rule"><b>Games played</b><span>Counting games needs the coach to confirm per game or per season. Per season is realistic. Per game is not, outside the products we own.</span></div>
+      <div class="rule"><b>Product confirmations</b><span>FootyEye and Futbol Island can sign stamps automatically. Which other products get a signing key, and on what terms?</span></div>
+      <div class="rule"><b>The trait groupings</b><span>The six traits above are a first cut. They should be yours, in your words, and tied to the Five Functions language.</span></div>
+    </div>
+  </section>
+
+  <footer><a class="paperToggle" href="#">Paper</a> · © 2026 White Sports Ventures · Soccer's Journey · <a href="privacy.html">Privacy</a></footer>
+</main>
+<script>(function(){var k="sj.paper";function ap(on){document.body.classList.toggle("paper",on);document.querySelectorAll(".paperToggle").forEach(function(t){t.textContent=on?"Ink":"Paper"});}ap(localStorage.getItem(k)==="1");document.addEventListener("click",function(e){var t=e.target.closest(".paperToggle");if(!t)return;e.preventDefault();var on=!document.body.classList.contains("paper");localStorage.setItem(k,on?"1":"0");ap(on);});})();</script>
+</body>
+</html>

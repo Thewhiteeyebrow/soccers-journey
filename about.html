@@ -23,6 +23,13 @@ p,li{line-height:1.55;font-size:15.5px}ul{padding-left:20px}a{color:#dfe5ff}
 .btn.primary{background:#fff;color:#0b1020;border-color:#fff}
 footer{text-align:center;font-size:11.5px;color:var(--muted);padding:20px;border-top:1px solid var(--line)}
 @media (max-width:480px){.fn{grid-template-columns:1fr}.fn b{margin-top:6px}}
+
+body.paper{--bg:#fbfaf6;--ink:#15192b;--muted:#5b6278;--line:rgba(0,0,0,.12);--panel:#f1efe7;background:#fbfaf6;color:#15192b}
+body.paper h1,body.paper h2,body.paper h3,body.paper .big,body.paper .fn b,body.paper .lead,body.paper .cell h3,body.paper td:first-child,body.paper .rule b,body.paper .pair .b,body.paper .vh{color:#15192b}
+body.paper a{color:#1d3a8a}body.paper .btn{background:#fff;color:#15192b;border-color:rgba(0,0,0,.2)}body.paper .btn.primary{background:#15192b;color:#fff;border-color:#15192b}
+body.paper .cell p,body.paper .cell li{color:#2a2f45}body.paper .ed,body.paper .k{color:#8a6a10}
+body.paper .grade,body.paper .ppg{color:#5b6278;border-color:rgba(0,0,0,.15)}body.paper .grade.att{color:#8a6a10}body.paper .grade.sig{color:#2f7a35}body.paper .grade.plat{color:#1d3a8a}
+.paperToggle{cursor:pointer;text-decoration:underline}
 </style>
 </head>
 <body>
@@ -64,6 +71,7 @@ footer{text-align:center;font-size:11.5px;color:var(--muted);padding:20px;border
 
   <div class="row" style="margin-top:26px"><a class="btn primary" href="./">Open the map</a></div>
 </main>
-<footer>© 2026 White Sports Ventures · The Five Functions framework and the Soccer's Journey map are the work of Jeremiah White III. All rights reserved. · <a href="privacy.html">Privacy</a></footer>
+<footer><a class="paperToggle" href="#">Paper</a> · © 2026 White Sports Ventures · The Five Functions framework and the Soccer's Journey map are the work of Jeremiah White III. All rights reserved. · <a href="privacy.html">Privacy</a></footer>
+<script>(function(){var k="sj.paper";function ap(on){document.body.classList.toggle("paper",on);document.querySelectorAll(".paperToggle").forEach(function(t){t.textContent=on?"Ink":"Paper"});}ap(localStorage.getItem(k)==="1");document.addEventListener("click",function(e){var t=e.target.closest(".paperToggle");if(!t)return;e.preventDefault();var on=!document.body.classList.contains("paper");localStorage.setItem(k,on?"1":"0");ap(on);});})();</script>
 </body>
 </html>

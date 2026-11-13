@@ -701,6 +701,75 @@ path.road.gold.show{stroke:rgba(226,185,79,.75)}
 #card .pass .pbtns button:disabled{opacity:.5;cursor:default}
 #card .pass .stamped{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:#e2b94f}
 
+
+/* ---------- passport (phase A) ---------- */
+#carry{gap:10px}
+#carry .pps{display:flex;gap:5px}
+#carry .ppslot{width:22px;height:22px;border-radius:5px;border:1px dashed rgba(255,255,255,.25)}
+.ppst{width:22px;height:22px;border-radius:5px;border:1px solid rgba(255,255,255,.22);display:inline-grid;place-items:center;color:#e2b94f;background:#141a33;flex:0 0 auto}
+.ppst svg{width:14px;height:14px}
+.ppst.self{color:#dfe5ff}.ppst.email{color:#f0d890;border-color:rgba(226,185,79,.5)}.ppst.person{color:#8fc38a;border-color:rgba(143,195,138,.6)}.ppst.product{color:#b7c6ff}
+#carry.pulse{animation:pppulse 1.2s ease-in-out 3}
+@keyframes pppulse{0%,100%{box-shadow:0 0 0 0 rgba(226,185,79,0)}50%{box-shadow:0 0 0 6px rgba(226,185,79,.35)}}
+.ppsec .ppq{border:1px solid rgba(226,185,79,.35);border-radius:10px;padding:12px 14px;background:rgba(226,185,79,.05)}
+.ppt{font-family:var(--head);font-size:17px;font-weight:600}
+.ppm{font-size:13px;color:var(--muted);line-height:1.5;margin-top:4px}
+.ppfine{font-size:11.5px;color:var(--muted);margin-top:8px}
+.pprow{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.ppb{border:1px solid rgba(255,255,255,.18);background:rgba(9,12,26,.9);color:#dfe5ff;border-radius:6px;padding:8px 11px;font:600 11.5px/1 var(--font);letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
+.ppb:hover{border-color:#fff}.ppb.ghost{border-color:transparent;color:var(--muted)}
+.ppdone{display:flex;gap:10px;align-items:center;margin-top:8px}
+.ppdone b{display:block;font-size:14px;font-weight:600}.ppdone span:not(.ppst){font-size:12px;color:var(--muted)}
+.ppcover{border:1px solid rgba(226,185,79,.35);border-radius:12px;padding:16px;background:linear-gradient(160deg,#182048,#0f1430);position:relative}
+.ppcover.empty{border-style:dashed;background:none}
+.ppcrest{position:absolute;right:14px;top:14px;width:42px;height:42px;border:1px solid rgba(226,185,79,.5);border-radius:50%;display:grid;place-items:center;color:#e2b94f}
+.ppcrest svg{width:24px;height:24px}
+.pped{font-family:var(--head);font-style:italic;font-size:12.5px;color:#c9cde0}
+.ppnum{font-family:ui-monospace,Menlo,monospace;font-size:14px;color:#e2b94f;letter-spacing:.08em;margin-top:2px}
+.ppmeta{font-size:12px;color:var(--muted);margin-top:6px}
+.pplegend{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 6px}
+.ppg{font:600 9.5px/1 var(--font);letter-spacing:.08em;text-transform:uppercase;padding:4px 6px;border-radius:4px;border:1px solid var(--line);color:var(--muted)}
+.ppg.email{color:#f0d890;border-color:rgba(226,185,79,.5)}.ppg.person{color:#8fc38a;border-color:rgba(143,195,138,.6)}
+.pplist{border-top:1px solid var(--line)}
+.ppitem{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.ppitem b{display:block;font-size:13.5px;font-weight:600;line-height:1.3}.ppitem span:not(.ppst){font-size:11.5px;color:var(--muted)}
+.ppitem:hover b{color:#fff}
+#pptrail .ppline{fill:none;stroke:#e2b94f;stroke-width:3.5;stroke-linecap:round;stroke-dasharray:1 9;opacity:.9}
+#pptrail .ppdot{fill:#0d1120;stroke:#e2b94f;stroke-width:2}
+#pptrail .ppdot.self{stroke:#dfe5ff;stroke-dasharray:3 2}
+body.notrail #pptrail{display:none}
+#ppissue{position:fixed;left:50%;bottom:72px;transform:translateX(-50%) translateY(140%);z-index:30;width:min(560px,calc(100vw - 28px));display:flex;gap:14px;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:12px;background:rgba(9,12,26,.96);border:1px solid rgba(226,185,79,.55);box-shadow:0 20px 60px rgba(0,0,0,.6);transition:transform .55s cubic-bezier(.2,.8,.2,1)}
+#ppissue.up{transform:translateX(-50%) translateY(0)}
+#ppissue .ppi-t{font-family:var(--head);font-size:17px;font-weight:600}
+#ppissue .ppi-n{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:#e2b94f;letter-spacing:.08em;margin-top:2px}
+#ppissue .ppi-m{font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.4}
+#ppissue .ppi-r{display:flex;flex-direction:column;gap:6px;flex:0 0 auto}
+@media (max-width:760px){#ppissue{bottom:70px;flex-direction:column;align-items:stretch}#ppissue .ppi-r{flex-direction:row}}
+body.paper #ppissue{background:#fbfaf6;color:#15192b;border-color:rgba(180,140,40,.5)}body.paper #ppissue .ppi-n{color:#8a6a10}
+/* ---------- paper: white reading panels ---------- */
+body.paper #card,body.paper #mine,body.paper .slides,body.paper #journey .jbox{--ink:#15192b;--muted:#5b6278;--line:rgba(0,0,0,.12);--glass:rgba(255,255,255,.9);--glass2:#fff;background:#fbfaf6;color:#15192b;border-color:rgba(0,0,0,.1);box-shadow:0 30px 80px rgba(0,0,0,.35)}
+body.paper #card h2,body.paper #mine h3,body.paper .slide h2,body.paper #card b,body.paper #mine b,body.paper .ppitem:hover b,body.paper #card .stat b,body.paper #mine .stat b{color:#15192b}
+body.paper #card .x,body.paper #mine .x{background:rgba(0,0,0,.06);color:#15192b}
+body.paper #card .sec h4{color:#5b6278}
+body.paper #card p,body.paper #mine p,body.paper .slide p,body.paper #card li{color:#2a2f45}
+body.paper .ppb,body.paper #card .btn,body.paper #mine .btn,body.paper .slide .btn{background:#fff;color:#15192b;border-color:rgba(0,0,0,.2)}
+body.paper .ppb.ghost{border-color:transparent;color:#5b6278}
+body.paper #card .btn.primary,body.paper #mine .btn.primary,body.paper .slide .btn.primary{background:#15192b;color:#fff;border-color:#15192b}
+body.paper .ppsec .ppq{background:rgba(226,185,79,.08);border-color:rgba(180,140,40,.45)}
+body.paper .ppcover{background:#f1efe7;border-color:rgba(180,140,40,.45)}
+body.paper .ppst{background:#fff;border-color:rgba(0,0,0,.18);color:#8a6a10}.body.paper .ppst.self{color:#15192b}
+body.paper .ppnum,body.paper .ppcrest{color:#8a6a10;border-color:rgba(180,140,40,.5)}
+body.paper .pped{color:#5b6278}
+body.paper .ppg{color:#5b6278;border-color:rgba(0,0,0,.15)}body.paper .ppg.email{color:#8a6a10;border-color:rgba(180,140,40,.5)}body.paper .ppg.person{color:#2f7a35;border-color:rgba(47,122,53,.5)}
+body.paper #mine .tok{background:#fff;border-color:rgba(0,0,0,.12);color:#15192b}
+body.paper #card .roads button{background:#fff;color:#15192b;border-color:rgba(0,0,0,.15)}
+body.paper #card .kind,body.paper #card .short,body.paper #card .crumb{color:#5b6278}
+body.paper .slides .follow{background:rgba(0,0,0,.05);color:#2a2f45;border-color:rgba(0,0,0,.1)}body.paper .slides .follow a{color:#15192b}body.paper .slides .copy{color:#5b6278}
+body.paper .slides .dots i{background:rgba(0,0,0,.18)}body.paper .slides .dots i.on{background:#15192b}
+body.paper .slides .btn{background:#fff;color:#15192b;border-color:rgba(0,0,0,.2)}body.paper .slides .btn.primary{background:#15192b;color:#fff;border-color:#15192b}
+body.paper .slides,body.paper .slides label,body.paper .slides button{color:#15192b}body.paper .slides .muted,body.paper .slides small{color:#5b6278}
+body.paper .slide .art{background:#ece9df}
+body.paper #card .earn b{color:#15192b}
 </style>
 </head>
 <body class="no-select">
@@ -711,7 +780,7 @@ path.road.gold.show{stroke:rgba(226,185,79,.75)}
   <div class="tools">
     <button class="btn icon" id="journeyBtn" data-s="Journey" title="Build my journey">Journey</button>
     <button class="btn icon" id="shareBtn" data-s="Share" title="Share my journey">Share</button>
-    <button class="btn icon" id="mineBtn" data-s="Map" title="Your map: path and attributes">Your map</button>
+    <button class="btn icon" id="mineBtn" data-s="Pass" title="Your passport: where you have been, what you carry">Passport</button>
     <button class="btn icon" id="sndBtn" data-s="♪" title="Sound on / off">Sound</button>
     <button class="btn icon" id="helpBtn" data-s="Help" title="How this works">Help</button>
     <a class="btn icon" id="aboutBtn" data-s="About" href="about.html" title="Who made this and where the numbers come from">About</a>
@@ -749,19 +818,18 @@ path.road.gold.show{stroke:rgba(226,185,79,.75)}
 <div id="grain" aria-hidden="true"></div>
 <footer id="credits"><a class="cr" href="https://www.whitesportventures.com" target="_blank" rel="noopener" title="The Five Functions framework and the Soccer's Journey map are the work of Jeremiah White III. All rights reserved.">© 2026 White Sports Ventures</a> <span class="cnt" id="counterFoot" hidden>· <b data-n="journeys">0</b> journeys mapped</span> · <a href="about.html">About</a> · <a href="privacy.html">Privacy</a></footer>
 
-<button id="carry" title="Your map">
-  <div class="coins" id="coins"></div>
-  <div class="txt"><b id="carryN">0</b> of 12<span class="cw"> carried</span></div>
-</button>
+<button id="carry" title="Your passport"></button>
+<div id="ppissue" aria-live="polite"><div class="ppi-l"><div class="ppi-t">Your passport is ready</div><div class="ppi-n" id="ppiNum"></div><div class="ppi-m" id="ppiMsg"></div></div><div class="ppi-r"><button class="ppb" id="ppiOpen">Open it</button><button class="ppb ghost" id="ppiOk">Got it</button></div></div>
 
 <div id="viewtools">
   <button class="btn icon" id="trafficBtn" data-w="Traffic" title="Traffic: how people move through the map, and ask it questions"><span class="tlight"><i class="r"></i><i class="y"></i><i class="g"></i></span></button>
   <button class="btn icon" id="trailBtn" data-w="Trail" title="Show or hide your trail">≈</button>
+  <button class="btn icon" id="paperBtn" data-w="Paper" title="Paper: white reading panels">▢</button>
   <button class="btn icon" id="tiltBtn" data-w="Flat / 3D" title="Flat view / 3D view">◩</button>
   <button class="btn icon" id="zinBtn" data-w="Zoom in" title="Zoom in">+</button>
   <button class="btn icon" id="zoutBtn" data-w="Zoom out" title="Zoom out">−</button>
   <button class="btn icon" id="homeBtn" data-w="The field" title="Back to the field">⌂</button>
-  <button class="btn icon" id="resetMapBtn" data-w="Reset" title="Reset the map: clear your dot and start over">↺</button>
+  <button class="btn icon" id="resetMapBtn" data-w="Reset" title="Reset the map: take yourself off it and start over">↺</button>
 </div>
 
 <aside id="card" aria-live="polite">
@@ -771,7 +839,7 @@ path.road.gold.show{stroke:rgba(226,185,79,.75)}
 </aside>
 
 <section id="mine">
-  <div class="top"><h3>Your map</h3><button class="x btn icon" id="closeMine">×</button></div>
+  <div class="top"><h3>Passport</h3><button class="x btn icon" id="closeMine">×</button></div>
   <div class="body" id="mineBody"></div>
 </section>
 
@@ -797,7 +865,7 @@ path.road.gold.show{stroke:rgba(226,185,79,.75)}
       <div class="art"><div class="ring"><i style="--c:var(--play);left:0;top:50%"></i><i style="--c:var(--test);left:50%;top:0"></i><i style="--c:var(--learn);left:100%;top:50%"></i><i style="--c:var(--choose);left:50%;top:100%"></i><b></b></div></div>
       <h2>Soccer's Journey. A map, not a ladder.</h2>
       <p>Five functions shape every player: Play, Test, Learn, Choose, and Pathway. Four sit around the player, not above each other. The fifth arrives from outside. You can be in any of them at any age. Explore in any direction.</p>
-      <div class="waysin"><button class="btn primary" id="wayDot">Place my dot</button><button class="btn" id="wayAsk">Ask the map a question</button><button class="btn" id="wayExplore">Just explore</button></div>
+      <div class="waysin"><button class="btn primary" id="wayDot">Put me on the map</button><button class="btn" id="wayAsk">Ask the map a question</button><button class="btn" id="wayExplore">Just explore</button></div>
       <p class="devicenote">Works best on a desktop or tablet. Works on your phone too, with a smaller view.</p>
       <div class="counter" id="counterIntro" hidden><i></i><span><b data-n="journeys">0</b> journeys mapped <small id="counterToday"></small></span></div>
     </div>
@@ -813,9 +881,8 @@ path.road.gold.show{stroke:rgba(226,185,79,.75)}
     </div>
     <div class="slide">
       <div class="art"><div class="coins"><i></i><i></i><i></i><i></i><i></i></div></div>
-      <h2>You carry things off the map.</h2>
-      <p>Twelve attributes get picked up as you explore. They are what the game leaves in a person, and they travel into every other kind of work. Nothing here is a verdict. It's terrain.</p>
-      <p class="credits">Based on Jeremiah White III's Five Functions system and Handoff Between Systems model. More at <a href="https://www.wsvlabs.com" target="_blank" rel="noopener">wsvlabs.com</a> and <a href="https://www.whitesportventures.com" target="_blank" rel="noopener">whitesportventures.com</a>.</p>
+      <h2>The map remembers.</h2>
+      <p>Every place you've actually been can get a stamp in your passport: a season at a club, a tryout, a cut, a comeback. Open any place and answer the question at the bottom of its card. You press the stamps; a club can confirm them later. Twelve attributes get picked up along the way too. Nothing here is a verdict. It's terrain.</p>
     </div>
     <div class="follow">Built on Jeremiah White III's Five Functions model · <a href="about.html">About this map</a></div>
     <div class="copy">© 2026 White Sports Ventures</div>
@@ -1456,7 +1523,7 @@ function build(){
   const seg = $("#povseg"); POVS.forEach(([id,label]) => { const b = document.createElement("button"); b.textContent = label; b.dataset.pov = id; b.addEventListener("click", ()=>{ Snd.tone([329.63,277.18,220,164.81][POVS.findIndex(x=>x[0]===id)], 0.25); setPov(id); }); seg.appendChild(b); });
 
   // coins
-  const coins = $("#coins"); ATTRS.forEach(a => { const i = document.createElement("i"); i.className="coin"; i.dataset.attr=a.id; i.title=a.t; coins.appendChild(i); });
+  const coins = $("#coins"); if(coins) ATTRS.forEach(a => { const i = document.createElement("i"); i.className="coin"; i.dataset.attr=a.id; i.title=a.t; coins.appendChild(i); });
 
   // intro dots
   const dots = $("#dots"); document.querySelectorAll(".slide").forEach((s,i)=>{ const d=document.createElement("i"); if(i===0) d.className="on"; dots.appendChild(d); });
@@ -1671,12 +1738,12 @@ function setPov(p){ state.pov = p; document.querySelectorAll("#povseg button").f
 const RECENT = 8;
 function pushTrail(k){ const i = state.trail.indexOf(k); if(i>=0) state.trail.splice(i,1); state.trail.push(k); }
 function lightRoads(){ const n = state.trail.length; document.querySelectorAll("#roads path.road").forEach(p => { const i = state.trail.indexOf(p.dataset.k); p.classList.toggle("trail", i>=0); p.classList.toggle("old", i>=0 && i < n - RECENT); }); document.body.classList.toggle("notrail", !state.trailOn); }
-function renderCarry(){ document.querySelectorAll("#coins .coin").forEach(c => c.classList.toggle("on", state.attrs.has(c.dataset.attr))); $("#carryN").textContent = state.attrs.size; NODES.filter(n=>n.k==="attr").forEach(n => $("#n_"+n.id).classList.toggle("earned", state.attrs.has(n.attrRef))); }
+function renderCarry(){ document.querySelectorAll("#coins .coin").forEach(c => c.classList.toggle("on", state.attrs.has(c.dataset.attr))); if($("#carryN")) $("#carryN").textContent = state.attrs.size; NODES.filter(n=>n.k==="attr").forEach(n => $("#n_"+n.id).classList.toggle("earned", state.attrs.has(n.attrRef))); }
 
 /* ---------- Your Map ---------- */
 window.resetMap = function(){ state.visited.clear(); state.attrs.clear(); state.path=[]; state.hist=[]; state.current=null; state.at="you"; state.trail = []; state.journey = null; restAvatar("you"); avatarColor("you"); document.querySelectorAll(".node").forEach(d=>d.classList.remove("visited","earned","hilite")); renderCarry(); lightRoads(); showRoadsFor(null); persist(); renderMine(); closeCard(); $("#mine").classList.remove("open"); if(window.sjEvidence){ window.sjEvidence.setTraffic(false); window.sjEvidence.refreshChips(); } if(window.sjAskCtx) window.sjAskCtx(); Snd.click(); flyTo(FIELD.x, FIELD.y, isMobile()?0.42:0.62); if(typeof track==="function") track("reset_map", {}); };
   (function(){ let arm = 0; const b = $("#resetMapBtn"); const toast = (m) => { let el = $("#toast"); if(!el){ el = document.createElement("div"); el.id = "toast"; document.body.appendChild(el); } el.textContent = m; el.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("on"), 2600); };
-    b.addEventListener("click", () => { if(Date.now() - arm > 3000){ arm = Date.now(); Snd.click(); toast(state.journey ? "Tap ↺ again to clear your dot and start the map over." : "Tap ↺ again to clear the map."); return; } arm = 0; window.resetMap(); toast("Map reset. Start here."); }); })();
+    b.addEventListener("click", () => { if(Date.now() - arm > 3000){ arm = Date.now(); Snd.click(); toast(state.journey ? "Tap ↺ again to take yourself off the map and start over." : "Tap ↺ again to clear the map."); return; } arm = 0; window.resetMap(); toast("Map reset. Start here."); }); })();
 function renderMine(){
   const total = NODES.length;
   let html = `<div class="stat"><b>${state.visited.size}</b> of ${total} places explored · <b>${state.attrs.size}</b> of 12 attributes carried</div>`;
@@ -1826,7 +1893,7 @@ function finishJourney(){
 function renderJourneyCard(){
   const j = state.journey; if(!j) return; const a = j.answers, d = j.derived; const n = byId[d.pos]; const r = REGIONS[n.r]; const color = n.c || r.color;
   card.style.setProperty("--c", color); $("#crumb").textContent = "Your journey";
-  let html = `<h2>${a.who === "parent" ? "Your player's dot" : "Your dot"} is here.</h2><div class="kind"><b>${journeyLine(a)}</b></div>`;
+  let html = `<h2>${a.who === "parent" ? "Your player is here." : "You are here."}</h2><div class="kind"><b>${journeyLine(a)}</b></div>`;
   html += `<div class="sec jpos"><div class="jchip" style="--c:${color}"><i></i>${n.t}${n.sub?` · ${n.sub}`:""}</div><p class="short">${n.s}</p></div>`;
   html += `<div class="sec jfrom" id="jfrom"></div>`;
   if(n.pov) html += `<div class="sec"><p class="povtext" style="--c:${color};margin-top:0">${n.pov[state.pov]}</p></div>`;
@@ -1834,7 +1901,7 @@ function renderJourneyCard(){
   html += `<div class="sec"><h4>Roads open from here</h4><div class="roads">${d.open.map(id => { const m = byId[id]; return `<button data-go="${id}" style="--rc:${m.c||REGIONS[m.r].color}"><i></i>${m.t}</button>`; }).join("")}</div></div>`;
   html += `<div class="sec"><h4>What ${a.who === "player" ? "you" : "the player"} already carr${a.who === "player" ? "y" : "ies"}</h4><div class="roads">${d.attrs.map(id => `<button data-go="a_${id}" style="--rc:var(--beyond)"><i></i>${ATTR[id].t}</button>`).join("")}</div></div>`;
   html += `<div class="sec jactions"><button class="btn primary" id="shareJ">Share my journey</button><button class="btn" id="updateJ">Update my journey</button></div>`;
-  html += `<p class="tiny" style="margin-top:12px">Saved on this device. Come back when the dot moves.</p>`;
+  html += `<p class="tiny" style="margin-top:12px">Saved on this device. Come back when things change.</p>`;
   cardBody.innerHTML = html; cardBody.scrollTop = 0;
   cardBody.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => openNode(b.dataset.go)));
   if(window.sjEvidence){ window.sjEvidence.fillFromHere($("#jfrom"), d.pos); window.sjEvidence.refreshChips(); } if(window.sjAskCtx) window.sjAskCtx();
@@ -1922,7 +1989,7 @@ $("#shareDl").addEventListener("click", () => track("share_done", { how:"downloa
 /* ---------- entry points ---------- */
 $("#journeyBtn").addEventListener("click", () => { Snd.click(); if(state.journey){ const d = state.journey.derived; openNode(d.pos); setTimeout(() => { if(state.current === d.pos) renderJourneyCard(); }, 2600); } else openJourney(); });
 $("#shareBtn").addEventListener("click", () => { Snd.click(); shareJourney(); });
-function restoreJourney(){ const b = $("#journeyBtn"); const t = state.journey ? "Your journey: back to your dot" : "Build my journey"; b.removeAttribute("title"); b.dataset.tip = t; }
+function restoreJourney(){ const b = $("#journeyBtn"); const t = state.journey ? "Your journey: back to where you are" : "Build my journey"; b.removeAttribute("title"); b.dataset.tip = t; }
 restoreJourney();
 
 /* =====================================================================
@@ -1977,7 +2044,7 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
   function hide(){ clearTimeout(timer); tip.classList.remove("on"); }
   document.querySelectorAll("#hud .btn.icon, #viewtools .btn.icon, #carry, #lens .seg button").forEach(el => {
     if(el.matches("#lens .seg button")) el.dataset.tip = "See every card as the " + el.textContent.toLowerCase();
-    if(el.id === "carry") el.dataset.tip = "Attributes you carry. Tap for your map";
+    if(el.id === "carry") el.dataset.tip = "Your passport. Tap to open it";
     el.addEventListener("mouseenter", () => { clearTimeout(timer); timer = setTimeout(() => show(el), 140); });
     el.addEventListener("mouseleave", hide); el.addEventListener("mousedown", hide);
     el.addEventListener("focus", () => show(el)); el.addEventListener("blur", hide);
@@ -2548,7 +2615,7 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
     C.qs = activeQs(); const q = C.qs[C.i]; const last = seasonsOf().slice(-1)[0]; const ln = byId[last.pos];
     $("#jq").textContent = q.q;
     let lastLine = $("#journey .jlast"); if(!lastLine){ lastLine = document.createElement("div"); lastLine.className = "jlast"; $("#jq").after(lastLine); }
-    lastLine.innerHTML = `Last time (${fmtDate(last.at)}): the dot was at <b>${ln ? ln.t : last.pos}</b>.`;
+    lastLine.innerHTML = `Last time (${fmtDate(last.at)}): you were at <b>${ln ? ln.t : last.pos}</b>.`;
     $("#jopts").innerHTML = q.opts.map(([v,l]) => `<button data-v="${v}" class="${C.a[q.id]===v?"on":""}">${l}</button>`).join("");
     $("#jdots").innerHTML = C.qs.map((_,k) => `<i class="${k===C.i?"on":k<C.i?"done":""}"></i>`).join("");
     $("#jback").style.visibility = C.i ? "visible" : "hidden";
@@ -2615,13 +2682,13 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
     // email nudge
     const minorPlayer = a.who === "player" && !["19-22","23+"].includes(a.age);
     const box = document.createElement("div"); box.className = "nudge" + (j.subscribed ? " done" : "");
-    if(j.subscribed){ box.innerHTML = `<h4>Your dot is saved</h4><p>You'll get one note when the season turns, with a link that brings this dot back. Nothing else.</p>`; }
-    else if(minorPlayer){ box.innerHTML = `<h4>Your dot is saved</h4><p>Come back when the season ends and tell the map what happened. If a parent adds their email on their device, they'll get one note when the season turns.</p><p class="fine">Players under 18 don't give an email here.</p>`; }
-    else { box.innerHTML = `<h4>Your dot is saved</h4><p>Come back when the season ends and tell the map what happened. One note when the season turns, with a link that brings this dot back on any device.</p><form id="nudgeForm"><input type="email" id="nudgeEmail" placeholder="your@email.com" required autocomplete="email"><button type="submit">Remind me</button></form><p class="fine">Email only, no name. One note a season. Unsubscribe in one click.</p>`; }
+    if(j.subscribed){ box.innerHTML = `<h4>Your place is saved</h4><p>You'll get one note when the season turns, with a link that brings you back here. Nothing else.</p>`; }
+    else if(minorPlayer){ box.innerHTML = `<h4>Your place is saved</h4><p>Come back when the season ends and tell the map what happened. If a parent adds their email on their device, they'll get one note when the season turns.</p><p class="fine">Players under 18 don't give an email here.</p>`; }
+    else { box.innerHTML = `<h4>Your place is saved</h4><p>Come back when the season ends and tell the map what happened. One note when the season turns, with a link that brings you back here on any device.</p><form id="nudgeForm"><input type="email" id="nudgeEmail" placeholder="your@email.com" required autocomplete="email"><button type="submit">Remind me</button></form><p class="fine">Email only, no name. One note a season. Unsubscribe in one click.</p>`; }
     const jfrom = cardBody.querySelector("#jfrom"); const tiny = cardBody.querySelector("p.tiny"); if(jfrom) jfrom.after(box); else if(tiny) tiny.before(box); else cardBody.appendChild(box);
-    const f = $("#nudgeForm"); if(f) f.addEventListener("submit", async e => { e.preventDefault(); const em = $("#nudgeEmail").value.trim(); if(!em) return; if(!j.key){ box.querySelector("p.fine").textContent = "Saving your dot first; try again in a moment."; return; } try{ await sjCall("sj_subscribe", { k: j.key, e: em }); j.subscribed = true; persist(); box.className = "nudge done"; box.innerHTML = `<h4>Your dot is saved</h4><p>Done. One note when the season turns, with a link back to this dot.</p>${j.key ? `<p class="fine">Bookmark it: <a href="https://soccersjourney.com/?j=${j.key}" style="color:#9ccfff">soccersjourney.com/?j=${j.key.slice(0,8)}…</a></p>` : ""}`; track("subscribe", { at: "landing", pos: (state.journey && state.journey.derived) ? state.journey.derived.pos : "" }); }catch(err){ box.querySelector("p.fine").textContent = "That email didn't go through. Check it and try again."; } });
+    const f = $("#nudgeForm"); if(f) f.addEventListener("submit", async e => { e.preventDefault(); const em = $("#nudgeEmail").value.trim(); if(!em) return; if(!j.key){ box.querySelector("p.fine").textContent = "Saving your place first; try again in a moment."; return; } try{ await sjCall("sj_subscribe", { k: j.key, e: em }); j.subscribed = true; persist(); box.className = "nudge done"; box.innerHTML = `<h4>Your place is saved</h4><p>Done. One note when the season turns, with a link back to where you are.</p>${j.key ? `<p class="fine">Bookmark it: <a href="https://soccersjourney.com/?j=${j.key}" style="color:#9ccfff">soccersjourney.com/?j=${j.key.slice(0,8)}…</a></p>` : ""}`; track("subscribe", { at: "landing", pos: (state.journey && state.journey.derived) ? state.journey.derived.pos : "" }); }catch(err){ box.querySelector("p.fine").textContent = "That email didn't go through. Check it and try again."; } });
     // link to this dot
-    if(j.key){ const p = document.createElement("p"); p.className = "tiny"; p.innerHTML = `This dot has its own link: <a href="https://soccersjourney.com/?j=${j.key}" style="color:#9ccfff">soccersjourney.com/?j=${j.key.slice(0,8)}…</a> · opens it on any device`; const t2 = cardBody.querySelector("p.tiny"); if(t2) t2.after(p); }
+    if(j.key){ const p = document.createElement("p"); p.className = "tiny"; p.innerHTML = `Your place on the map has its own link: <a href="https://soccersjourney.com/?j=${j.key}" style="color:#9ccfff">soccersjourney.com/?j=${j.key.slice(0,8)}…</a> · opens it on any device`; const t2 = cardBody.querySelector("p.tiny"); if(t2) t2.after(p); }
   };
 
   /* ----- record the key when a journey is saved ----- */
@@ -2680,7 +2747,7 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
   // what changed: classes on pieces and roads, body flags
   const mo = new MutationObserver(() => { ver++; dirty = true; });
   mo.observe(document.getElementById("nodes"), { attributes: true, attributeFilter: ["class"], subtree: true });
-  mo.observe(document.getElementById("roads"), { attributes: true, attributeFilter: ["class"], subtree: true });
+  mo.observe(document.getElementById("roads"), { attributes: true, attributeFilter: ["class"], subtree: true, childList: true });
   mo.observe(document.body, { attributes: true, attributeFilter: ["class"] });
   const origApply = window.applyCamNow; window.applyCamNow = function(){ origApply(); dirty = true; };
   img.addEventListener("load", () => { dirty = true; });
@@ -2722,6 +2789,7 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
     });
     ctx.setLineDash([]);
     // the trail drawing itself in behind the dot
+    if(window.sjPPTrail && window.sjPPTrail.length > 1 && state.trailOn){ const pts = window.sjPPTrail; ctx.save(); ctx.strokeStyle = "#e2b94f"; ctx.lineWidth = 3.5/Math.max(z,0.25)*0.6; ctx.setLineDash([1/Math.max(z,0.25)*0.6, 9/Math.max(z,0.25)*0.6]); ctx.lineCap = "round"; ctx.beginPath(); pts.forEach((p,i) => { if(!i){ ctx.moveTo(p[0],p[1]); return; } const q = pts[i-1]; ctx.quadraticCurveTo((q[0]+p[0])/2, (q[1]+p[1])/2 - Math.abs(p[0]-q[0])*0.12, p[0], p[1]); }); ctx.stroke(); ctx.setLineDash([]); pts.forEach(p => { ctx.fillStyle = "#0d1120"; ctx.strokeStyle = p[2] === "self" ? "#dfe5ff" : "#e2b94f"; ctx.lineWidth = 2/Math.max(z,0.25)*0.6; ctx.beginPath(); ctx.arc(p[0],p[1],7/Math.max(z,0.25)*0.6,0,Math.PI*2); ctx.fill(); ctx.stroke(); }); ctx.restore(); }
     if(window.sjSeg){ const sg = window.sjSeg; const pts = bezPts(sg.g, sg.rev, sg.e, 24); ctx.strokeStyle = "#e2b94f"; ctx.lineWidth = 5/Math.max(z,0.25)*0.6; ctx.beginPath(); pts.forEach((p,i) => i ? ctx.lineTo(p[0],p[1]) : ctx.moveTo(p[0],p[1])); ctx.stroke(); }
     // traffic: travelling light and arrival rings, moved by the traffic module, drawn here
     if(tr){ const T = window.sjTraffic; ctx.globalCompositeOperation = "lighter";
@@ -2752,54 +2820,114 @@ async function recordJourney(a, pos){ try{ const t = await sjCall("sj_journey", 
 
 <script>
 /* ---------- the passport: get one from the journey card, stamp from any place card ---------- */
+/* ---------- Passport (phase A: the map remembers) ---------- */
 (function(){
-  const PP = { get num(){ return localStorage.getItem("sj.passport") || ""; }, set num(v){ v ? localStorage.setItem("sj.passport", v) : localStorage.removeItem("sj.passport"); } };
+  const PP_ON = true; if(!PP_ON) return;
+  const KEY = "sj.pp";
+  const SEASON = (() => { const d = new Date(); const y = d.getMonth() >= 7 ? d.getFullYear() : d.getFullYear() - 1; return y + "/" + String(y + 1).slice(2); })();
+  const SEASONS = [SEASON, (() => { const y = parseInt(SEASON) - 1; return y + "/" + String(y + 1).slice(2); })(), "earlier"];
+  const P = { load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || null; }catch(e){ return null; } }, save(p){ try{ localStorage.setItem(KEY, JSON.stringify(p)); }catch(e){} } };
+  let pp = P.load();
+  const CREST = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M12 7l4.5 3.3-1.7 5.4H9.2L7.5 10.3z"/><path d="M12 3v4M3.5 10.3l4 0M20.5 10.3l-4 0M6.3 19.5l2.9-3.8M17.7 19.5l-2.9-3.8"/></svg>';
+  const ICON = { journey: CREST, place:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 21s6-5.2 6-10a6 6 0 10-12 0c0 4.8 6 10 6 10z"/><circle cx="12" cy="11" r="2"/></svg>', handoff:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 9h12l-3-3M20 15H8l3 3"/></svg>', crossroads:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3v18M3 12h18"/></svg>', checkin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 12l4 4L19 6"/></svg>' };
   const HQ = { g1:"Does the kid want more?", g2:"What can the player do in May that they could not in September?", g3:"Who is grading, and what are they selling?", bridge:"What was measured, and where did the player fall short?" };
-  const stampedKey = (id) => "sj.stamped." + id;
-  function kindFor(n){ if(HQ[n.id]) return "handoff"; if(n.r === "cross" || n.k === "break") return "crossroads"; if(["backed","college","work","adult"].includes(n.r)) return "milestone"; return "arrival"; }
-  const PAGE = "preview-7k4m-passport/";
-  function section(html){ const d = document.createElement("div"); d.className = "sec"; d.innerHTML = html; return d; }
+  function kindFor(n){ if(HQ[n.id] || n.k === "gap" || n.k === "bridge") return "handoff"; if(n.r === "cross" || n.k === "break") return "crossroads"; return "place"; }
+  function mint(){ const r = crypto.getRandomValues(new Uint8Array(3)); return "SJ-" + (2600 + r[0] % 300) + "-" + [...r.slice(1)].map(b => b.toString(16).padStart(2,"0")).join("").toUpperCase(); }
+  function issue(){ if(pp) return pp; pp = { num: mint(), issued: new Date().toISOString().slice(0,10), stamps: [] }; P.save(pp); return pp; }
+  function toast(m){ let el = $("#toast"); if(!el){ el = document.createElement("div"); el.id = "toast"; document.body.appendChild(el); } el.textContent = m; el.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("on"), 3000); }
+  function showIssue(msg){ if(!pp || pp.seen) return; pp.seen = true; P.save(pp); const el = $("#ppissue"); $("#ppiNum").textContent = pp.num; $("#ppiMsg").textContent = msg; el.classList.add("up"); const hide = () => el.classList.remove("up"); $("#ppiOk").onclick = () => { hide(); Snd.click && Snd.click(); }; $("#ppiOpen").onclick = () => { hide(); openSheet(); }; }
+  function stamp(s){ issue(); const same = pp.stamps.find(x => x.ref === s.ref && x.kind === s.kind && x.season === s.season); if(same) return same; s.ts = new Date().toISOString(); s.grade = s.grade || "self"; pp.stamps.push(s); P.save(pp); renderStrip(); drawTrail(); if(typeof track === "function") track("stamp", { kind: s.kind, ref: s.ref }); return s; }
+  function unstamp(ref, kind){ if(!pp) return; pp.stamps = pp.stamps.filter(x => !(x.ref === ref && x.kind === kind)); P.save(pp); renderStrip(); drawTrail(); }
+  const GRADE = { self:"You said it", product:"Product confirmed", email:"Club confirmed by email", person:"Club confirmed in person" };
+  const stampsFor = (id) => pp ? pp.stamps.filter(s => s.ref === id) : [];
 
-  async function getPassport(){
-    const j = state.journey; if(!j || !j.key) throw new Error("no key");
-    const r = await sjCall("sj_passport_create", { key: j.key });
-    PP.num = r.number; return r;
+  /* ----- strip (replaces the carry tray) ----- */
+  function renderStrip(){
+    const el = $("#carry"); if(!el) return;
+    if(!pp){ el.innerHTML = `<div class="pps"><span class="ppslot"></span><span class="ppslot"></span><span class="ppslot"></span></div><div class="txt"><b>No passport yet</b><span class="cw"> · put yourself on the map to get one</span></div>`; el.title = "Your passport"; return; }
+    const last = pp.stamps.slice(-5);
+    el.innerHTML = `<div class="pps">${last.map(s => `<span class="ppst ${s.grade}" title="${s.claim}">${ICON[s.kind] || ICON.place}</span>`).join("")}${pp.stamps.length < 3 ? "<span class='ppslot'></span>".repeat(3 - pp.stamps.length) : ""}</div><div class="txt"><b>${pp.stamps.length}</b> stamp${pp.stamps.length === 1 ? "" : "s"}<span class="cw"> · ${pp.num}</span></div>`;
+    el.title = "Your passport";
   }
 
-  const PREVIEW = /[?&]passport=1/.test(location.search) || localStorage.getItem("sj.pp_preview") === "1"; if(/[?&]passport=1/.test(location.search)) localStorage.setItem("sj.pp_preview", "1");
-  if(!PREVIEW) return;   /* nothing passport-related runs on the public page until it ships */
-  function journeySection(){
-    const j = state.journey; if(!j) return null;
-    if(!PP.num && !PREVIEW) return null;   /* preview until it ships: open the map with ?passport=1 */
-    if(PP.num) return section(`<div class="pass"><div class="pt">Your passport</div><div class="pn">${PP.num}</div><div class="pm">Stamps are pressed by you, on the places you stand on. The passport keeps the trail.</div><div class="pbtns"><a class="pb" href="${PAGE}?n=${PP.num}">Open passport</a></div></div>`);
-    const d = section(`<div class="pass"><div class="pt">Get a passport for this dot</div><div class="pm">A number, a crest, and a page that keeps every place you stamp, season by season. No name, no email, nothing to remember but the number. Held by the family.</div><div class="pbtns"><button class="primary" id="ppGet">Get my passport</button></div></div>`);
-    d.querySelector("#ppGet").onclick = async (e) => { const b = e.currentTarget; b.disabled = true; b.textContent = "Minting…"; try{ const r = await getPassport(); if(typeof track === "function") track("passport_create"); renderJourneyCard(); Snd.click && Snd.click(); }catch(err){ b.disabled = false; b.textContent = j.key ? "Try again" : "Place the dot first"; } };
-    return d;
+  /* ----- traveled trail: where you've actually been ----- */
+  function trailPts(){ if(!pp) return []; const seen = new Set(); const pts = []; pp.stamps.slice().sort((a,b) => a.ts < b.ts ? -1 : 1).forEach(s => { const n = byId[s.ref]; if(!n || seen.has(s.ref)) return; seen.add(s.ref); pts.push([n.x, n.y, s.grade]); }); return pts; }
+  function drawTrail(){
+    const pts = trailPts(); window.sjPPTrail = pts;
+    const rg = $("#roads-g"); if(!rg) return;
+    let g = $("#pptrail"); if(!g){ g = document.createElementNS("http://www.w3.org/2000/svg", "g"); g.id = "pptrail"; rg.appendChild(g); }
+    g.innerHTML = "";
+    if(pts.length < 2) return;
+    let d = ""; pts.forEach((p,i) => { if(!i){ d += `M${p[0]} ${p[1]}`; return; } const q = pts[i-1]; const mx = (q[0]+p[0])/2, my = (q[1]+p[1])/2 - Math.abs(p[0]-q[0])*0.12; d += ` Q${mx} ${my} ${p[0]} ${p[1]}`; });
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path"); path.setAttribute("d", d); path.setAttribute("class", "ppline"); g.appendChild(path);
+    pts.forEach(p => { const c = document.createElementNS("http://www.w3.org/2000/svg", "circle"); c.setAttribute("cx", p[0]); c.setAttribute("cy", p[1]); c.setAttribute("r", 7); c.setAttribute("class", "ppdot " + p[2]); g.appendChild(c); });
   }
 
+  /* ----- the line at the bottom of a place card ----- */
   function placeSection(n){
-    if(!PP.num || !n || n.k === "attr" || n.k === "center") return null;
-    const kind = kindFor(n); const done = store.get(stampedKey(n.id), null);
-    const label = { arrival:"Stamp: I was here", handoff:"Stamp the handoff", crossroads:"Stamp the crossroads", milestone:"Stamp the milestone" }[kind];
-    if(done) return section(`<div class="pass"><div class="pt">Stamped</div><div class="stamped">✓ ${label.replace("Stamp: ","").replace("Stamp the ","")} · ${done}</div><div class="pbtns" style="margin-top:8px"><a class="pb" href="${PAGE}?n=${PP.num}">Open passport</a></div></div>`);
-    let html = `<div class="pass"><div class="pt">${label}</div>`;
-    if(kind === "handoff") html += `<div class="pq">${HQ[n.id]}</div><div class="pbtns"><button data-ans="yes">Yes</button><button data-ans="no">No</button><button data-ans="notsure">Not sure</button></div>`;
-    else html += `<div class="pm">${kind === "crossroads" ? "This is one of the hard places. The stamp records that the dot was here this season; it stays private on any link unless you change it." : kind === "milestone" ? "A rare road. The stamp records the season the dot reached it." : "The stamp records the place and the season. Nothing else."}</div><div class="pbtns"><button data-ans="">${label}</button></div>`;
-    html += `</div>`;
-    const d = section(html);
-    d.querySelectorAll("[data-ans]").forEach(b => b.onclick = async () => {
-      d.querySelectorAll("button").forEach(x => x.disabled = true);
-      const payload = kind === "handoff" ? { answer: b.dataset.ans } : {};
-      try{ const r = await sjCall("sj_stamp", { number: PP.num, kind, ref: n.id, payload }); store.set(stampedKey(n.id), r.season); if(typeof track === "function") track("stamp", { kind, ref: n.id }); Snd.click && Snd.click(); renderNodeCard(n, false); }
-      catch(err){ d.querySelector(".pt").textContent = err.message === "slow down" ? "Too many stamps for now. Try later." : "Could not stamp. Is the passport still open?"; d.querySelectorAll("button").forEach(x => x.disabled = false); }
+    if(!n || n.k === "attr" || n.k === "center") return null;
+    const kind = kindFor(n); const mine = stampsFor(n.id);
+    const d = document.createElement("div"); d.className = "sec ppsec";
+    if(mine.length){
+      d.innerHTML = `<div class="ppq"><div class="ppt">In your passport</div>${mine.map(s => `<div class="ppdone"><span class="ppst ${s.grade}">${ICON[s.kind]}</span><div><b>${s.claim}</b><span>${s.season} · ${GRADE[s.grade]}</span></div></div>`).join("")}<div class="pprow"><button class="ppb" data-open>Open passport</button><button class="ppb ghost" data-undo>Remove</button></div></div>`;
+      d.querySelector("[data-open]").onclick = () => openSheet();
+      d.querySelector("[data-undo]").onclick = () => { unstamp(n.id, kind); renderNodeCard(n, false); };
+      return d;
+    }
+    const q = kind === "handoff" ? "Did this happen to you?" : kind === "crossroads" ? "Did you stand here?" : "Were you here?";
+    const hint = kind === "handoff" ? HQ[n.id] || "The handoff question, answered by the people it happened to." : kind === "crossroads" ? "One of the hard places. Stamping it only says you were here, nothing more." : "Add a season. One tap puts this place in your passport.";
+    d.innerHTML = `<div class="ppq"><div class="ppt">${q}</div><div class="ppm">${hint}</div><div class="pprow" data-seasons>${SEASONS.map(s => `<button class="ppb" data-season="${s}">${s === "earlier" ? "Earlier" : s}</button>`).join("")}</div><div class="ppfine">Goes in as "you said it". A club can confirm it later.</div></div>`;
+    d.querySelectorAll("[data-season]").forEach(b => b.onclick = () => {
+      const season = b.dataset.season; const first = !pp;
+      stamp({ ref: n.id, kind, season, claim: kind === "handoff" ? `${n.t}: it happened` : kind === "crossroads" ? `Stood at ${n.t}` : `${n.t}` });
+      Snd.click && Snd.click(); renderNodeCard(n, false);
+      if(first) setTimeout(() => showIssue("This place is its first stamp. The passport keeps every place you stamp, season by season, and lives in the strip at the bottom left."), 400);
     });
     return d;
   }
 
+  /* ----- passport sheet (replaces Your map) ----- */
+  function renderSheet(){
+    const body = $("#mineBody"); const total = NODES.length;
+    let html = "";
+    if(pp){
+      html += `<div class="ppcover"><div class="ppcrest">${CREST}</div><div class="pped">Soccer's Journey passport · First edition</div><div class="ppnum">${pp.num}</div><div class="ppmeta">Issued ${pp.issued} · ${pp.stamps.length} stamp${pp.stamps.length===1?"":"s"} · Only on this device until you share it</div></div>`;
+      html += `<p class="ppm" style="margin:10px 0 0">Where you've been on this map, season by season. You press the stamps. A club can confirm them later, and the passport always shows which is which.</p>`;
+      html += `<div class="pplegend"><span class="ppg self">You said it</span><span class="ppg email">Club confirmed by email</span><span class="ppg person">Club confirmed in person</span></div>`;
+      html += pp.stamps.length ? `<div class="pplist">${pp.stamps.slice().reverse().map(s => `<div class="ppitem" data-go="${s.ref}"><span class="ppst ${s.grade}">${ICON[s.kind] || ICON.place}</span><div><b>${s.claim}</b><span>${s.season} · ${GRADE[s.grade]}</span></div></div>`).join("")}</div>` : `<p class="ppm">No stamps yet. Open any place on the map and answer the question at the bottom of its card.</p>`;
+      html += `<div class="pprow"><a class="ppb ghost" href="passport.html">What a passport is for</a></div>`;
+    } else {
+      html += `<div class="ppcover empty"><div class="ppcrest">${CREST}</div><div class="pped">No passport yet</div><div class="ppm" style="margin-top:6px">Put yourself on the map and it issues one. Or open any place and answer the question at the bottom of its card. "Were you here?".</div></div>`;
+    }
+    html += `<div class="stat" style="margin-top:16px"><b>${state.visited.size}</b> of ${total} places explored · <b>${state.attrs.size}</b> of 12 attributes carried</div>`;
+    html += `<div class="grid">${ATTRS.map(a => `<div class="tok ${state.attrs.has(a.id)?"on":""}" data-go="a_${a.id}"><span class="coin">${svgIcon(ATTR_ICON[a.id])}</span>${a.t}</div>`).join("")}</div>`;
+    html += `<div class="row"><button class="btn primary" id="mineJourney">${state.journey ? "Update my journey" : "Put me on the map"}</button></div>`;
+    html += `<div class="row"><button class="btn" id="resetBtn">Start over</button><button class="btn" id="fieldBtn">Back to the field</button></div>`;
+    body.innerHTML = html;
+    body.querySelectorAll("[data-go]").forEach(el => el.addEventListener("click", ()=> openNode(el.dataset.go)));
+    $("#mineJourney").addEventListener("click", ()=>{ Snd.click(); openJourney(); });
+    $("#resetBtn").addEventListener("click", e=>{ const b=e.currentTarget; if(!b.dataset.arm){ b.dataset.arm="1"; b.textContent="Tap again to clear"; Snd.click(); setTimeout(()=>{ b.dataset.arm=""; b.textContent="Start over"; }, 2500); return; } window.resetMap(); });
+    $("#fieldBtn").addEventListener("click", ()=>{ $("#mine").classList.remove("open"); Snd.whoosh(); flyTo(FIELD.x, FIELD.y, isMobile()?0.42:0.62); });
+    
+  }
+  function openSheet(){ const m = $("#mine"); renderSheet(); closeCard(); m.classList.add("open"); Snd.click && Snd.click(); }
+  window.renderMine = renderSheet;
+
+  /* ----- hooks ----- */
   const _node = window.renderNodeCard; window.renderNodeCard = function(n, earnedNow){ _node.apply(this, arguments); const sec = placeSection(n); if(sec) cardBody.appendChild(sec); };
-  const _jc = window.renderJourneyCard; window.renderJourneyCard = function(){ _jc.apply(this, arguments); const sec = journeySection(); if(sec) cardBody.appendChild(sec); };
-  // the season check-in is itself a press: it becomes a stamp
-  const _call = window.sjCall; window.sjCall = async function(fn, body){ const r = await _call(fn, body); if(fn === "sj_checkin" && PP.num && body && body.a){ try{ await _call("sj_stamp", { number: PP.num, kind: "checkin", ref: body.a.pos, payload: { change: body.a.change, reason: body.a.reason || undefined, intend: body.a.intend || undefined } }); }catch(e){} } return r; };
+  const _finish = window.finishJourney; window.finishJourney = function(){ _finish.apply(this, arguments); const j = state.journey; if(!j) return; const first = !pp; const n = byId[j.derived.pos]; const a = j.answers; const FN = { play:"Play", test:"Test", learn:"Learn", choose:"Choose", bridge:"Pathway" }; const RC = { picked:"picked", notpicked:"not picked", released:"released", none:"no tryout yet" }; stamp({ ref: j.derived.pos, kind: "journey", season: SEASON, claim: `Journey drawn: age ${a.age}, ${FN[a.fn] || a.fn}, ${RC[a.recent] || ""}`.replace(/, $/, "") }); if(first){ setTimeout(() => showIssue("Where you are now is its first stamp. Open any place on the map and answer the question at the bottom of its card to add more. It lives in the strip at the bottom left."), 2600); $("#carry").classList.add("pulse"); setTimeout(() => $("#carry").classList.remove("pulse"), 5000); } };
+  const _call = window.sjCall; window.sjCall = async function(fn, body){ const r = await _call(fn, body); if(fn === "sj_checkin" && body && body.a && pp){ const n = byId[body.a.pos]; stamp({ ref: body.a.pos, kind: "checkin", season: SEASON, claim: `Season check-in at ${n ? n.t : body.a.pos}` }); } return r; };
+  const _reset = window.resetMap; window.resetMap = function(){ _reset.apply(this, arguments); };   /* the passport survives a map reset on purpose */
+  renderStrip(); drawTrail();
+  window.sjPassport = { get: () => pp, stamp, issue };
+})();
+
+/* ---------- Paper: white reading surfaces ---------- */
+(function(){
+  const k = "sj.paper"; const b = $("#paperBtn"); if(!b) return;
+  function apply(on){ document.body.classList.toggle("paper", on); b.setAttribute("data-w", on ? "Ink" : "Paper"); b.title = on ? "Back to ink: dark reading panels" : "Paper: white reading panels"; }
+  apply(localStorage.getItem(k) === "1");
+  b.addEventListener("click", () => { const on = !document.body.classList.contains("paper"); localStorage.setItem(k, on ? "1" : "0"); apply(on); Snd.click && Snd.click(); });
 })();
 </script>
 </body>
